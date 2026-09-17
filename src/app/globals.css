@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f8fafc;
+  --foreground: #1e293b;
+  --heroui-background: #f8fafc;
+  --heroui-foreground: #1e293b;
+  --heroui-content1: #ffffff;
+  --heroui-content2: #f8fafc;
+  --heroui-overlay: rgba(15, 23, 42, 0.65);
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* HeroUI & Popup Modal Global Solid Styling (Non-transparent, Centered, Top Layer) */
+[data-slot="backdrop"] {
+  background-color: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  z-index: 9998 !important;
+  position: fixed !important;
+  inset: 0 !important;
+}
+
+[data-slot="wrapper"] {
+  z-index: 9999 !important;
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1rem !important;
+}
+
+[data-slot="base"],
+div[role="dialog"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+  border: 1px solid rgba(226, 232, 240, 0.95) !important;
+  border-radius: 1.25rem !important;
+  z-index: 10000 !important;
+  opacity: 1 !important;
+  position: relative !important;
+}
+
+/* Custom clean scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
