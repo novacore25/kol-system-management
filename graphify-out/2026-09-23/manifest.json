@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "src/db/schema.ts": {
-    "mtime": 1790143367.5019684,
-    "seen": 1790143548.2646759,
-    "ast_hash": "344be2201158b3f3f078d2cf85fa4812",
+    "mtime": 1789621212.759045,
+    "seen": 1789621515.1905115,
+    "ast_hash": "c08b267573b891e2a489c6f9bc95e1c3",
     "semantic_hash": ""
   },
   "src/lib/tiktok.ts": {
@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "src/types/index.ts": {
-    "mtime": 1790143378.477893,
-    "seen": 1790143548.2646759,
-    "ast_hash": "e969357c07076d32978b0a51e21a30bc",
+    "mtime": 1789621266.279154,
+    "seen": 1789621515.1905115,
+    "ast_hash": "3a51861bc77eaaecf39f9a33d6fafab4",
     "semantic_hash": ""
   },
   "tailwind.config.ts": {
@@ -312,9 +312,9 @@
     "semantic_hash": ""
   },
   "src/app/my-tasks/[id]/page.tsx": {
-    "mtime": 1790143445.1323576,
-    "seen": 1790143548.2626326,
-    "ast_hash": "87d2e75340ead083e70346e92eb426a2",
+    "mtime": 1789628576.3562703,
+    "seen": 1789628658.2205112,
+    "ast_hash": "0057600a9f057570be9ad535dabc8c99",
     "semantic_hash": ""
   },
   "src/app/my-tasks/page.tsx": {
@@ -336,9 +336,9 @@
     "semantic_hash": ""
   },
   "src/lib/tasks-data.ts": {
-    "mtime": 1790143405.8073711,
-    "seen": 1790143548.2646759,
-    "ast_hash": "b0e3f43d6218061db5bde12084f67631",
+    "mtime": 1789626175.2727287,
+    "seen": 1789626244.780327,
+    "ast_hash": "4a582e4e6c10ea662b0ffc0ab075f6c7",
     "semantic_hash": ""
   },
   "src/app/protocol/page.tsx": {
@@ -363,12 +363,6 @@
     "mtime": 1789628494.6757421,
     "seen": 1789628658.2205112,
     "ast_hash": "efa64292f1423569078e5e79b055334a",
-    "semantic_hash": ""
-  },
-  "README.md": {
-    "mtime": 1789631113.9227147,
-    "seen": 1790143548.2656956,
-    "ast_hash": "794bee2f1c12855abac8a21c964f4b89",
     "semantic_hash": ""
   }
 }

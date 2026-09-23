@@ -1,24 +1,19 @@
-# Graph Report - kol-system  (2026-09-23)
+# Graph Report - kol-system  (2026-09-17)
 
 ## Corpus Check
-- 63 files · ~61,467 words
+- 62 files · ~58,920 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 4 file(s) not represented in the graph (top: (none) 2, .example 1, .css 1)
 
 ## Summary
-- 340 nodes · 414 edges · 31 communities (24 shown, 6 thin omitted)
+- 317 nodes · 383 edges · 30 communities (23 shown, 6 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
-
-## Graph Freshness
-- Built from commit: `6534bfc1`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - TikTok API & Ecosystem Integration Guide
 - What You Must Do When Invoked
-- CreatorRegistrationForm.tsx
+- app/layout.tsx
 - graphify reference: extra exports and benchmark
 - graphify reference: query, path, explain
 - User Flows, Role Permissions, and Business Rules
@@ -44,7 +39,6 @@
 - scripts
 - postcss.config.mjs
 - wilayah.ts
-- README.md
 - react
 
 ## God Nodes (most connected - your core abstractions)
@@ -68,13 +62,11 @@
   src/app/api/wilayah/route.ts → src/lib/wilayah.ts
 - `GET()` --calls--> `getVillages()`  [EXTRACTED]
   src/app/api/wilayah/route.ts → src/lib/wilayah.ts
-- `CreatorTaskItem` --references--> `CampaignSalesAwarenessSummary`  [EXTRACTED]
-  src/lib/tasks-data.ts → src/types/index.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (31 total, 6 thin omitted)
+## Communities (30 total, 6 thin omitted)
 
 ### Community 0 - "TikTok API & Ecosystem Integration Guide"
 Cohesion: 0.17
@@ -84,9 +76,9 @@ Nodes (11): 1. Arsitektur Dua Pilar Ekosistem TikTok, 2. Rincian API: TikTok for
 Cohesion: 0.08
 Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
-### Community 2 - "CreatorRegistrationForm.tsx"
+### Community 2 - "app/layout.tsx"
 Cohesion: 0.13
-Nodes (9): OnboardingPage(), POPULAR_BANKS, CreatorRegistrationForm(), NICHES, POPULAR_BANKS, SelectedWilayah, WilayahOption, WilayahSelect() (+1 more)
+Nodes (11): nextConfig, clsx, next, CommissionItem, mockCommissions, inter, metadata, Providers() (+3 more)
 
 ### Community 3 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
@@ -129,20 +121,20 @@ Cohesion: 0.40
 Nodes (4): 1. Perbedaan Utama: Versi Kita vs Gro Creator, 2. Struktur Modul Aplikasi, 3. Alur Status Komprehensif, Product Requirements, Unique UX & Brand Identity
 
 ### Community 18 - "schema.ts"
-Cohesion: 0.06
-Nodes (31): applicationStatusEnum, auditLogs, campaignApplications, campaignApplicationsRelations, campaigns, campaignsRelations, campaignStatusEnum, campaignTasks (+23 more)
+Cohesion: 0.07
+Nodes (26): pg, db, pool, applicationStatusEnum, auditLogs, campaignApplications, campaignApplicationsRelations, campaigns (+18 more)
 
 ### Community 19 - "package.json"
-Cohesion: 0.07
-Nodes (23): nextConfig, name, private, version, autoprefixer, dotenv, drizzle-kit, drizzle-orm (+15 more)
+Cohesion: 0.10
+Nodes (18): name, private, version, autoprefixer, dotenv, drizzle-kit, drizzle-orm, framer-motion (+10 more)
 
 ### Community 20 - "ApplicationReviewTable.tsx"
 Cohesion: 0.23
 Nodes (6): ApplicationReviewTable(), REJECTION_REASONS, COURIERS, SampleLogisticsTable(), AdminApplicationItem, initialApplications
 
 ### Community 21 - "types/index.ts"
-Cohesion: 0.09
-Nodes (21): CreatorTaskItem, initialCreatorTasks, ApplicationStatus, CampaignSalesAwarenessSummary, CampaignStatus, CommissionType, CreatorTier, DosAndDontsItem (+13 more)
+Cohesion: 0.12
+Nodes (13): ApplicationStatus, CampaignStatus, CommissionType, CreatorTier, DosAndDontsItem, ShipmentStatus, ShippingAddressData, SOWChecklistItem (+5 more)
 
 ### Community 22 - "compilerOptions"
 Cohesion: 0.11
@@ -164,33 +156,29 @@ Nodes (9): scripts, build, db:generate, db:migrate, db:push, db:studio, dev, lin
 Cohesion: 0.44
 Nodes (7): GET(), cache, getDistricts(), getProvinces(), getRegencies(), getVillages(), WilayahItem
 
-### Community 28 - "README.md"
-Cohesion: 0.22
-Nodes (8): 1. Clone repository, 1. Portal Kreator, 2. Install dependencies, 2. Panel Admin Agensi, 3. Jalankan development server, 🛠️ Cara Menjalankan Secara Lokal, 📱 Panduan Review UI (Fitur & Halaman), 💻 Tech Stack
-
 ### Community 29 - "react"
-Cohesion: 0.09
-Nodes (16): clsx, @heroui/react, lucide-react, react, CommissionItem, mockCommissions, inter, metadata (+8 more)
+Cohesion: 0.07
+Nodes (18): @heroui/react, lucide-react, react, OnboardingPage(), initialCampaigns, POPULAR_BANKS, AdminSidebar(), CampaignCard() (+10 more)
 
 ## Knowledge Gaps
-- **192 isolated node(s):** `nextConfig`, `name`, `version`, `private`, `dev` (+187 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 235 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **176 isolated node(s):** `nextConfig`, `name`, `version`, `private`, `dev` (+171 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 219 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `react` to `CreatorRegistrationForm.tsx`, `package.json`, `ApplicationReviewTable.tsx`, `types/index.ts`?**
-  _High betweenness centrality (0.095) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `app/layout.tsx`, `package.json`, `ApplicationReviewTable.tsx`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **Why does `drizzle-orm` connect `package.json` to `schema.ts`?**
-  _High betweenness centrality (0.089) - this node is a cross-community bridge._
-- **Why does `lucide-react` connect `react` to `CreatorRegistrationForm.tsx`, `package.json`, `ApplicationReviewTable.tsx`, `types/index.ts`?**
-  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
+- **Why does `lucide-react` connect `react` to `app/layout.tsx`, `package.json`, `ApplicationReviewTable.tsx`?**
+  _High betweenness centrality (0.049) - this node is a cross-community bridge._
 - **What connects `nextConfig`, `name`, `version` to the rest of the system?**
-  _192 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _176 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
-- **Should `CreatorRegistrationForm.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.13157894736842105 - nodes in this community are weakly interconnected._
+- **Should `app/layout.tsx` be split into smaller, more focused modules?**
+  _Cohesion score 0.1286549707602339 - nodes in this community are weakly interconnected._
 - **Should `schema.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._

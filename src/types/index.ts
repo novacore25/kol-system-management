@@ -18,6 +18,17 @@ export type TaskStatus =
   | "VERIFIED_COMPLETE"
   | "FLAGGED_OR_REMOVED";
 
+export type TikTokContentType = "VIDEO" | "LIVE" | "SHOWCASE";
+
+export type TikTokOrderStatus =
+  | "AWAITING_PAYMENT"
+  | "PAID"
+  | "IN_TRANSIT"
+  | "DELIVERED"
+  | "SETTLED"
+  | "CANCELLED"
+  | "REFUNDED";
+
 export interface SOWChecklistItem {
   id: string;
   title: string;
@@ -67,4 +78,81 @@ export interface TikTokVideoItem {
   like_count: number;
   comment_count: number;
   share_count: number;
+}
+
+// ==========================================
+// RAW DATA MODELS (VIDEO, LIVE, SALES)
+// ==========================================
+export interface RawDataVideo {
+  id: string;
+  campaignId?: string;
+  productId: string; // TikTok Shop Product ID
+  creatorUsername: string; // @handle
+  creatorOpenId?: string;
+  videoId: string;
+  videoUrl: string;
+  caption: string;
+  postTime: string;
+  durationSeconds: number;
+  viewsCount: number;
+  likesCount: number;
+  commentsCount: number;
+  sharesCount: number;
+  retentionRate: number; // e.g. 68.5%
+}
+
+export interface RawDataLive {
+  id: string;
+  campaignId?: string;
+  productId: string;
+  creatorUsername: string;
+  liveRoomId: string;
+  liveTitle: string;
+  startTime: string;
+  endTime?: string;
+  durationMinutes: number;
+  totalLiveViews: number;
+  peakViewersPcu: number;
+  avgViewersAcu: number;
+  totalComments: number;
+  totalShares: number;
+  totalProductClicks: number;
+}
+
+export interface RawDataSales {
+  id: string;
+  campaignId?: string;
+  productId: string;
+  skuId?: string;
+  productName: string;
+  creatorUsername: string;
+  orderId: string;
+  subOrderId?: string;
+  contentType: TikTokContentType;
+  sourceId?: string; // videoId or liveRoomId
+  orderStatus: TikTokOrderStatus;
+  quantity: number;
+  itemPrice: number;
+  totalGmv: number;
+  commissionRate: number; // e.g. 10.0
+  commissionAmount: number;
+  settledCommission: number;
+  orderCreatedTime: string;
+  orderSettledTime?: string;
+  buyerRegion?: string;
+}
+
+export interface CampaignSalesAwarenessSummary {
+  productId: string;
+  creatorUsername: string;
+  totalViews: number;
+  totalLikes: number;
+  totalLiveDurationMinutes: number;
+  totalLivePeakViewers: number;
+  totalItemsSold: number;
+  totalGmv: number;
+  estimatedCommission: number;
+  settledCommission: number;
+  videoCount: number;
+  liveCount: number;
 }

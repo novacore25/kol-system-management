@@ -3,6 +3,7 @@ import {
   text,
   timestamp,
   integer,
+  bigint,
   boolean,
   uuid,
   numeric,
@@ -66,6 +67,22 @@ export const taskStatusEnum = pgEnum("task_status", [
   "DETECTED_ACTIVE",
   "VERIFIED_COMPLETE",
   "FLAGGED_OR_REMOVED",
+]);
+
+export const contentTypeEnum = pgEnum("content_type", [
+  "VIDEO",
+  "LIVE",
+  "SHOWCASE",
+]);
+
+export const orderStatusEnum = pgEnum("order_status", [
+  "AWAITING_PAYMENT",
+  "PAID",
+  "IN_TRANSIT",
+  "DELIVERED",
+  "SETTLED",
+  "CANCELLED",
+  "REFUNDED",
 ]);
 
 // ==========================================
@@ -273,6 +290,90 @@ export const auditLogs = pgTable("audit_logs", {
 });
 
 // ==========================================
+// 6. RAW DATA INGESTION (VIDEO, LIVE, SALES)
+// ==========================================
+export const rawDataVideos = pgTable("raw_data_videos", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  campaignId: uuid("campaign_id").references(() => campaigns.id, { onDelete: "set null" }),
+  productId: text("product_id").notNull(), // TikTok Shop Product ID
+  creatorUsername: text("creator_username").notNull(), // TikTok handle e.g. @banibanzl
+  creatorOpenId: text("creator_open_id"),
+  videoId: text("video_id").unique().notNull(),
+  videoUrl: text("video_url").notNull(),
+  caption: text("caption"),
+  postTime: timestamp("post_time", { withTimezone: true }),
+  durationSeconds: integer("duration_seconds").default(0),
+  viewsCount: bigint("views_count", { mode: "number" }).default(0).notNull(),
+  likesCount: integer("likes_count").default(0).notNull(),
+  commentsCount: integer("comments_count").default(0).notNull(),
+  sharesCount: integer("shares_count").default(0).notNull(),
+  retentionRate: numeric("retention_rate", { precision: 5, scale: 2 }).default("0.00"),
+  rawPayload: jsonb("raw_payload"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index("raw_video_product_idx").on(table.productId),
+  index("raw_video_creator_idx").on(table.creatorUsername),
+  index("raw_video_campaign_idx").on(table.campaignId),
+]);
+
+export const rawDataLives = pgTable("raw_data_lives", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  campaignId: uuid("campaign_id").references(() => campaigns.id, { onDelete: "set null" }),
+  productId: text("product_id").notNull(), // TikTok Shop Product ID pinned during live
+  creatorUsername: text("creator_username").notNull(), // TikTok handle
+  liveRoomId: text("live_room_id").unique().notNull(),
+  liveTitle: text("live_title"),
+  startTime: timestamp("start_time", { withTimezone: true }).notNull(),
+  endTime: timestamp("end_time", { withTimezone: true }),
+  durationMinutes: integer("duration_minutes").default(0).notNull(),
+  totalLiveViews: bigint("total_live_views", { mode: "number" }).default(0).notNull(),
+  peakViewersPcu: integer("peak_viewers_pcu").default(0).notNull(),
+  avgViewersAcu: integer("avg_viewers_acu").default(0).notNull(),
+  totalComments: integer("total_comments").default(0).notNull(),
+  totalShares: integer("total_shares").default(0).notNull(),
+  totalProductClicks: integer("total_product_clicks").default(0).notNull(),
+  rawPayload: jsonb("raw_payload"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index("raw_live_product_idx").on(table.productId),
+  index("raw_live_creator_idx").on(table.creatorUsername),
+  index("raw_live_campaign_idx").on(table.campaignId),
+]);
+
+export const rawDataSales = pgTable("raw_data_sales", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  campaignId: uuid("campaign_id").references(() => campaigns.id, { onDelete: "set null" }),
+  productId: text("product_id").notNull(), // TikTok Shop Product ID
+  skuId: text("sku_id"),
+  productName: text("product_name").notNull(),
+  creatorUsername: text("creator_username").notNull(), // TikTok handle
+  orderId: text("order_id").notNull(),
+  subOrderId: text("sub_order_id"),
+  contentType: contentTypeEnum("content_type").default("VIDEO").notNull(),
+  sourceId: text("source_id"), // video_id or live_room_id
+  orderStatus: orderStatusEnum("order_status").default("PAID").notNull(),
+  quantity: integer("quantity").default(1).notNull(),
+  itemPrice: numeric("item_price", { precision: 15, scale: 2 }).notNull(),
+  totalGmv: numeric("total_gmv", { precision: 15, scale: 2 }).notNull(),
+  commissionRate: numeric("commission_rate", { precision: 5, scale: 2 }).notNull(),
+  commissionAmount: numeric("commission_amount", { precision: 15, scale: 2 }).notNull(),
+  settledCommission: numeric("settled_commission", { precision: 15, scale: 2 }).default("0.00"),
+  orderCreatedTime: timestamp("order_created_time", { withTimezone: true }).notNull(),
+  orderSettledTime: timestamp("order_settled_time", { withTimezone: true }),
+  buyerRegion: text("buyer_region"),
+  rawPayload: jsonb("raw_payload"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+}, (table) => [
+  index("raw_sales_product_idx").on(table.productId),
+  index("raw_sales_creator_idx").on(table.creatorUsername),
+  index("raw_sales_campaign_idx").on(table.campaignId),
+  index("raw_sales_order_idx").on(table.orderId),
+]);
+
+// ==========================================
 // RELATIONS
 // ==========================================
 export const usersRelations = relations(users, ({ one, many }) => ({
@@ -303,6 +404,30 @@ export const tiktokAccountsRelations = relations(tiktokAccounts, ({ one, many })
 
 export const campaignsRelations = relations(campaigns, ({ many }) => ({
   applications: many(campaignApplications),
+  rawDataVideos: many(rawDataVideos),
+  rawDataLives: many(rawDataLives),
+  rawDataSales: many(rawDataSales),
+}));
+
+export const rawDataVideosRelations = relations(rawDataVideos, ({ one }) => ({
+  campaign: one(campaigns, {
+    fields: [rawDataVideos.campaignId],
+    references: [campaigns.id],
+  }),
+}));
+
+export const rawDataLivesRelations = relations(rawDataLives, ({ one }) => ({
+  campaign: one(campaigns, {
+    fields: [rawDataLives.campaignId],
+    references: [campaigns.id],
+  }),
+}));
+
+export const rawDataSalesRelations = relations(rawDataSales, ({ one }) => ({
+  campaign: one(campaigns, {
+    fields: [rawDataSales.campaignId],
+    references: [campaigns.id],
+  }),
 }));
 
 export const campaignApplicationsRelations = relations(campaignApplications, ({ one }) => ({
