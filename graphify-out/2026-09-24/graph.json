@@ -4,30 +4,43 @@
   "graph": {},
   "nodes": [
     {
-      "id": "src_app_earnings_page_commissionitem",
-      "label": "CommissionItem",
+      "id": "src_components_profile_wilayahselect_selectedwilayah",
+      "label": "SelectedWilayah",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "commissionitem",
-      "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L20"
+      "norm_label": "selectedwilayah",
+      "source_file": "src/components/profile/WilayahSelect.tsx",
+      "source_location": "L12"
     },
     {
-      "id": "src_components_navigation_appheader_notificationitem",
-      "label": "NotificationItem",
+      "id": "src_components_profile_wilayahselect_wilayahoption",
+      "label": "WilayahOption",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "notificationitem",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L16"
+      "norm_label": "wilayahoption",
+      "source_file": "src/components/profile/WilayahSelect.tsx",
+      "source_location": "L7"
+    },
+    {
+      "id": "src_components_profile_wilayahselect_wilayahselectprops",
+      "label": "WilayahSelectProps",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
+      "file_type": "code",
+      "norm_label": "wilayahselectprops",
+      "source_file": "src/components/profile/WilayahSelect.tsx",
+      "source_location": "L23"
     },
     {
       "id": "src_lib_admin_data_adminapplicationitem",
@@ -316,17 +329,17 @@
       "source_location": "L1"
     },
     {
-      "id": "src_app_admin_campaigns_page_campaignadminitem",
-      "label": "CampaignAdminItem",
+      "id": "src_app_earnings_page_commissionitem",
+      "label": "CommissionItem",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 29,
       "community_name": "react",
       "file_type": "code",
-      "norm_label": "campaignadminitem",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L26"
+      "norm_label": "commissionitem",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L20"
     },
     {
       "id": "src_components_campaign_campaigncard_campaigndata",
@@ -342,127 +355,112 @@
       "source_location": "L28"
     },
     {
-      "id": "src_components_profile_wilayahselect_selectedwilayah",
-      "label": "SelectedWilayah",
+      "id": "src_app_onboarding_page_onboardingpage",
+      "label": "OnboardingPage()",
       "_callable": true,
-      "_callable_class": true,
       "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "selectedwilayah",
+      "norm_label": "onboardingpage()",
+      "source_file": "src/app/onboarding/page.tsx",
+      "source_location": "L4"
+    },
+    {
+      "id": "src_app_profile_page_profilepage",
+      "label": "ProfilePage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
+      "file_type": "code",
+      "norm_label": "profilepage()",
+      "source_file": "src/app/profile/page.tsx",
+      "source_location": "L41"
+    },
+    {
+      "id": "src_app_register_page_registerpage",
+      "label": "RegisterPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
+      "file_type": "code",
+      "norm_label": "registerpage()",
+      "source_file": "src/app/register/page.tsx",
+      "source_location": "L3"
+    },
+    {
+      "id": "src_components_profile_creatorregistrationform_creatorregistrationform",
+      "label": "CreatorRegistrationForm()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
+      "file_type": "code",
+      "norm_label": "creatorregistrationform()",
+      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
+      "source_location": "L51"
+    },
+    {
+      "id": "src_components_profile_wilayahselect_wilayahselect",
+      "label": "WilayahSelect()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
+      "file_type": "code",
+      "norm_label": "wilayahselect()",
       "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L12"
+      "source_location": "L28"
     },
     {
-      "id": "src_components_profile_wilayahselect_wilayahoption",
-      "label": "WilayahOption",
+      "id": "src_components_profile_wilayahselect_wilayahselect_loaddistricts",
+      "label": "loadDistricts()",
       "_callable": true,
-      "_callable_class": true,
       "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "wilayahoption",
+      "norm_label": "loaddistricts()",
       "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L7"
+      "source_location": "L96"
     },
     {
-      "id": "src_components_profile_wilayahselect_wilayahselectprops",
-      "label": "WilayahSelectProps",
+      "id": "src_components_profile_wilayahselect_wilayahselect_loadprovinces",
+      "label": "loadProvinces()",
       "_callable": true,
-      "_callable_class": true,
       "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "wilayahselectprops",
+      "norm_label": "loadprovinces()",
       "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L23"
+      "source_location": "L46"
     },
     {
-      "id": "src_app_earnings_page_earningspage",
-      "label": "EarningsPage()",
+      "id": "src_components_profile_wilayahselect_wilayahselect_loadregencies",
+      "label": "loadRegencies()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "earningspage()",
-      "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L84"
+      "norm_label": "loadregencies()",
+      "source_file": "src/components/profile/WilayahSelect.tsx",
+      "source_location": "L71"
     },
     {
-      "id": "src_app_layout_rootlayout",
-      "label": "RootLayout()",
+      "id": "src_components_profile_wilayahselect_wilayahselect_loadvillages",
+      "label": "loadVillages()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "rootlayout()",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L16"
-    },
-    {
-      "id": "src_app_providers_providers",
-      "label": "Providers()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "providers()",
-      "source_file": "src/app/providers.tsx",
-      "source_location": "L6"
-    },
-    {
-      "id": "src_components_navigation_appheader_appheader",
-      "label": "AppHeader()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "appheader()",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L65"
-    },
-    {
-      "id": "src_components_navigation_appheader_appheader_handleclickoutside",
-      "label": "handleClickOutside()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "handleclickoutside()",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L78"
-    },
-    {
-      "id": "src_components_navigation_appsidebar_appsidebar",
-      "label": "AppSidebar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "appsidebar()",
-      "source_file": "src/components/navigation/AppSidebar.tsx",
-      "source_location": "L15"
-    },
-    {
-      "id": "src_components_navigation_mobilebottomnav_mobilebottomnav",
-      "label": "MobileBottomNav()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "mobilebottomnav()",
-      "source_file": "src/components/navigation/MobileBottomNav.tsx",
-      "source_location": "L9"
+      "norm_label": "loadvillages()",
+      "source_file": "src/components/profile/WilayahSelect.tsx",
+      "source_location": "L121"
     },
     {
       "id": "src_app_admin_applications_page_applicationsreviewpage",
@@ -511,18 +509,6 @@
       "norm_label": "samplelogisticstable()",
       "source_file": "src/components/admin/SampleLogisticsTable.tsx",
       "source_location": "L42"
-    },
-    {
-      "id": "src_app_my_tasks_id_page_campaigndetailpage",
-      "label": "CampaignDetailPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "campaigndetailpage()",
-      "source_file": "src/app/my-tasks/[id]/page.tsx",
-      "source_location": "L27"
     },
     {
       "id": "src_components_tasks_taskcard_taskcard",
@@ -657,30 +643,6 @@
       "source_location": "L65"
     },
     {
-      "id": "src_app_admin_campaigns_page_admincampaignspage",
-      "label": "AdminCampaignsPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "admincampaignspage()",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L90"
-    },
-    {
-      "id": "src_app_admin_import_page_adminimportpage",
-      "label": "AdminImportPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "adminimportpage()",
-      "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L20"
-    },
-    {
       "id": "src_app_admin_layout_adminlayout",
       "label": "AdminLayout()",
       "_callable": true,
@@ -705,6 +667,42 @@
       "source_location": "L20"
     },
     {
+      "id": "src_app_earnings_page_earningspage",
+      "label": "EarningsPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "earningspage()",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L79"
+    },
+    {
+      "id": "src_app_layout_rootlayout",
+      "label": "RootLayout()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "rootlayout()",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L16"
+    },
+    {
+      "id": "src_app_my_tasks_id_page_campaigndetailpage",
+      "label": "CampaignDetailPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "campaigndetailpage()",
+      "source_file": "src/app/my-tasks/[id]/page.tsx",
+      "source_location": "L27"
+    },
+    {
       "id": "src_app_my_tasks_page_mycampaignspage",
       "label": "MyCampaignsPage()",
       "_callable": true,
@@ -715,18 +713,6 @@
       "norm_label": "mycampaignspage()",
       "source_file": "src/app/my-tasks/page.tsx",
       "source_location": "L16"
-    },
-    {
-      "id": "src_app_onboarding_page_onboardingpage",
-      "label": "OnboardingPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "onboardingpage()",
-      "source_file": "src/app/onboarding/page.tsx",
-      "source_location": "L4"
     },
     {
       "id": "src_app_page_homepage",
@@ -741,18 +727,6 @@
       "source_location": "L158"
     },
     {
-      "id": "src_app_profile_page_profilepage",
-      "label": "ProfilePage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "profilepage()",
-      "source_file": "src/app/profile/page.tsx",
-      "source_location": "L41"
-    },
-    {
       "id": "src_app_protocol_page_protocolpage",
       "label": "ProtocolPage()",
       "_callable": true,
@@ -765,16 +739,16 @@
       "source_location": "L5"
     },
     {
-      "id": "src_app_register_page_registerpage",
-      "label": "RegisterPage()",
+      "id": "src_app_providers_providers",
+      "label": "Providers()",
       "_callable": true,
       "_origin": "ast",
       "community": 29,
       "community_name": "react",
       "file_type": "code",
-      "norm_label": "registerpage()",
-      "source_file": "src/app/register/page.tsx",
-      "source_location": "L3"
+      "norm_label": "providers()",
+      "source_file": "src/app/providers.tsx",
+      "source_location": "L6"
     },
     {
       "id": "src_components_admin_adminsidebar_adminsidebar",
@@ -801,6 +775,42 @@
       "source_location": "L48"
     },
     {
+      "id": "src_components_navigation_appheader_appheader",
+      "label": "AppHeader()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appheader()",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L8"
+    },
+    {
+      "id": "src_components_navigation_appsidebar_appsidebar",
+      "label": "AppSidebar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appsidebar()",
+      "source_file": "src/components/navigation/AppSidebar.tsx",
+      "source_location": "L15"
+    },
+    {
+      "id": "src_components_navigation_mobilebottomnav_mobilebottomnav",
+      "label": "MobileBottomNav()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "mobilebottomnav()",
+      "source_file": "src/components/navigation/MobileBottomNav.tsx",
+      "source_location": "L9"
+    },
+    {
       "id": "src_components_navigation_navbar_navbar",
       "label": "Navbar()",
       "_callable": true,
@@ -811,78 +821,6 @@
       "norm_label": "navbar()",
       "source_file": "src/components/navigation/Navbar.tsx",
       "source_location": "L15"
-    },
-    {
-      "id": "src_components_profile_creatorregistrationform_creatorregistrationform",
-      "label": "CreatorRegistrationForm()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "creatorregistrationform()",
-      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
-      "source_location": "L51"
-    },
-    {
-      "id": "src_components_profile_wilayahselect_wilayahselect",
-      "label": "WilayahSelect()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "wilayahselect()",
-      "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L28"
-    },
-    {
-      "id": "src_components_profile_wilayahselect_wilayahselect_loaddistricts",
-      "label": "loadDistricts()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "loaddistricts()",
-      "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L96"
-    },
-    {
-      "id": "src_components_profile_wilayahselect_wilayahselect_loadprovinces",
-      "label": "loadProvinces()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "loadprovinces()",
-      "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L46"
-    },
-    {
-      "id": "src_components_profile_wilayahselect_wilayahselect_loadregencies",
-      "label": "loadRegencies()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "loadregencies()",
-      "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L71"
-    },
-    {
-      "id": "src_components_profile_wilayahselect_wilayahselect_loadvillages",
-      "label": "loadVillages()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "loadvillages()",
-      "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L121"
     },
     {
       "id": "src_app_api_tasks_detect_route_post",
@@ -2349,125 +2287,92 @@
       "source_location": "L37"
     },
     {
-      "id": "src_app_earnings_page",
-      "label": "earnings/page.tsx",
+      "id": "src_app_onboarding_page",
+      "label": "onboarding/page.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "earnings/page.tsx",
-      "source_file": "src/app/earnings/page.tsx",
+      "norm_label": "onboarding/page.tsx",
+      "source_file": "src/app/onboarding/page.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_app_earnings_page_mockcommissions",
-      "label": "mockCommissions",
+      "id": "src_app_profile_page",
+      "label": "profile/page.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "mockcommissions",
-      "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L33"
-    },
-    {
-      "id": "src_app_layout",
-      "label": "app/layout.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "app/layout.tsx",
-      "source_file": "src/app/layout.tsx",
+      "norm_label": "profile/page.tsx",
+      "source_file": "src/app/profile/page.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_app_layout_inter",
-      "label": "inter",
+      "id": "src_app_profile_page_popular_banks",
+      "label": "POPULAR_BANKS",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "inter",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L9"
+      "norm_label": "popular_banks",
+      "source_file": "src/app/profile/page.tsx",
+      "source_location": "L30"
     },
     {
-      "id": "src_app_layout_metadata",
-      "label": "metadata",
+      "id": "src_app_register_page",
+      "label": "register/page.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "metadata",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L11"
-    },
-    {
-      "id": "src_app_providers",
-      "label": "providers.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "providers.tsx",
-      "source_file": "src/app/providers.tsx",
+      "norm_label": "register/page.tsx",
+      "source_file": "src/app/register/page.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_components_navigation_appheader",
-      "label": "AppHeader.tsx",
+      "id": "src_components_profile_creatorregistrationform",
+      "label": "CreatorRegistrationForm.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "appheader.tsx",
-      "source_file": "src/components/navigation/AppHeader.tsx",
+      "norm_label": "creatorregistrationform.tsx",
+      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_components_navigation_appheader_initialnotifications",
-      "label": "initialNotifications",
+      "id": "src_components_profile_creatorregistrationform_niches",
+      "label": "NICHES",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "initialnotifications",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L26"
+      "norm_label": "niches",
+      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
+      "source_location": "L40"
     },
     {
-      "id": "src_components_navigation_appsidebar",
-      "label": "AppSidebar.tsx",
+      "id": "src_components_profile_creatorregistrationform_popular_banks",
+      "label": "POPULAR_BANKS",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "CreatorRegistrationForm.tsx",
       "file_type": "code",
-      "norm_label": "appsidebar.tsx",
-      "source_file": "src/components/navigation/AppSidebar.tsx",
+      "norm_label": "popular_banks",
+      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
+      "source_location": "L29"
+    },
+    {
+      "id": "src_components_profile_wilayahselect",
+      "label": "WilayahSelect.tsx",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "CreatorRegistrationForm.tsx",
+      "file_type": "code",
+      "norm_label": "wilayahselect.tsx",
+      "source_file": "src/components/profile/WilayahSelect.tsx",
       "source_location": "L1"
-    },
-    {
-      "id": "src_components_navigation_mobilebottomnav",
-      "label": "MobileBottomNav.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "mobilebottomnav.tsx",
-      "source_file": "src/components/navigation/MobileBottomNav.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "ref_clsx",
-      "label": "clsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "concept",
-      "norm_label": "clsx",
-      "source_file": "package.json",
-      "source_location": "L17"
     },
     {
       "id": "src_app_admin_applications_page",
@@ -2556,17 +2461,6 @@
       "norm_label": "initialapplications",
       "source_file": "src/lib/admin-data.ts",
       "source_location": "L33"
-    },
-    {
-      "id": "src_app_my_tasks_id_page",
-      "label": "[id]/page.tsx",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "[id]/page.tsx",
-      "source_file": "src/app/my-tasks/[id]/page.tsx",
-      "source_location": "L1"
     },
     {
       "id": "src_components_tasks_taskcard",
@@ -3359,39 +3253,6 @@
       "source_location": "L53"
     },
     {
-      "id": "src_app_admin_campaigns_page",
-      "label": "campaigns/page.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "campaigns/page.tsx",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_admin_campaigns_page_initialcampaigns",
-      "label": "initialCampaigns",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "initialcampaigns",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L39"
-    },
-    {
-      "id": "src_app_admin_import_page",
-      "label": "import/page.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "import/page.tsx",
-      "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_app_admin_layout",
       "label": "admin/layout.tsx",
       "_origin": "ast",
@@ -3414,6 +3275,72 @@
       "source_location": "L1"
     },
     {
+      "id": "src_app_earnings_page",
+      "label": "earnings/page.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "earnings/page.tsx",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_earnings_page_mockcommissions",
+      "label": "mockCommissions",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "mockcommissions",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L32"
+    },
+    {
+      "id": "src_app_layout",
+      "label": "app/layout.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "app/layout.tsx",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_layout_inter",
+      "label": "inter",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "inter",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L9"
+    },
+    {
+      "id": "src_app_layout_metadata",
+      "label": "metadata",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "metadata",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "src_app_my_tasks_id_page",
+      "label": "[id]/page.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "[id]/page.tsx",
+      "source_file": "src/app/my-tasks/[id]/page.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "src_app_my_tasks_page",
       "label": "my-tasks/page.tsx",
       "_origin": "ast",
@@ -3422,17 +3349,6 @@
       "file_type": "code",
       "norm_label": "my-tasks/page.tsx",
       "source_file": "src/app/my-tasks/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_onboarding_page",
-      "label": "onboarding/page.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "onboarding/page.tsx",
-      "source_file": "src/app/onboarding/page.tsx",
       "source_location": "L1"
     },
     {
@@ -3458,28 +3374,6 @@
       "source_location": "L22"
     },
     {
-      "id": "src_app_profile_page",
-      "label": "profile/page.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "profile/page.tsx",
-      "source_file": "src/app/profile/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_profile_page_popular_banks",
-      "label": "POPULAR_BANKS",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "popular_banks",
-      "source_file": "src/app/profile/page.tsx",
-      "source_location": "L30"
-    },
-    {
       "id": "src_app_protocol_page",
       "label": "protocol/page.tsx",
       "_origin": "ast",
@@ -3491,14 +3385,14 @@
       "source_location": "L1"
     },
     {
-      "id": "src_app_register_page",
-      "label": "register/page.tsx",
+      "id": "src_app_providers",
+      "label": "providers.tsx",
       "_origin": "ast",
       "community": 29,
       "community_name": "react",
       "file_type": "code",
-      "norm_label": "register/page.tsx",
-      "source_file": "src/app/register/page.tsx",
+      "norm_label": "providers.tsx",
+      "source_file": "src/app/providers.tsx",
       "source_location": "L1"
     },
     {
@@ -3524,6 +3418,39 @@
       "source_location": "L1"
     },
     {
+      "id": "src_components_navigation_appheader",
+      "label": "AppHeader.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appheader.tsx",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_navigation_appsidebar",
+      "label": "AppSidebar.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appsidebar.tsx",
+      "source_file": "src/components/navigation/AppSidebar.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_navigation_mobilebottomnav",
+      "label": "MobileBottomNav.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "mobilebottomnav.tsx",
+      "source_file": "src/components/navigation/MobileBottomNav.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "src_components_navigation_navbar",
       "label": "Navbar.tsx",
       "_origin": "ast",
@@ -3535,48 +3462,15 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_profile_creatorregistrationform",
-      "label": "CreatorRegistrationForm.tsx",
+      "id": "ref_clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 29,
       "community_name": "react",
-      "file_type": "code",
-      "norm_label": "creatorregistrationform.tsx",
-      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_profile_creatorregistrationform_niches",
-      "label": "NICHES",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "niches",
-      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
-      "source_location": "L40"
-    },
-    {
-      "id": "src_components_profile_creatorregistrationform_popular_banks",
-      "label": "POPULAR_BANKS",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "popular_banks",
-      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
-      "source_location": "L29"
-    },
-    {
-      "id": "src_components_profile_wilayahselect",
-      "label": "WilayahSelect.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "wilayahselect.tsx",
-      "source_file": "src/components/profile/WilayahSelect.tsx",
-      "source_location": "L1"
+      "file_type": "concept",
+      "norm_label": "clsx",
+      "source_file": "package.json",
+      "source_location": "L17"
     },
     {
       "id": "ref_heroui_react",
@@ -4910,90 +4804,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_app_admin_campaigns_page",
-      "target": "ref_heroui_react",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L16",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_campaigns_page",
-      "target": "ref_clsx",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L24",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_campaigns_page",
-      "target": "ref_react",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L3",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_campaigns_page",
-      "target": "ref_lucide_react",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L4",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_import_page",
-      "target": "ref_clsx",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L18",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_import_page",
-      "target": "ref_react",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L3",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_import_page",
-      "target": "ref_lucide_react",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L4",
-      "weight": 1.0
-    },
-    {
       "source": "src_app_admin_layout",
       "target": "ref_react",
       "relation": "imports_from",
@@ -5632,18 +5442,6 @@
     },
     {
       "source": "src_components_navigation_appheader",
-      "target": "ref_clsx",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L14",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_navigation_appheader",
       "target": "ref_react",
       "relation": "imports_from",
       "_origin": "ast",
@@ -5664,6 +5462,18 @@
       "context": "import",
       "source_file": "src/components/navigation/AppHeader.tsx",
       "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_navigation_appheader",
+      "target": "ref_heroui_react",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L6",
       "weight": 1.0
     },
     {
@@ -7470,50 +7280,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_app_admin_campaigns_page",
-      "target": "src_app_admin_campaigns_page_campaignadminitem",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L26",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_campaigns_page",
-      "target": "src_app_admin_campaigns_page_initialcampaigns",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L39",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_campaigns_page",
-      "target": "src_app_admin_campaigns_page_admincampaignspage",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L90",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_import_page",
-      "target": "src_app_admin_import_page_adminimportpage",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L20",
-      "weight": 1.0
-    },
-    {
       "source": "src_app_admin_layout",
       "target": "src_app_admin_layout_adminlayout",
       "relation": "contains",
@@ -7587,7 +7353,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L33",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -7598,7 +7364,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L84",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -7823,35 +7589,13 @@
     },
     {
       "source": "src_components_navigation_appheader",
-      "target": "src_components_navigation_appheader_notificationitem",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L16",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_navigation_appheader",
-      "target": "src_components_navigation_appheader_initialnotifications",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L26",
-      "weight": 1.0
-    },
-    {
-      "source": "src_components_navigation_appheader",
       "target": "src_components_navigation_appheader_appheader",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L65",
+      "source_location": "L8",
       "weight": 1.0
     },
     {
@@ -8929,20 +8673,8 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "postcss.config.mjs"
-    },
-    {
-      "source": "src_components_navigation_appheader_appheader",
-      "target": "src_components_navigation_appheader_appheader_handleclickoutside",
-      "relation": "indirect_call",
-      "_origin": "ast",
-      "confidence": "INFERRED",
-      "confidence_score": 0.85,
-      "context": "argument",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L83",
-      "weight": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "86e7ee3f5e58b36d6a1be546617b211832ebd115"
+  "built_at_commit": "6534bfc110d9eff9e2c193e663cbd59a1481d7b4"
 }

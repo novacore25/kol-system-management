@@ -25,6 +25,12 @@ export function AdminSidebar() {
       isActive: pathname === "/admin",
     },
     {
+      label: "Manajemen Campaign",
+      href: "/admin/campaigns",
+      icon: Layers,
+      isActive: pathname.startsWith("/admin/campaigns"),
+    },
+    {
       label: "Kurasi Pendaftar",
       href: "/admin/applications",
       icon: UserCheck,
@@ -39,10 +45,11 @@ export function AdminSidebar() {
       badge: "1 Pending",
     },
     {
-      label: "Daftar Campaign",
-      href: "/#how-it-works",
-      icon: Layers,
-      isActive: false,
+      label: "Import Raw Data",
+      href: "/admin/import",
+      icon: Sparkles,
+      isActive: pathname.startsWith("/admin/import"),
+      badge: "Baru",
     },
   ];
 
