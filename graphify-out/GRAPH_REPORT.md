@@ -1,17 +1,17 @@
 # Graph Report - kol-system  (2026-09-24)
 
 ## Corpus Check
-- 65 files · ~64,474 words
+- 65 files · ~69,537 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 4 file(s) not represented in the graph (top: (none) 2, .example 1, .css 1)
 
 ## Summary
-- 349 nodes · 428 edges · 31 communities (24 shown, 6 thin omitted)
+- 357 nodes · 446 edges · 32 communities (24 shown, 7 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `86e7ee3f`
+- Built from commit: `cf4020dc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -46,18 +46,19 @@
 - wilayah.ts
 - README.md
 - react
+- onboarding/page.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `react` - 26 edges
 2. `lucide-react` - 23 edges
 3. `@heroui/react` - 16 edges
 4. `compilerOptions` - 16 edges
-5. `What You Must Do When Invoked` - 12 edges
-6. `clsx` - 10 edges
-7. `/graphify` - 10 edges
-8. `scripts` - 9 edges
-9. `graphify reference: extra exports and benchmark` - 8 edges
-10. `WilayahSelect()` - 7 edges
+5. `CreatorTaskItem` - 12 edges
+6. `What You Must Do When Invoked` - 12 edges
+7. `clsx` - 10 edges
+8. `/graphify` - 10 edges
+9. `scripts` - 9 edges
+10. `graphify reference: extra exports and benchmark` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `GET()` --calls--> `getDistricts()`  [EXTRACTED]
@@ -68,13 +69,13 @@
   src/app/api/wilayah/route.ts → src/lib/wilayah.ts
 - `GET()` --calls--> `getVillages()`  [EXTRACTED]
   src/app/api/wilayah/route.ts → src/lib/wilayah.ts
-- `CreatorTaskItem` --references--> `CampaignSalesAwarenessSummary`  [EXTRACTED]
+- `CreatorTaskItem` --references--> `CampaignPlatformType`  [EXTRACTED]
   src/lib/tasks-data.ts → src/types/index.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (31 total, 6 thin omitted)
+## Communities (32 total, 7 thin omitted)
 
 ### Community 0 - "TikTok API & Ecosystem Integration Guide"
 Cohesion: 0.17
@@ -85,8 +86,8 @@ Cohesion: 0.08
 Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
 ### Community 2 - "app/layout.tsx"
-Cohesion: 0.13
-Nodes (11): clsx, CommissionItem, mockCommissions, inter, metadata, Providers(), AppHeader(), initialNotifications (+3 more)
+Cohesion: 0.14
+Nodes (10): nextConfig, next, inter, metadata, Providers(), AppHeader(), initialNotifications, NotificationItem (+2 more)
 
 ### Community 3 - "graphify reference: extra exports and benchmark"
 Cohesion: 0.22
@@ -130,19 +131,19 @@ Nodes (4): 1. Perbedaan Utama: Versi Kita vs Gro Creator, 2. Struktur Modul Apli
 
 ### Community 18 - "schema.ts"
 Cohesion: 0.06
-Nodes (31): applicationStatusEnum, auditLogs, campaignApplications, campaignApplicationsRelations, campaigns, campaignsRelations, campaignStatusEnum, campaignTasks (+23 more)
+Nodes (33): applicationStatusEnum, auditLogs, campaignApplications, campaignApplicationsRelations, campaignPlatformTypeEnum, campaigns, campaignsRelations, campaignStatusEnum (+25 more)
 
 ### Community 19 - "package.json"
-Cohesion: 0.07
-Nodes (23): nextConfig, name, private, version, autoprefixer, dotenv, drizzle-kit, drizzle-orm (+15 more)
+Cohesion: 0.08
+Nodes (21): name, private, version, autoprefixer, dotenv, drizzle-kit, drizzle-orm, framer-motion (+13 more)
 
 ### Community 20 - "ApplicationReviewTable.tsx"
 Cohesion: 0.23
 Nodes (6): ApplicationReviewTable(), REJECTION_REASONS, COURIERS, SampleLogisticsTable(), AdminApplicationItem, initialApplications
 
 ### Community 21 - "types/index.ts"
-Cohesion: 0.08
-Nodes (21): CreatorTaskItem, initialCreatorTasks, ApplicationStatus, CampaignSalesAwarenessSummary, CampaignStatus, CommissionType, CreatorTier, DosAndDontsItem (+13 more)
+Cohesion: 0.09
+Nodes (27): CreatorTaskItem, initialCreatorTasks, ApplicationStatus, CampaignPlatformType, CampaignSalesAwarenessSummary, CampaignStatus, CommissionType, CreatorTier (+19 more)
 
 ### Community 22 - "compilerOptions"
 Cohesion: 0.11
@@ -170,27 +171,27 @@ Nodes (8): 1. Clone repository, 1. Portal Kreator, 2. Install dependencies, 2. P
 
 ### Community 29 - "react"
 Cohesion: 0.07
-Nodes (18): @heroui/react, lucide-react, react, CampaignAdminItem, initialCampaigns, OnboardingPage(), initialCampaigns, POPULAR_BANKS (+10 more)
+Nodes (19): clsx, @heroui/react, lucide-react, react, CampaignAdminItem, initialCampaigns, CommissionItem, mockCommissions (+11 more)
 
 ## Knowledge Gaps
-- **196 isolated node(s):** `nextConfig`, `name`, `version`, `private`, `dev` (+191 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 242 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **199 isolated node(s):** `nextConfig`, `name`, `version`, `private`, `dev` (+194 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 245 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `react` to `app/layout.tsx`, `package.json`, `ApplicationReviewTable.tsx`, `types/index.ts`?**
-  _High betweenness centrality (0.101) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `app/layout.tsx`, `package.json`, `ApplicationReviewTable.tsx`, `types/index.ts`, `onboarding/page.tsx`?**
+  _High betweenness centrality (0.104) - this node is a cross-community bridge._
 - **Why does `drizzle-orm` connect `package.json` to `schema.ts`?**
-  _High betweenness centrality (0.089) - this node is a cross-community bridge._
+  _High betweenness centrality (0.094) - this node is a cross-community bridge._
 - **Why does `lucide-react` connect `react` to `app/layout.tsx`, `package.json`, `ApplicationReviewTable.tsx`, `types/index.ts`?**
-  _High betweenness centrality (0.074) - this node is a cross-community bridge._
+  _High betweenness centrality (0.077) - this node is a cross-community bridge._
 - **What connects `nextConfig`, `name`, `version` to the rest of the system?**
-  _196 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _199 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
 - **Should `app/layout.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.13157894736842105 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14166666666666666 - nodes in this community are weakly interconnected._
 - **Should `schema.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.058823529411764705 - nodes in this community are weakly interconnected._

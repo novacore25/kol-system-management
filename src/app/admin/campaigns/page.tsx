@@ -12,6 +12,10 @@ import {
   Sparkles,
   ExternalLink,
   Search,
+  MapPin,
+  ShoppingBag,
+  Store,
+  Ticket,
 } from "lucide-react";
 import {
   Modal,
@@ -27,6 +31,12 @@ interface CampaignAdminItem {
   id: string;
   title: string;
   brandName: string;
+  platformType?: "TIKTOK_SHOP" | "TIKTOK_GO";
+  locationId?: string;
+  locationName?: string;
+  industryCategory?: string;
+  benefitType?: "VOUCHER_DIGITAL" | "OUTLET_PASS_LINK";
+  benefitData?: string;
   productId: string;
   commissionRate: string;
   sampleQuota: number;
@@ -41,6 +51,7 @@ const initialCampaigns: CampaignAdminItem[] = [
     id: "1",
     title: "[MAKE OVER] Velvet Mattifying Cushion Special 9.9",
     brandName: "Make Over Indonesia",
+    platformType: "TIKTOK_SHOP",
     productId: "172981928391",
     commissionRate: "18%",
     sampleQuota: 100,
@@ -53,6 +64,7 @@ const initialCampaigns: CampaignAdminItem[] = [
     id: "2",
     title: "[EMINA] Glossy Tinted Glow Balm x Daily Fresh",
     brandName: "Emina Cosmetics",
+    platformType: "TIKTOK_SHOP",
     productId: "172981928392",
     commissionRate: "15%",
     sampleQuota: 50,
@@ -65,6 +77,7 @@ const initialCampaigns: CampaignAdminItem[] = [
     id: "3",
     title: "[KAHF] Oil and Acne Care Face Wash Seeding",
     brandName: "Kahf Men",
+    platformType: "TIKTOK_SHOP",
     productId: "172981928393",
     commissionRate: "20%",
     sampleQuota: 80,
@@ -77,6 +90,7 @@ const initialCampaigns: CampaignAdminItem[] = [
     id: "4",
     title: "[SKINTIFIC] 5X Ceramide Barrier Repair Moisture Gel",
     brandName: "Skintific Indonesia",
+    platformType: "TIKTOK_SHOP",
     productId: "172981928394",
     commissionRate: "16%",
     sampleQuota: 60,
@@ -84,6 +98,42 @@ const initialCampaigns: CampaignAdminItem[] = [
     deadlineDate: "10 Oct 2026",
     status: "COMPLETED",
     hashtags: ["#SkintificID", "#5XCeramide", "#Creavy"],
+  },
+  {
+    id: "5",
+    title: "[SOLARIA] Weekend Dine-in Feast Voucher Promo - Gandaria City",
+    brandName: "Solaria Indonesia",
+    platformType: "TIKTOK_GO",
+    locationId: "loc_solaria_gandaria_6912",
+    locationName: "Solaria - Mall Gandaria City, Jakarta Selatan",
+    industryCategory: "Dining",
+    benefitType: "VOUCHER_DIGITAL",
+    benefitData: "SOLARIA-VIP-VOUCHER",
+    productId: "172989182390",
+    commissionRate: "15%",
+    sampleQuota: 100,
+    approvedCount: 48,
+    deadlineDate: "15 Oct 2026",
+    status: "ACTIVE",
+    hashtags: ["#SolariaID", "#SolariaGandaria", "#TikTokGoFood", "#Creavy"],
+  },
+  {
+    id: "6",
+    title: "[PULLMAN HOTEL] Staycation Deluxe & Weekend Buffet Brunch",
+    brandName: "Pullman Hotels & Resorts",
+    platformType: "TIKTOK_GO",
+    locationId: "loc_pullman_cp_8819",
+    locationName: "Pullman Jakarta Central Park",
+    industryCategory: "Accommodations",
+    benefitType: "OUTLET_PASS_LINK",
+    benefitData: "https://docs.google.com/spreadsheets/d/creavy-pullman-pass",
+    productId: "172989182399",
+    commissionRate: "12%",
+    sampleQuota: 50,
+    approvedCount: 32,
+    deadlineDate: "20 Oct 2026",
+    status: "ACTIVE",
+    hashtags: ["#PullmanJakarta", "#StaycationJakarta", "#Creavy"],
   },
 ];
 
@@ -96,13 +146,19 @@ export default function AdminCampaignsPage() {
   const [newCampaign, setNewCampaign] = useState({
     title: "",
     brandName: "",
+    platformType: "TIKTOK_SHOP" as "TIKTOK_SHOP" | "TIKTOK_GO",
+    locationId: "",
+    locationName: "",
+    industryCategory: "Dining",
+    benefitType: "VOUCHER_DIGITAL" as "VOUCHER_DIGITAL" | "OUTLET_PASS_LINK",
+    benefitData: "",
     productId: "",
     commissionRate: "15%",
     sampleQuota: 50,
     deadlineDate: "15 Oct 2026",
     hashtags: "#CreavyCampaign, #ReviewJujur",
     mentions: "@brand_official",
-    sow: "Durasi minimal 30 detik\nTautkan keranjang kuning\nPencahayaan jelas",
+    sow: "Durasi minimal 30 detik\nTautkan keranjang kuning / voucher\nPencahayaan jelas",
   });
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -117,6 +173,12 @@ export default function AdminCampaignsPage() {
       id: `camp-${Date.now()}`,
       title: newCampaign.title,
       brandName: newCampaign.brandName,
+      platformType: newCampaign.platformType,
+      locationId: newCampaign.locationId,
+      locationName: newCampaign.locationName,
+      industryCategory: newCampaign.industryCategory,
+      benefitType: newCampaign.benefitType,
+      benefitData: newCampaign.benefitData,
       productId: newCampaign.productId,
       commissionRate: newCampaign.commissionRate,
       sampleQuota: Number(newCampaign.sampleQuota),
@@ -136,7 +198,8 @@ export default function AdminCampaignsPage() {
     (c) =>
       c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       c.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.productId.includes(searchQuery)
+      c.productId.includes(searchQuery) ||
+      c.locationName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -219,7 +282,25 @@ export default function AdminCampaignsPage() {
                 <tr key={camp.id} className="hover:bg-slate-50 transition-colors">
                   <td className="py-3.5 px-4 max-w-xs">
                     <p className="font-bold text-slate-900 truncate">{camp.title}</p>
-                    <span className="text-[11px] text-slate-400">{camp.brandName}</span>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <span className="text-[11px] text-slate-500 font-medium">{camp.brandName}</span>
+                      {camp.platformType === "TIKTOK_GO" ? (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                          <MapPin className="w-3 h-3 text-emerald-600" />
+                          <span>TikTok Go</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                          <ShoppingBag className="w-3 h-3 text-amber-500" />
+                          <span>TikTok Shop</span>
+                        </span>
+                      )}
+                    </div>
+                    {camp.locationName && (
+                      <p className="text-[10px] text-emerald-800 font-semibold truncate mt-0.5">
+                        📍 {camp.locationName}
+                      </p>
+                    )}
                     <div className="flex flex-wrap gap-1 mt-1">
                       {camp.hashtags.map((h) => (
                         <span key={h} className="text-[10px] text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded font-medium">
@@ -233,6 +314,11 @@ export default function AdminCampaignsPage() {
                       <Tag className="w-3 h-3 text-indigo-500" />
                       <span>{camp.productId}</span>
                     </div>
+                    {camp.locationId && (
+                      <span className="block text-[10px] font-mono text-emerald-700 mt-1">
+                        POI: {camp.locationId}
+                      </span>
+                    )}
                   </td>
                   <td className="py-3.5 px-3 text-center">
                     <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
@@ -244,7 +330,7 @@ export default function AdminCampaignsPage() {
                       {camp.approvedCount} / {camp.sampleQuota}
                     </div>
                     <span className="text-[10px] text-slate-400">
-                      {camp.sampleQuota - camp.approvedCount} tersisa
+                      {camp.sampleQuota - camp.approvedCount} {camp.platformType === "TIKTOK_GO" ? "voucher tersisa" : "sampel tersisa"}
                     </span>
                   </td>
                   <td className="py-3.5 px-3">
@@ -279,27 +365,58 @@ export default function AdminCampaignsPage() {
             <>
               <ModalHeader className="border-b border-slate-100 pb-3 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
-                <h3 className="font-bold text-sm text-slate-900">Buat Campaign Baru &amp; Kunci Product ID</h3>
+                <h3 className="font-bold text-sm text-slate-900">Buat Campaign Baru &amp; Kunci ID Binding</h3>
               </ModalHeader>
 
               <ModalBody className="py-4 space-y-4 text-xs">
+                {/* 0. Tipe Platform Switcher */}
+                <div>
+                  <label className="block text-slate-600 font-semibold mb-1.5">Tipe Platform Campaign</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setNewCampaign({ ...newCampaign, platformType: "TIKTOK_SHOP" })}
+                      className={`p-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all ${
+                        newCampaign.platformType === "TIKTOK_SHOP"
+                          ? "border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm"
+                          : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                      }`}
+                    >
+                      <ShoppingBag className="w-4 h-4 text-amber-500" />
+                      <span>TikTok Shop (Keranjang Kuning)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNewCampaign({ ...newCampaign, platformType: "TIKTOK_GO" })}
+                      className={`p-2.5 rounded-xl border flex items-center justify-center gap-2 font-bold transition-all ${
+                        newCampaign.platformType === "TIKTOK_GO"
+                          ? "border-emerald-600 bg-emerald-50 text-emerald-700 shadow-sm"
+                          : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                      }`}
+                    >
+                      <MapPin className="w-4 h-4 text-emerald-500" />
+                      <span>TikTok Go (Tempat &amp; Kuliner)</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* 1. Judul & Brand */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-slate-600 font-semibold mb-1">Judul Campaign</label>
                     <input
                       type="text"
-                      placeholder="Contoh: [WARDAH] Skinverse Seeding Challenge"
+                      placeholder={newCampaign.platformType === "TIKTOK_GO" ? "Contoh: [SOLARIA] Weekend Dine-in Feast" : "Contoh: [WARDAH] Skinverse Seeding Challenge"}
                       value={newCampaign.title}
                       onChange={(e) => setNewCampaign({ ...newCampaign, title: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-600 font-semibold mb-1">Nama Brand / Klien</label>
+                    <label className="block text-slate-600 font-semibold mb-1">Nama Brand / Merchant</label>
                     <input
                       type="text"
-                      placeholder="Contoh: Wardah Beauty"
+                      placeholder={newCampaign.platformType === "TIKTOK_GO" ? "Contoh: Solaria Indonesia" : "Contoh: Wardah Beauty"}
                       value={newCampaign.brandName}
                       onChange={(e) => setNewCampaign({ ...newCampaign, brandName: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
@@ -307,28 +424,100 @@ export default function AdminCampaignsPage() {
                   </div>
                 </div>
 
+                {/* Khusus TikTok Go: POI Tag, Location, Category, Benefit */}
+                {newCampaign.platformType === "TIKTOK_GO" && (
+                  <div className="p-3.5 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-3">
+                    <div className="flex items-center gap-1.5 text-emerald-900 font-bold text-xs border-b border-emerald-200/80 pb-2">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Pengaturan Lokasi Outlet &amp; Benefit TikTok Go</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-emerald-900 font-semibold mb-1">
+                          Tag Lokasi POI ID <span className="text-rose-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="loc_solaria_gandaria_6912"
+                          value={newCampaign.locationId}
+                          onChange={(e) => setNewCampaign({ ...newCampaign, locationId: e.target.value })}
+                          className="w-full px-3 py-2 border border-emerald-300 rounded-xl focus:outline-none focus:border-emerald-500 font-mono bg-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-emerald-900 font-semibold mb-1">Nama Tempat / Outlet</label>
+                        <input
+                          type="text"
+                          placeholder="Solaria - Mall Gandaria City, Jakarta"
+                          value={newCampaign.locationName}
+                          onChange={(e) => setNewCampaign({ ...newCampaign, locationName: e.target.value })}
+                          className="w-full px-3 py-2 border border-emerald-300 rounded-xl focus:outline-none focus:border-emerald-500 bg-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-emerald-900 font-semibold mb-1">Kategori Industri</label>
+                        <select
+                          value={newCampaign.industryCategory}
+                          onChange={(e) => setNewCampaign({ ...newCampaign, industryCategory: e.target.value })}
+                          className="w-full px-3 py-2 border border-emerald-300 rounded-xl focus:outline-none focus:border-emerald-500 bg-white"
+                        >
+                          <option value="Dining">Dining (Restoran / Kafe / Kuliner)</option>
+                          <option value="Accommodations">Accommodations (Hotel / Villa / Resort)</option>
+                          <option value="Attractions">Attractions (Wisata &amp; Hiburan)</option>
+                          <option value="Beauty & Wellness">Beauty &amp; Wellness (Salon / Spa)</option>
+                          <option value="Retail & Other">Retail &amp; Toko Offline</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-emerald-900 font-semibold mb-1">Jenis Benefit Kunjungan</label>
+                        <select
+                          value={newCampaign.benefitType}
+                          onChange={(e) => setNewCampaign({ ...newCampaign, benefitType: e.target.value as any })}
+                          className="w-full px-3 py-2 border border-emerald-300 rounded-xl focus:outline-none focus:border-emerald-500 bg-white"
+                        >
+                          <option value="VOUCHER_DIGITAL">Voucher Digital (Dine-in / Belanja di Kasir)</option>
+                          <option value="OUTLET_PASS_LINK">Pass Kunjungan Resmi / Reservasi VIP Creavy</option>
+                        </select>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="block text-emerald-900 font-semibold mb-1">
+                          {newCampaign.benefitType === "VOUCHER_DIGITAL" ? "Kode Voucher Digital Kasir" : "Link Spreadsheet Pass Kunjungan Kreator"}
+                        </label>
+                        <input
+                          type="text"
+                          placeholder={newCampaign.benefitType === "VOUCHER_DIGITAL" ? "Contoh: SOLARIA-VIP-VOUCHER" : "Contoh: https://docs.google.com/spreadsheets/..."}
+                          value={newCampaign.benefitData}
+                          onChange={(e) => setNewCampaign({ ...newCampaign, benefitData: e.target.value })}
+                          className="w-full px-3 py-2 border border-emerald-300 rounded-xl focus:outline-none focus:border-emerald-500 bg-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* 2. TikTok Product ID (Wajib) & Komisi */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
                     <label className="block text-slate-600 font-semibold mb-1">
-                      TikTok Shop Product ID <span className="text-rose-500">* (Kunci Atribusi)</span>
+                      {newCampaign.platformType === "TIKTOK_GO" ? "TikTok Go Voucher Product ID" : "TikTok Shop Product ID"} <span className="text-rose-500">* (Kunci Atribusi)</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="Contoh: 172981928399"
+                      placeholder={newCampaign.platformType === "TIKTOK_GO" ? "Contoh: 172989182390" : "Contoh: 172981928399"}
                       value={newCampaign.productId}
                       onChange={(e) => setNewCampaign({ ...newCampaign, productId: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-mono"
                     />
                     <span className="text-[10px] text-slate-400 mt-0.5 block">
-                      ID produk resmi dari TikTok Shop Partner Center untuk atribusi penjualan otomatis.
+                      ID produk/voucher resmi dari TikTok Partner Center untuk atribusi penjualan otomatis.
                     </span>
                   </div>
                   <div>
                     <label className="block text-slate-600 font-semibold mb-1">Rate Komisi (%)</label>
                     <input
                       type="text"
-                      placeholder="18%"
+                      placeholder="15%"
                       value={newCampaign.commissionRate}
                       onChange={(e) => setNewCampaign({ ...newCampaign, commissionRate: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
@@ -339,7 +528,9 @@ export default function AdminCampaignsPage() {
                 {/* 3. Kuota & Deadline */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-600 font-semibold mb-1">Kuota Sampel Gratis</label>
+                    <label className="block text-slate-600 font-semibold mb-1">
+                      {newCampaign.platformType === "TIKTOK_GO" ? "Kuota Voucher / Kunjungan" : "Kuota Sampel Gratis"}
+                    </label>
                     <input
                       type="number"
                       value={newCampaign.sampleQuota}
@@ -365,7 +556,7 @@ export default function AdminCampaignsPage() {
                     <label className="block text-slate-600 font-semibold mb-1">Hashtag Wajib (Pisahkan Koma)</label>
                     <input
                       type="text"
-                      placeholder="#WardahSkinverse, #Creavy"
+                      placeholder="#CreavyCampaign, #ReviewJujur"
                       value={newCampaign.hashtags}
                       onChange={(e) => setNewCampaign({ ...newCampaign, hashtags: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
@@ -375,7 +566,7 @@ export default function AdminCampaignsPage() {
                     <label className="block text-slate-600 font-semibold mb-1">Mention Wajib</label>
                     <input
                       type="text"
-                      placeholder="@wardahbeauty"
+                      placeholder="@brand_official"
                       value={newCampaign.mentions}
                       onChange={(e) => setNewCampaign({ ...newCampaign, mentions: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
@@ -384,20 +575,20 @@ export default function AdminCampaignsPage() {
                 </div>
               </ModalBody>
 
-              <ModalFooter className="border-t border-slate-100 py-3">
+              <ModalFooter className="border-t border-slate-100 py-3 flex justify-between">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                 >
-                  Batalkan
+                  Batal
                 </button>
                 <button
                   type="button"
                   onClick={() => handleCreateCampaign(onClose)}
-                  className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-semibold text-white shadow-sm"
+                  className="px-5 py-2 rounded-xl bg-indigo-600 text-xs font-semibold text-white hover:bg-indigo-700 transition-colors shadow-sm"
                 >
-                  Terbitkan Campaign
+                  Simpan &amp; Kunci Binding
                 </button>
               </ModalFooter>
             </>

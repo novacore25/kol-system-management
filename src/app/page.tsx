@@ -7,6 +7,8 @@ import {
   ChevronDown,
   X,
   Sparkles,
+  MapPin,
+  ShoppingBag,
 } from "lucide-react";
 import {
   Modal,
@@ -153,10 +155,97 @@ const initialCampaigns: CampaignData[] = [
       "Sematkan link keranjang kuning afiliasi",
     ],
   },
+  {
+    id: "7",
+    title: "[SOLARIA] Weekend Dine-in Feast Voucher Promo - Gandaria City",
+    brandName: "Solaria",
+    category: "Dining & Kuliner",
+    platformType: "TIKTOK_GO",
+    locationName: "Solaria - Mall Gandaria City, Jakarta Selatan",
+    locationId: "loc_solaria_gandaria_6912",
+    benefitType: "VOUCHER_DIGITAL",
+    benefitData: "SOLARIA-VIP-VOUCHER",
+    outletAddress: "Mall Gandaria City Lantai UG Unit 24, Jl. Sultan Iskandar Muda, Jakarta Selatan",
+    bannerUrl: "",
+    commissionType: "COMMISSION_ONLY",
+    commissionRateText: "Komisi 15%",
+    isFreeSample: false,
+    sampleQuota: 100,
+    sampleStockRemaining: 82,
+    startDate: "20 Sep 2026",
+    endDate: "15 Oct 2026",
+    daysRemaining: 21,
+    mandatoryHashtags: ["#SolariaID", "#SolariaGandaria", "#TikTokGoFood", "#Creavy"],
+    mandatoryMentions: ["@solaria.indonesia"],
+    sowItems: [
+      "Datang langsung ke outlet Solaria Mall Gandaria City & nikmati menu andalan",
+      "Review jujur minimal 2 menu andalan dengan porsi & suasana resto",
+      "Wajib sematkan Pin Tag Lokasi Hijau resmi: Solaria - Mall Gandaria City",
+      "Tautkan keranjang voucher TikTok Go di postingan video",
+    ],
+  },
+  {
+    id: "8",
+    title: "[PULLMAN HOTEL] Staycation Deluxe & Weekend Buffet Brunch",
+    brandName: "Pullman",
+    category: "Accommodations",
+    platformType: "TIKTOK_GO",
+    locationName: "Pullman Jakarta Central Park",
+    locationId: "loc_pullman_cp_8819",
+    benefitType: "OUTLET_PASS_LINK",
+    benefitData: "https://creavy.id/pass/pullman-deluxe-pass",
+    outletAddress: "Podomoro City, Jl. Letjen S. Parman No.Kav. 28, Jakarta Barat",
+    bannerUrl: "",
+    commissionType: "COMMISSION_ONLY",
+    commissionRateText: "Komisi 12%",
+    isFreeSample: false,
+    sampleQuota: 50,
+    sampleStockRemaining: 34,
+    startDate: "18 Sep 2026",
+    endDate: "20 Oct 2026",
+    daysRemaining: 26,
+    mandatoryHashtags: ["#PullmanJakarta", "#StaycationJakarta", "#TikTokGoTravel", "#Creavy"],
+    mandatoryMentions: ["@pullmanjakartacp"],
+    sowItems: [
+      "Tunjukkan pass digital Creavy saat check-in di resepsionis Pullman CP",
+      "Buat video room tour Deluxe Room & suasana dining weekend brunch",
+      "Wajib pasang pin tag lokasi hijau: Pullman Jakarta Central Park",
+      "Sematkan tautan voucher staycation TikTok Go di video postingan",
+    ],
+  },
+  {
+    id: "9",
+    title: "[KOPI KENANGAN] Sultan Pass Voucher Series - Jakarta Outlets",
+    brandName: "Kopi Kenangan",
+    category: "Dining & Beverage",
+    platformType: "TIKTOK_GO",
+    locationName: "Kopi Kenangan - Senayan City, Jakarta Pusat",
+    locationId: "loc_kopikenangan_senci",
+    benefitType: "VOUCHER_DIGITAL",
+    benefitData: "KENANGAN-SULTAN-PASS",
+    outletAddress: "Senayan City Mall Lantai LG Unit 12, Jl. Asia Afrika, Jakarta Pusat",
+    bannerUrl: "",
+    commissionType: "COMMISSION_ONLY",
+    commissionRateText: "Komisi 15%",
+    isFreeSample: false,
+    sampleQuota: 300,
+    sampleStockRemaining: 210,
+    startDate: "15 Sep 2026",
+    endDate: "10 Oct 2026",
+    daysRemaining: 16,
+    mandatoryHashtags: ["#KopiKenangan", "#KenanganSultanPass", "#TikTokGoFood", "#Creavy"],
+    mandatoryMentions: ["@kopikenangan.id"],
+    sowItems: [
+      "Beli dan review varian Kopi Kenangan Mantan / Avocado Coffee",
+      "Wajib menyematkan Pin Tag Lokasi Hijau outlet resmi",
+      "Tautkan keranjang voucher TikTok Go di video TikTok Anda",
+    ],
+  },
 ];
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [platformFilter, setPlatformFilter] = useState<"ALL" | "TIKTOK_SHOP" | "TIKTOK_GO">("ALL");
   const [dateFilter, setDateFilter] = useState("Semua");
   const [showDateDropdown, setShowDateDropdown] = useState(false);
 
@@ -184,13 +273,18 @@ export default function HomePage() {
   };
 
   const filteredCampaigns = initialCampaigns.filter((campaign) => {
+    // Platform filter
+    if (platformFilter === "TIKTOK_SHOP" && campaign.platformType === "TIKTOK_GO") return false;
+    if (platformFilter === "TIKTOK_GO" && campaign.platformType !== "TIKTOK_GO") return false;
+
     // Search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchTitle = campaign.title.toLowerCase().includes(q);
       const matchBrand = campaign.brandName.toLowerCase().includes(q);
       const matchCategory = campaign.category.toLowerCase().includes(q);
-      if (!matchTitle && !matchBrand && !matchCategory) return false;
+      const matchLocation = campaign.locationName?.toLowerCase().includes(q);
+      if (!matchTitle && !matchBrand && !matchCategory && !matchLocation) return false;
     }
 
     // Free sample
@@ -212,6 +306,45 @@ export default function HomePage() {
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">
           Beranda
         </h1>
+      </div>
+
+      {/* Platform Category Tabs (TikTok Shop vs TikTok Go) */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        <button
+          type="button"
+          onClick={() => setPlatformFilter("ALL")}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-sm shrink-0 ${
+            platformFilter === "ALL"
+              ? "bg-slate-900 text-white"
+              : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/90"
+          }`}
+        >
+          Semua Campaign ({initialCampaigns.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setPlatformFilter("TIKTOK_SHOP")}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm shrink-0 ${
+            platformFilter === "TIKTOK_SHOP"
+              ? "bg-indigo-600 text-white"
+              : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/90"
+          }`}
+        >
+          <ShoppingBag className="w-3.5 h-3.5 text-amber-500" />
+          <span>TikTok Shop (Barang Fisik)</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setPlatformFilter("TIKTOK_GO")}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm shrink-0 ${
+            platformFilter === "TIKTOK_GO"
+              ? "bg-emerald-600 text-white"
+              : "bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/90"
+          }`}
+        >
+          <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+          <span>TikTok Go (Tempat &amp; Kuliner)</span>
+        </button>
       </div>
 
       {/* Search & Filter Row */}

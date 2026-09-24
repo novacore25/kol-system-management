@@ -155,4 +155,78 @@ export interface CampaignSalesAwarenessSummary {
   settledCommission: number;
   videoCount: number;
   liveCount: number;
+  // TikTok Go specific metrics
+  redemptionAmount?: number;
+  redeemedOrders?: number;
+}
+
+// ==========================================
+// TIKTOK GO SPECIFIC TYPES & DATASETS
+// ==========================================
+export type CampaignPlatformType = "TIKTOK_SHOP" | "TIKTOK_GO";
+export type TikTokGoBenefitType = "VOUCHER_DIGITAL" | "OUTLET_PASS_LINK";
+export type TikTokGoIndustry = "Dining" | "Accommodations" | "Attractions" | "Beauty & Wellness" | "Retail & Other";
+
+export interface RawTikTokGoVideo {
+  industry: string;
+  creatorType: string;
+  postId: string;
+  postTitle: string;
+  postDate: string;
+  currentStatus: string;
+  duration: string;
+  taskType: string;
+  locationId: string; // POI ID
+  locationName: string; // Nama Outlet / Resto / Hotel
+  productId: string; // ID Voucher
+  productName: string; // Nama Voucher / Menu
+  locationRegion: string;
+  locationCity: string;
+  merchant: string;
+  creatorName: string;
+  creatorId: string;
+  postLink: string;
+  salesValue: number; // GMV Penjualan Voucher
+  orders: number; // Qty Voucher Terjual
+  redemptionAmount: number; // Nilai Voucher yang Sudah Di-redeem
+  redeemedOrders: number; // Qty Voucher yang Sudah Di-redeem di Kasir
+  videoViews: number;
+  ctr: string;
+  cvr: string;
+  aov: number;
+  videoCompletionRate: string;
+  likeRate: string;
+  commentRate: string;
+}
+
+export interface RawTikTokGoLiveProduct {
+  roomId: string;
+  liveTitle: string;
+  creatorId: string;
+  productName: string;
+  productId: string;
+  merchant: string;
+  merchantId: string;
+  salesValue: number;
+  orders: number;
+  aov: number;
+}
+
+export interface RawTikTokGoLiveRoom {
+  roomId: string;
+  liveTitle: string;
+  liveStartTime: string;
+  liveEndTime: string;
+  liveDuration: string;
+  creatorName: string;
+  creatorId: string;
+  liveType: string;
+  salesValue: number;
+  orders: number;
+  redemptionAmount: number;
+  redeemedOrders: number;
+  viewers: number;
+  liveEntryRate: string;
+  cvr: string;
+  aov: number;
 }

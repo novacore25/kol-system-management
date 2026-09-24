@@ -85,6 +85,16 @@ export const orderStatusEnum = pgEnum("order_status", [
   "REFUNDED",
 ]);
 
+export const campaignPlatformTypeEnum = pgEnum("campaign_platform_type", [
+  "TIKTOK_SHOP",
+  "TIKTOK_GO",
+]);
+
+export const tiktokGoBenefitTypeEnum = pgEnum("tiktok_go_benefit_type", [
+  "VOUCHER_DIGITAL",
+  "OUTLET_PASS_LINK",
+]);
+
 // ==========================================
 // 1. USERS & PROFILES
 // ==========================================
@@ -168,6 +178,14 @@ export const campaigns = pgTable("campaigns", {
   bannerUrl: text("banner_url").notNull(),
   description: text("description").notNull(),
   category: text("category").notNull(), // Beauty, Tech, Food, etc.
+  
+  platformType: campaignPlatformTypeEnum("platform_type").default("TIKTOK_SHOP").notNull(),
+  locationId: text("location_id"), // Tag Lokasi POI ID untuk TikTok Go
+  locationName: text("location_name"), // Nama Outlet / Tempat / Hotel
+  merchantName: text("merchant_name"),
+  industryCategory: text("industry_category"), // Dining, Accommodations, Attractions, etc.
+  benefitType: tiktokGoBenefitTypeEnum("benefit_type"), // VOUCHER_DIGITAL / OUTLET_PASS_LINK
+  benefitData: text("benefit_data"), // URL gambar voucher / Kode voucher / Link Spreadsheet agensi
   
   commissionType: commissionTypeEnum("commission_type").default("COMMISSION_ONLY").notNull(),
   commissionRateText: text("commission_rate_text").notNull(), // e.g. "15% per penjualan"

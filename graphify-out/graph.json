@@ -4,19 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "id": "src_app_earnings_page_commissionitem",
-      "label": "CommissionItem",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "commissionitem",
-      "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L20"
-    },
-    {
       "id": "src_components_navigation_appheader_notificationitem",
       "label": "NotificationItem",
       "_callable": true,
@@ -53,7 +40,7 @@
       "file_type": "code",
       "norm_label": "creatortaskitem",
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L3"
+      "source_location": "L13"
     },
     {
       "id": "src_types_index_applicationstatus",
@@ -67,6 +54,19 @@
       "norm_label": "applicationstatus",
       "source_file": "src/types/index.ts",
       "source_location": "L9"
+    },
+    {
+      "id": "src_types_index_campaignplatformtype",
+      "label": "CampaignPlatformType",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "campaignplatformtype",
+      "source_file": "src/types/index.ts",
+      "source_location": "L166"
     },
     {
       "id": "src_types_index_campaignsalesawarenesssummary",
@@ -173,6 +173,45 @@
       "source_location": "L86"
     },
     {
+      "id": "src_types_index_rawtiktokgoliveproduct",
+      "label": "RawTikTokGoLiveProduct",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "rawtiktokgoliveproduct",
+      "source_file": "src/types/index.ts",
+      "source_location": "L202"
+    },
+    {
+      "id": "src_types_index_rawtiktokgoliveroom",
+      "label": "RawTikTokGoLiveRoom",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "rawtiktokgoliveroom",
+      "source_file": "src/types/index.ts",
+      "source_location": "L215"
+    },
+    {
+      "id": "src_types_index_rawtiktokgovideo",
+      "label": "RawTikTokGoVideo",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "rawtiktokgovideo",
+      "source_file": "src/types/index.ts",
+      "source_location": "L170"
+    },
+    {
       "id": "src_types_index_shipmentstatus",
       "label": "ShipmentStatus",
       "_callable": true,
@@ -236,6 +275,32 @@
       "norm_label": "tiktokcontenttype",
       "source_file": "src/types/index.ts",
       "source_location": "L21"
+    },
+    {
+      "id": "src_types_index_tiktokgobenefittype",
+      "label": "TikTokGoBenefitType",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "tiktokgobenefittype",
+      "source_file": "src/types/index.ts",
+      "source_location": "L167"
+    },
+    {
+      "id": "src_types_index_tiktokgoindustry",
+      "label": "TikTokGoIndustry",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "tiktokgoindustry",
+      "source_file": "src/types/index.ts",
+      "source_location": "L168"
     },
     {
       "id": "src_types_index_tiktokorderstatus",
@@ -326,7 +391,20 @@
       "file_type": "code",
       "norm_label": "campaignadminitem",
       "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L26"
+      "source_location": "L30"
+    },
+    {
+      "id": "src_app_earnings_page_commissionitem",
+      "label": "CommissionItem",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "commissionitem",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L20"
     },
     {
       "id": "src_components_campaign_campaigncard_campaigndata",
@@ -379,18 +457,6 @@
       "norm_label": "wilayahselectprops",
       "source_file": "src/components/profile/WilayahSelect.tsx",
       "source_location": "L23"
-    },
-    {
-      "id": "src_app_earnings_page_earningspage",
-      "label": "EarningsPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "earningspage()",
-      "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L84"
     },
     {
       "id": "src_app_layout_rootlayout",
@@ -522,31 +588,7 @@
       "file_type": "code",
       "norm_label": "campaigndetailpage()",
       "source_file": "src/app/my-tasks/[id]/page.tsx",
-      "source_location": "L27"
-    },
-    {
-      "id": "src_components_tasks_taskcard_taskcard",
-      "label": "TaskCard()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "taskcard()",
-      "source_file": "src/components/tasks/TaskCard.tsx",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_components_tasks_videodetectioncard_videodetectioncard",
-      "label": "VideoDetectionCard()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "videodetectioncard()",
-      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
-      "source_location": "L25"
+      "source_location": "L31"
     },
     {
       "id": "src_lib_tiktok_exchangecodefortoken",
@@ -666,7 +708,7 @@
       "file_type": "code",
       "norm_label": "admincampaignspage()",
       "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L90"
+      "source_location": "L140"
     },
     {
       "id": "src_app_admin_import_page_adminimportpage",
@@ -678,7 +720,7 @@
       "file_type": "code",
       "norm_label": "adminimportpage()",
       "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L20"
+      "source_location": "L24"
     },
     {
       "id": "src_app_admin_layout_adminlayout",
@@ -705,6 +747,18 @@
       "source_location": "L20"
     },
     {
+      "id": "src_app_earnings_page_earningspage",
+      "label": "EarningsPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "earningspage()",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L84"
+    },
+    {
       "id": "src_app_my_tasks_page_mycampaignspage",
       "label": "MyCampaignsPage()",
       "_callable": true,
@@ -717,18 +771,6 @@
       "source_location": "L16"
     },
     {
-      "id": "src_app_onboarding_page_onboardingpage",
-      "label": "OnboardingPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "onboardingpage()",
-      "source_file": "src/app/onboarding/page.tsx",
-      "source_location": "L4"
-    },
-    {
       "id": "src_app_page_homepage",
       "label": "HomePage()",
       "_callable": true,
@@ -738,7 +780,7 @@
       "file_type": "code",
       "norm_label": "homepage()",
       "source_file": "src/app/page.tsx",
-      "source_location": "L158"
+      "source_location": "L246"
     },
     {
       "id": "src_app_profile_page_profilepage",
@@ -765,18 +807,6 @@
       "source_location": "L5"
     },
     {
-      "id": "src_app_register_page_registerpage",
-      "label": "RegisterPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "registerpage()",
-      "source_file": "src/app/register/page.tsx",
-      "source_location": "L3"
-    },
-    {
       "id": "src_components_admin_adminsidebar_adminsidebar",
       "label": "AdminSidebar()",
       "_callable": true,
@@ -798,7 +828,7 @@
       "file_type": "code",
       "norm_label": "campaigncard()",
       "source_file": "src/components/campaign/CampaignCard.tsx",
-      "source_location": "L48"
+      "source_location": "L55"
     },
     {
       "id": "src_components_navigation_navbar_navbar",
@@ -811,18 +841,6 @@
       "norm_label": "navbar()",
       "source_file": "src/components/navigation/Navbar.tsx",
       "source_location": "L15"
-    },
-    {
-      "id": "src_components_profile_creatorregistrationform_creatorregistrationform",
-      "label": "CreatorRegistrationForm()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "creatorregistrationform()",
-      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
-      "source_location": "L51"
     },
     {
       "id": "src_components_profile_wilayahselect_wilayahselect",
@@ -885,6 +903,30 @@
       "source_location": "L121"
     },
     {
+      "id": "src_components_tasks_taskcard_taskcard",
+      "label": "TaskCard()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "taskcard()",
+      "source_file": "src/components/tasks/TaskCard.tsx",
+      "source_location": "L25"
+    },
+    {
+      "id": "src_components_tasks_videodetectioncard_videodetectioncard",
+      "label": "VideoDetectionCard()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "videodetectioncard()",
+      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
+      "source_location": "L25"
+    },
+    {
       "id": "src_app_api_tasks_detect_route_post",
       "label": "POST()",
       "_callable": true,
@@ -895,6 +937,42 @@
       "norm_label": "post()",
       "source_file": "src/app/api/tasks/detect/route.ts",
       "source_location": "L3"
+    },
+    {
+      "id": "src_app_onboarding_page_onboardingpage",
+      "label": "OnboardingPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "onboarding/page.tsx",
+      "file_type": "code",
+      "norm_label": "onboardingpage()",
+      "source_file": "src/app/onboarding/page.tsx",
+      "source_location": "L4"
+    },
+    {
+      "id": "src_app_register_page_registerpage",
+      "label": "RegisterPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "onboarding/page.tsx",
+      "file_type": "code",
+      "norm_label": "registerpage()",
+      "source_file": "src/app/register/page.tsx",
+      "source_location": "L3"
+    },
+    {
+      "id": "src_components_profile_creatorregistrationform_creatorregistrationform",
+      "label": "CreatorRegistrationForm()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "onboarding/page.tsx",
+      "file_type": "code",
+      "norm_label": "creatorregistrationform()",
+      "source_file": "src/components/profile/CreatorRegistrationForm.tsx",
+      "source_location": "L51"
     },
     {
       "id": "docs_tiktok_api_integration_guide",
@@ -1719,7 +1797,7 @@
       "file_type": "code",
       "norm_label": "auditlogs",
       "source_file": "src/db/schema.ts",
-      "source_location": "L282"
+      "source_location": "L300"
     },
     {
       "id": "src_db_schema_campaignapplications",
@@ -1730,7 +1808,7 @@
       "file_type": "code",
       "norm_label": "campaignapplications",
       "source_file": "src/db/schema.ts",
-      "source_location": "L206"
+      "source_location": "L224"
     },
     {
       "id": "src_db_schema_campaignapplicationsrelations",
@@ -1741,7 +1819,18 @@
       "file_type": "code",
       "norm_label": "campaignapplicationsrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L433"
+      "source_location": "L451"
+    },
+    {
+      "id": "src_db_schema_campaignplatformtypeenum",
+      "label": "campaignPlatformTypeEnum",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "schema.ts",
+      "file_type": "code",
+      "norm_label": "campaignplatformtypeenum",
+      "source_file": "src/db/schema.ts",
+      "source_location": "L88"
     },
     {
       "id": "src_db_schema_campaigns",
@@ -1752,7 +1841,7 @@
       "file_type": "code",
       "norm_label": "campaigns",
       "source_file": "src/db/schema.ts",
-      "source_location": "L162"
+      "source_location": "L172"
     },
     {
       "id": "src_db_schema_campaignsrelations",
@@ -1763,7 +1852,7 @@
       "file_type": "code",
       "norm_label": "campaignsrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L405"
+      "source_location": "L423"
     },
     {
       "id": "src_db_schema_campaignstatusenum",
@@ -1785,7 +1874,7 @@
       "file_type": "code",
       "norm_label": "campaigntasks",
       "source_file": "src/db/schema.ts",
-      "source_location": "L250"
+      "source_location": "L268"
     },
     {
       "id": "src_db_schema_campaigntasksrelations",
@@ -1796,7 +1885,7 @@
       "file_type": "code",
       "norm_label": "campaigntasksrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L463"
+      "source_location": "L481"
     },
     {
       "id": "src_db_schema_commissiontypeenum",
@@ -1829,7 +1918,7 @@
       "file_type": "code",
       "norm_label": "creatorprofiles",
       "source_file": "src/db/schema.ts",
-      "source_location": "L103"
+      "source_location": "L113"
     },
     {
       "id": "src_db_schema_creatorprofilesrelations",
@@ -1840,7 +1929,7 @@
       "file_type": "code",
       "norm_label": "creatorprofilesrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L387"
+      "source_location": "L405"
     },
     {
       "id": "src_db_schema_creatortierenum",
@@ -1873,7 +1962,7 @@
       "file_type": "code",
       "norm_label": "rawdatalives",
       "source_file": "src/db/schema.ts",
-      "source_location": "L320"
+      "source_location": "L338"
     },
     {
       "id": "src_db_schema_rawdatalivesrelations",
@@ -1884,7 +1973,7 @@
       "file_type": "code",
       "norm_label": "rawdatalivesrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L419"
+      "source_location": "L437"
     },
     {
       "id": "src_db_schema_rawdatasales",
@@ -1895,7 +1984,7 @@
       "file_type": "code",
       "norm_label": "rawdatasales",
       "source_file": "src/db/schema.ts",
-      "source_location": "L345"
+      "source_location": "L363"
     },
     {
       "id": "src_db_schema_rawdatasalesrelations",
@@ -1906,7 +1995,7 @@
       "file_type": "code",
       "norm_label": "rawdatasalesrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L426"
+      "source_location": "L444"
     },
     {
       "id": "src_db_schema_rawdatavideos",
@@ -1917,7 +2006,7 @@
       "file_type": "code",
       "norm_label": "rawdatavideos",
       "source_file": "src/db/schema.ts",
-      "source_location": "L295"
+      "source_location": "L313"
     },
     {
       "id": "src_db_schema_rawdatavideosrelations",
@@ -1928,7 +2017,7 @@
       "file_type": "code",
       "norm_label": "rawdatavideosrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L412"
+      "source_location": "L430"
     },
     {
       "id": "src_db_schema_roleenum",
@@ -1950,7 +2039,7 @@
       "file_type": "code",
       "norm_label": "sampleshipments",
       "source_file": "src/db/schema.ts",
-      "source_location": "L232"
+      "source_location": "L250"
     },
     {
       "id": "src_db_schema_sampleshipmentsrelations",
@@ -1961,7 +2050,7 @@
       "file_type": "code",
       "norm_label": "sampleshipmentsrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L456"
+      "source_location": "L474"
     },
     {
       "id": "src_db_schema_shipmentstatusenum",
@@ -1983,7 +2072,7 @@
       "file_type": "code",
       "norm_label": "shippingaddresses",
       "source_file": "src/db/schema.ts",
-      "source_location": "L121"
+      "source_location": "L131"
     },
     {
       "id": "src_db_schema_taskstatusenum",
@@ -2005,7 +2094,7 @@
       "file_type": "code",
       "norm_label": "tiktokaccounts",
       "source_file": "src/db/schema.ts",
-      "source_location": "L137"
+      "source_location": "L147"
     },
     {
       "id": "src_db_schema_tiktokaccountsrelations",
@@ -2016,7 +2105,18 @@
       "file_type": "code",
       "norm_label": "tiktokaccountsrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L397"
+      "source_location": "L415"
+    },
+    {
+      "id": "src_db_schema_tiktokgobenefittypeenum",
+      "label": "tiktokGoBenefitTypeEnum",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "schema.ts",
+      "file_type": "code",
+      "norm_label": "tiktokgobenefittypeenum",
+      "source_file": "src/db/schema.ts",
+      "source_location": "L93"
     },
     {
       "id": "src_db_schema_users",
@@ -2027,7 +2127,7 @@
       "file_type": "code",
       "norm_label": "users",
       "source_file": "src/db/schema.ts",
-      "source_location": "L91"
+      "source_location": "L101"
     },
     {
       "id": "src_db_schema_usersrelations",
@@ -2038,7 +2138,7 @@
       "file_type": "code",
       "norm_label": "usersrelations",
       "source_file": "src/db/schema.ts",
-      "source_location": "L379"
+      "source_location": "L397"
     },
     {
       "id": "drizzle_config",
@@ -2050,28 +2150,6 @@
       "norm_label": "drizzle.config.ts",
       "source_file": "drizzle.config.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "next_config",
-      "label": "next.config.ts",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "next.config.ts",
-      "source_file": "next.config.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "next_config_nextconfig",
-      "label": "nextConfig",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "package.json",
-      "file_type": "code",
-      "norm_label": "nextconfig",
-      "source_file": "next.config.ts",
-      "source_location": "L3"
     },
     {
       "id": "package",
@@ -2228,17 +2306,6 @@
       "source_location": "L20"
     },
     {
-      "id": "ref_next",
-      "label": "next",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "package.json",
-      "file_type": "concept",
-      "norm_label": "next",
-      "source_file": "package.json",
-      "source_location": "L22"
-    },
-    {
       "id": "ref_pg",
       "label": "pg",
       "_origin": "ast",
@@ -2349,26 +2416,26 @@
       "source_location": "L37"
     },
     {
-      "id": "src_app_earnings_page",
-      "label": "earnings/page.tsx",
+      "id": "next_config",
+      "label": "next.config.ts",
       "_origin": "ast",
       "community": 2,
       "community_name": "app/layout.tsx",
       "file_type": "code",
-      "norm_label": "earnings/page.tsx",
-      "source_file": "src/app/earnings/page.tsx",
+      "norm_label": "next.config.ts",
+      "source_file": "next.config.ts",
       "source_location": "L1"
     },
     {
-      "id": "src_app_earnings_page_mockcommissions",
-      "label": "mockCommissions",
+      "id": "next_config_nextconfig",
+      "label": "nextConfig",
       "_origin": "ast",
       "community": 2,
       "community_name": "app/layout.tsx",
       "file_type": "code",
-      "norm_label": "mockcommissions",
-      "source_file": "src/app/earnings/page.tsx",
-      "source_location": "L33"
+      "norm_label": "nextconfig",
+      "source_file": "next.config.ts",
+      "source_location": "L3"
     },
     {
       "id": "src_app_layout",
@@ -2437,37 +2504,15 @@
       "source_location": "L26"
     },
     {
-      "id": "src_components_navigation_appsidebar",
-      "label": "AppSidebar.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "appsidebar.tsx",
-      "source_file": "src/components/navigation/AppSidebar.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_navigation_mobilebottomnav",
-      "label": "MobileBottomNav.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "mobilebottomnav.tsx",
-      "source_file": "src/components/navigation/MobileBottomNav.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "ref_clsx",
-      "label": "clsx",
+      "id": "ref_next",
+      "label": "next",
       "_origin": "ast",
       "community": 2,
       "community_name": "app/layout.tsx",
       "file_type": "concept",
-      "norm_label": "clsx",
+      "norm_label": "next",
       "source_file": "package.json",
-      "source_location": "L17"
+      "source_location": "L22"
     },
     {
       "id": "src_app_admin_applications_page",
@@ -2569,28 +2614,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_tasks_taskcard",
-      "label": "TaskCard.tsx",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "taskcard.tsx",
-      "source_file": "src/components/tasks/TaskCard.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_tasks_videodetectioncard",
-      "label": "VideoDetectionCard.tsx",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "videodetectioncard.tsx",
-      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_lib_tasks_data",
       "label": "tasks-data.ts",
       "_origin": "ast",
@@ -2610,7 +2633,7 @@
       "file_type": "code",
       "norm_label": "initialcreatortasks",
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L61"
+      "source_location": "L88"
     },
     {
       "id": "src_lib_tiktok",
@@ -3378,7 +3401,7 @@
       "file_type": "code",
       "norm_label": "initialcampaigns",
       "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L39"
+      "source_location": "L49"
     },
     {
       "id": "src_app_admin_import_page",
@@ -3414,6 +3437,28 @@
       "source_location": "L1"
     },
     {
+      "id": "src_app_earnings_page",
+      "label": "earnings/page.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "earnings/page.tsx",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_earnings_page_mockcommissions",
+      "label": "mockCommissions",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "mockcommissions",
+      "source_file": "src/app/earnings/page.tsx",
+      "source_location": "L33"
+    },
+    {
       "id": "src_app_my_tasks_page",
       "label": "my-tasks/page.tsx",
       "_origin": "ast",
@@ -3422,17 +3467,6 @@
       "file_type": "code",
       "norm_label": "my-tasks/page.tsx",
       "source_file": "src/app/my-tasks/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_app_onboarding_page",
-      "label": "onboarding/page.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "onboarding/page.tsx",
-      "source_file": "src/app/onboarding/page.tsx",
       "source_location": "L1"
     },
     {
@@ -3455,7 +3489,7 @@
       "file_type": "code",
       "norm_label": "initialcampaigns",
       "source_file": "src/app/page.tsx",
-      "source_location": "L22"
+      "source_location": "L24"
     },
     {
       "id": "src_app_profile_page",
@@ -3491,17 +3525,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_app_register_page",
-      "label": "register/page.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "register/page.tsx",
-      "source_file": "src/app/register/page.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_components_admin_adminsidebar",
       "label": "AdminSidebar.tsx",
       "_origin": "ast",
@@ -3521,6 +3544,28 @@
       "file_type": "code",
       "norm_label": "campaigncard.tsx",
       "source_file": "src/components/campaign/CampaignCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_navigation_appsidebar",
+      "label": "AppSidebar.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appsidebar.tsx",
+      "source_file": "src/components/navigation/AppSidebar.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_navigation_mobilebottomnav",
+      "label": "MobileBottomNav.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "mobilebottomnav.tsx",
+      "source_file": "src/components/navigation/MobileBottomNav.tsx",
       "source_location": "L1"
     },
     {
@@ -3577,6 +3622,39 @@
       "norm_label": "wilayahselect.tsx",
       "source_file": "src/components/profile/WilayahSelect.tsx",
       "source_location": "L1"
+    },
+    {
+      "id": "src_components_tasks_taskcard",
+      "label": "TaskCard.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "taskcard.tsx",
+      "source_file": "src/components/tasks/TaskCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_tasks_videodetectioncard",
+      "label": "VideoDetectionCard.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "videodetectioncard.tsx",
+      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "ref_clsx",
+      "label": "clsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "concept",
+      "norm_label": "clsx",
+      "source_file": "package.json",
+      "source_location": "L17"
     },
     {
       "id": "ref_heroui_react",
@@ -3728,6 +3806,28 @@
       "file_type": "code",
       "norm_label": "detect/route.ts",
       "source_file": "src/app/api/tasks/detect/route.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_onboarding_page",
+      "label": "onboarding/page.tsx",
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "onboarding/page.tsx",
+      "file_type": "code",
+      "norm_label": "onboarding/page.tsx",
+      "source_file": "src/app/onboarding/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_register_page",
+      "label": "register/page.tsx",
+      "_origin": "ast",
+      "community": 31,
+      "community_name": "onboarding/page.tsx",
+      "file_type": "code",
+      "norm_label": "register/page.tsx",
+      "source_file": "src/app/register/page.tsx",
       "source_location": "L1"
     },
     {
@@ -4166,6 +4266,30 @@
     },
     {
       "source": "src_lib_tasks_data_creatortaskitem",
+      "target": "src_types_index_campaignplatformtype",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data_creatortaskitem",
+      "target": "src_types_index_tiktokgobenefittype",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data_creatortaskitem",
       "target": "src_types_index_rawdatavideo",
       "relation": "references",
       "_origin": "ast",
@@ -4173,7 +4297,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L55",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -4185,7 +4309,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L56",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -4197,7 +4321,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L57",
+      "source_location": "L79",
       "weight": 1.0
     },
     {
@@ -4209,7 +4333,43 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L58",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data_creatortaskitem",
+      "target": "src_types_index_rawtiktokgovideo",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data_creatortaskitem",
+      "target": "src_types_index_rawtiktokgoliveproduct",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data_creatortaskitem",
+      "target": "src_types_index_rawtiktokgoliveroom",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L85",
       "weight": 1.0
     },
     {
@@ -4593,7 +4753,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/my-tasks/[id]/page.tsx",
-      "source_location": "L24",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -4617,7 +4777,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/page.tsx",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -4629,7 +4789,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/page.tsx",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -4766,6 +4926,18 @@
     },
     {
       "source": "src_lib_tasks_data",
+      "target": "src_types_index_campaignplatformtype",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data",
       "target": "src_types_index_campaignsalesawarenesssummary",
       "relation": "imports",
       "_origin": "ast",
@@ -4803,6 +4975,54 @@
     {
       "source": "src_lib_tasks_data",
       "target": "src_types_index_rawdatavideo",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data",
+      "target": "src_types_index_rawtiktokgoliveproduct",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data",
+      "target": "src_types_index_rawtiktokgoliveroom",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data",
+      "target": "src_types_index_rawtiktokgovideo",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_tasks_data",
+      "target": "src_types_index_tiktokgobenefittype",
       "relation": "imports",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -4918,7 +5138,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L16",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -4930,7 +5150,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L24",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -4966,7 +5186,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L18",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -5219,7 +5439,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/my-tasks/[id]/page.tsx",
-      "source_location": "L24",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -5231,7 +5451,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/my-tasks/[id]/page.tsx",
-      "source_location": "L25",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -5327,7 +5547,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/page.tsx",
-      "source_location": "L11",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -5339,7 +5559,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/app/page.tsx",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -7471,13 +7691,24 @@
     },
     {
       "source": "src_app_admin_campaigns_page",
+      "target": "src_app_admin_campaigns_page_admincampaignspage",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/admin/campaigns/page.tsx",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_admin_campaigns_page",
       "target": "src_app_admin_campaigns_page_campaignadminitem",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L26",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -7488,18 +7719,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L39",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_admin_campaigns_page",
-      "target": "src_app_admin_campaigns_page_admincampaignspage",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/admin/campaigns/page.tsx",
-      "source_location": "L90",
+      "source_location": "L49",
       "weight": 1.0
     },
     {
@@ -7510,7 +7730,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/admin/import/page.tsx",
-      "source_location": "L20",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -7642,7 +7862,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/my-tasks/[id]/page.tsx",
-      "source_location": "L27",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -7669,24 +7889,24 @@
     },
     {
       "source": "src_app_page",
-      "target": "src_app_page_homepage",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app/page.tsx",
-      "source_location": "L158",
-      "weight": 1.0
-    },
-    {
-      "source": "src_app_page",
       "target": "src_app_page_initialcampaigns",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app/page.tsx",
-      "source_location": "L22",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_page",
+      "target": "src_app_page_homepage",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app/page.tsx",
+      "source_location": "L246",
       "weight": 1.0
     },
     {
@@ -7818,7 +8038,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/campaign/CampaignCard.tsx",
-      "source_location": "L48",
+      "source_location": "L55",
       "weight": 1.0
     },
     {
@@ -8010,13 +8230,24 @@
     },
     {
       "source": "src_db_schema",
+      "target": "src_db_schema_users",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/db/schema.ts",
+      "source_location": "L101",
+      "weight": 1.0
+    },
+    {
+      "source": "src_db_schema",
       "target": "src_db_schema_creatorprofiles",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L103",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -8027,7 +8258,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L121",
+      "source_location": "L131",
       "weight": 1.0
     },
     {
@@ -8038,7 +8269,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L137",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -8049,7 +8280,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L162",
+      "source_location": "L172",
       "weight": 1.0
     },
     {
@@ -8071,23 +8302,12 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L206",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
       "source": "src_db_schema",
       "target": "src_db_schema_sampleshipments",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/db/schema.ts",
-      "source_location": "L232",
-      "weight": 1.0
-    },
-    {
-      "source": "src_db_schema",
-      "target": "src_db_schema_campaigntasks",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -8109,13 +8329,24 @@
     },
     {
       "source": "src_db_schema",
+      "target": "src_db_schema_campaigntasks",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/db/schema.ts",
+      "source_location": "L268",
+      "weight": 1.0
+    },
+    {
+      "source": "src_db_schema",
       "target": "src_db_schema_auditlogs",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L282",
+      "source_location": "L300",
       "weight": 1.0
     },
     {
@@ -8126,7 +8357,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L295",
+      "source_location": "L313",
       "weight": 1.0
     },
     {
@@ -8137,7 +8368,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L320",
+      "source_location": "L338",
       "weight": 1.0
     },
     {
@@ -8159,7 +8390,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L345",
+      "source_location": "L363",
       "weight": 1.0
     },
     {
@@ -8170,7 +8401,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L379",
+      "source_location": "L397",
       "weight": 1.0
     },
     {
@@ -8181,7 +8412,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L387",
+      "source_location": "L405",
       "weight": 1.0
     },
     {
@@ -8192,40 +8423,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L397",
-      "weight": 1.0
-    },
-    {
-      "source": "src_db_schema",
-      "target": "src_db_schema_campaignsrelations",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/db/schema.ts",
-      "source_location": "L405",
-      "weight": 1.0
-    },
-    {
-      "source": "src_db_schema",
-      "target": "src_db_schema_rawdatavideosrelations",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/db/schema.ts",
-      "source_location": "L412",
-      "weight": 1.0
-    },
-    {
-      "source": "src_db_schema",
-      "target": "src_db_schema_rawdatalivesrelations",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/db/schema.ts",
-      "source_location": "L419",
+      "source_location": "L415",
       "weight": 1.0
     },
     {
@@ -8241,13 +8439,46 @@
     },
     {
       "source": "src_db_schema",
+      "target": "src_db_schema_campaignsrelations",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/db/schema.ts",
+      "source_location": "L423",
+      "weight": 1.0
+    },
+    {
+      "source": "src_db_schema",
+      "target": "src_db_schema_rawdatavideosrelations",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/db/schema.ts",
+      "source_location": "L430",
+      "weight": 1.0
+    },
+    {
+      "source": "src_db_schema",
+      "target": "src_db_schema_rawdatalivesrelations",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/db/schema.ts",
+      "source_location": "L437",
+      "weight": 1.0
+    },
+    {
+      "source": "src_db_schema",
       "target": "src_db_schema_rawdatasalesrelations",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L426",
+      "source_location": "L444",
       "weight": 1.0
     },
     {
@@ -8258,7 +8489,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L433",
+      "source_location": "L451",
       "weight": 1.0
     },
     {
@@ -8269,18 +8500,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L456",
-      "weight": 1.0
-    },
-    {
-      "source": "src_db_schema",
-      "target": "src_db_schema_campaigntasksrelations",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/db/schema.ts",
-      "source_location": "L463",
+      "source_location": "L474",
       "weight": 1.0
     },
     {
@@ -8292,6 +8512,17 @@
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
       "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "src_db_schema",
+      "target": "src_db_schema_campaigntasksrelations",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/db/schema.ts",
+      "source_location": "L481",
       "weight": 1.0
     },
     {
@@ -8340,13 +8571,24 @@
     },
     {
       "source": "src_db_schema",
-      "target": "src_db_schema_users",
+      "target": "src_db_schema_campaignplatformtypeenum",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/db/schema.ts",
-      "source_location": "L91",
+      "source_location": "L88",
+      "weight": 1.0
+    },
+    {
+      "source": "src_db_schema",
+      "target": "src_db_schema_tiktokgobenefittypeenum",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/db/schema.ts",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -8379,7 +8621,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L3",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -8390,7 +8632,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L61",
+      "source_location": "L88",
       "weight": 1.0
     },
     {
@@ -8571,6 +8813,61 @@
     },
     {
       "source": "src_types_index",
+      "target": "src_types_index_campaignplatformtype",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "L166",
+      "weight": 1.0
+    },
+    {
+      "source": "src_types_index",
+      "target": "src_types_index_tiktokgobenefittype",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "src_types_index",
+      "target": "src_types_index_tiktokgoindustry",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "L168",
+      "weight": 1.0
+    },
+    {
+      "source": "src_types_index",
+      "target": "src_types_index_rawtiktokgovideo",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "L170",
+      "weight": 1.0
+    },
+    {
+      "source": "src_types_index",
+      "target": "src_types_index_rawtiktokgoliveproduct",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "src_types_index",
       "target": "src_types_index_tiktokcontenttype",
       "relation": "contains",
       "_origin": "ast",
@@ -8578,6 +8875,17 @@
       "confidence_score": 1.0,
       "source_file": "src/types/index.ts",
       "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "src_types_index",
+      "target": "src_types_index_rawtiktokgoliveroom",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/types/index.ts",
+      "source_location": "L215",
       "weight": 1.0
     },
     {
@@ -8944,5 +9252,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "86e7ee3f5e58b36d6a1be546617b211832ebd115"
+  "built_at_commit": "cf4020dc01937d82c03de67f8e101225b6ee280e"
 }

@@ -29,5 +29,6 @@
   "27": "wilayah.ts",
   "28": "README.md",
   "29": "react",
-  "30": "detect/route.ts"
+  "30": "detect/route.ts",
+  "31": "onboarding/page.tsx"
 }

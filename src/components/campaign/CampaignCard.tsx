@@ -31,6 +31,13 @@ export interface CampaignData {
   brandName: string;
   category: string;
   bannerUrl: string;
+  platformType?: "TIKTOK_SHOP" | "TIKTOK_GO";
+  locationName?: string;
+  locationId?: string;
+  industryCategory?: string;
+  benefitType?: "VOUCHER_DIGITAL" | "OUTLET_PASS_LINK";
+  benefitData?: string;
+  outletAddress?: string;
   commissionType: "COMMISSION_ONLY" | "FIXED_FEE" | "HYBRID";
   commissionRateText: string;
   isFreeSample: boolean;
@@ -67,6 +74,7 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
   const [copied, setCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const isTikTokGo = campaign.platformType === "TIKTOK_GO";
   const filledQuota = campaign.sampleQuota - campaign.sampleStockRemaining;
 
   const copyHashtags = () => {
@@ -114,29 +122,53 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
 
             {/* Badges Row (Soft Pastel Colors like Gro Creator) */}
             <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
-              {campaign.isFreeSample && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-sky-600 border border-sky-200/80">
-                  <Gift className="w-3 h-3" />
-                  Sample Gratis
-                </span>
+              {isTikTokGo ? (
+                <>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <MapPin className="w-3 h-3 text-emerald-600" />
+                    Tag Lokasi Hijau
+                  </span>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-indigo-600 border border-purple-200/80">
+                    Commission Only
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-teal-50 text-teal-700 border border-teal-200">
+                    <Gift className="w-3 h-3" />
+                    {campaign.benefitType === "VOUCHER_DIGITAL" ? "Voucher Dine-in" : "Pass Outlet VIP"}
+                  </span>
+                </>
+              ) : (
+                <>
+                  {campaign.isFreeSample && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-sky-600 border border-sky-200/80">
+                      <Gift className="w-3 h-3" />
+                      Sample Gratis
+                    </span>
+                  )}
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-indigo-600 border border-purple-200/80">
+                    Commission Only
+                  </span>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
+                    <ShoppingBag className="w-3 h-3" />
+                    Link Keranjang Kuning
+                  </span>
+                </>
               )}
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-indigo-600 border border-purple-200/80">
-                Commission Only
-              </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
-                <ShoppingBag className="w-3 h-3" />
-                Link Keranjang Kuning
-              </span>
             </div>
 
-            {/* Tags */}
-            <div className="flex items-center gap-1.5 pt-1">
+            {/* Location or Category Tags */}
+            <div className="flex items-center gap-1.5 pt-1 flex-wrap">
+              {isTikTokGo && campaign.locationName && (
+                <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold max-w-[260px] truncate bg-emerald-50/60 px-2 py-0.5 rounded-md border border-emerald-100">
+                  <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
+                  <span className="truncate">{campaign.locationName}</span>
+                </div>
+              )}
               <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
                 {campaign.category}
               </span>
               <span className="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100 text-slate-600 border border-slate-200 flex items-center gap-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
-                TikTok
+                {isTikTokGo ? "TikTok Go" : "TikTok"}
               </span>
             </div>
           </div>
@@ -243,12 +275,24 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
                   </div>
                 </div>
 
-                <div className="p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl text-slate-600 space-y-1">
-                  <p className="font-bold text-indigo-700">Otomatis Terdeteksi:</p>
-                  <p className="text-[11px] leading-relaxed">
-                    Sistem mendeteksi live video kamu otomatis melalui akun TikTok terhubung &amp; hashtag wajib.
-                  </p>
-                </div>
+                {isTikTokGo ? (
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 space-y-1">
+                    <p className="font-bold text-emerald-800 flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-emerald-600" />
+                      Otomatis Terdeteksi (TikTok Go):
+                    </p>
+                    <p className="text-[11px] leading-relaxed text-emerald-800">
+                      Sistem melacak konten otomatis via akun TikTok, hashtag wajib, dan <strong>Pin Tag Lokasi Hijau (POI)</strong>: {campaign.locationName || "Outlet Resmi"}. Tidak ada pengiriman ekspedisi kurir.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-indigo-50/50 border border-indigo-100 rounded-xl text-slate-600 space-y-1">
+                    <p className="font-bold text-indigo-700">Otomatis Terdeteksi:</p>
+                    <p className="text-[11px] leading-relaxed">
+                      Sistem mendeteksi live video kamu otomatis melalui akun TikTok terhubung &amp; hashtag wajib.
+                    </p>
+                  </div>
+                )}
               </ModalBody>
 
               <ModalFooter className="border-t border-slate-100 py-3 flex justify-between">
@@ -405,65 +449,116 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
                       </div>
                     )}
 
-                    {/* STEP 2: Sampel & Pengiriman */}
+                    {/* STEP 2: Sampel / Benefit Outlet */}
                     {applyStep === 2 && (
                       <div className="space-y-4">
-                        <div>
-                          <h3 className="font-bold text-slate-900 text-sm">2. Sampel &amp; Pengiriman</h3>
-                          <p className="text-slate-500 text-xs">
-                            Pilih varian sampel produk dan konfirmasi alamat pengiriman.
-                          </p>
-                        </div>
-
-                        {campaign.isFreeSample ? (
-                          <div className="space-y-3">
-                            <label className="font-bold text-slate-800 text-xs block">
-                              Varian Produk yang Diinginkan
-                            </label>
-                            <div className="grid grid-cols-2 gap-2">
-                              {["01 Light Natural", "02 Golden Beige", "03 Warm Sand"].map((v) => (
-                                <button
-                                  key={v}
-                                  type="button"
-                                  onClick={() => setSelectedVariant(v)}
-                                  className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all ${
-                                    selectedVariant === v
-                                      ? "border-indigo-600 bg-indigo-50/50 text-indigo-600"
-                                      : "border-slate-200 text-slate-700 hover:bg-slate-50"
-                                  }`}
-                                >
-                                  {v}
-                                </button>
-                              ))}
+                        {isTikTokGo ? (
+                          <div className="space-y-4">
+                            <div>
+                              <h3 className="font-bold text-slate-900 text-sm">2. Benefit &amp; Akses Kunjungan Outlet</h3>
+                              <p className="text-slate-500 text-xs">
+                                Campaign TikTok Go berbasis kunjungan langsung ke tempat/outlet (tanpa kurir fisik).
+                              </p>
                             </div>
 
-                            <div className="space-y-2 pt-2">
-                              <label className="font-bold text-slate-800 text-xs block">
-                                Alamat Pengiriman Utama
-                              </label>
-                              <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-1">
-                                <div className="flex items-center justify-between">
-                                  <span className="font-bold text-slate-900">Hibban Nazala</span>
-                                  <span className="px-2 py-0.2 rounded-full text-[10px] font-semibold bg-slate-200 text-slate-700">
-                                    Alamat utama
-                                  </span>
+                            <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl space-y-3">
+                              <div className="flex items-start gap-2.5">
+                                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
+                                  <MapPin className="w-4 h-4" />
                                 </div>
-                                <p className="text-slate-500 text-[11px]">+62 896-2427-2784</p>
-                                <p className="text-slate-700 font-medium">
-                                  DKI JAKARTA, KOTA JAKARTA PUSAT, KEMAYORAN, 10650
+                                <div className="space-y-0.5">
+                                  <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">
+                                    Lokasi &amp; Tempat Kunjungan
+                                  </span>
+                                  <h4 className="font-bold text-slate-900 text-xs">{campaign.locationName || "Kunjungan Outlet Offline"}</h4>
+                                  <p className="text-[11px] text-slate-600">
+                                    {campaign.outletAddress || "Alamat lengkap dan kode voucher digital akan diterbitkan di dashboard tugas setelah pengajuan disetujui."}
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div className="p-3 bg-white border border-emerald-100 rounded-xl space-y-1">
+                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                                  Bentuk Benefit Kreator
+                                </span>
+                                <p className="text-xs font-bold text-emerald-800">
+                                  {campaign.benefitType === "VOUCHER_DIGITAL"
+                                    ? "🎟️ Voucher Digital Resmi (Dine-in / Belanja di Kasir)"
+                                    : "📋 Pass / Surat Tugas Resmi Creavy (Akses Kamar / Fasilitas)"}
                                 </p>
-                                <p className="text-slate-500 text-[11px]">
-                                  Jl. Taruna Jaya No.42, RT.011, RW.002, Serdang
+                                <p className="text-[11px] text-slate-500">
+                                  Tunjukkan kode barcode/pass dari aplikasi Creavy kepada kasir/staf saat tiba di outlet.
                                 </p>
                               </div>
                             </div>
+
+                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-start gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                              <p className="text-[11px] text-slate-600">
+                                Anda menyanggupi untuk berkunjung langsung ke outlet dan menyematkan <strong>Pin Tag Lokasi Hijau</strong> resmi serta keranjang voucher TikTok Go di video/live.
+                              </p>
+                            </div>
                           </div>
                         ) : (
-                          <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center space-y-1 text-slate-600">
-                            <p className="font-semibold text-slate-800">Campaign Tanpa Pengiriman Sampel Fisik</p>
-                            <p className="text-xs text-slate-500">
-                              Campaign ini berbasis komisi afiliasi murni. Anda dapat langsung menyematkan link keranjang kuning pada video TikTok Anda.
-                            </p>
+                          <div className="space-y-4">
+                            <div>
+                              <h3 className="font-bold text-slate-900 text-sm">2. Sampel &amp; Pengiriman</h3>
+                              <p className="text-slate-500 text-xs">
+                                Pilih varian sampel produk dan konfirmasi alamat pengiriman.
+                              </p>
+                            </div>
+
+                            {campaign.isFreeSample ? (
+                              <div className="space-y-3">
+                                <label className="font-bold text-slate-800 text-xs block">
+                                  Varian Produk yang Diinginkan
+                                </label>
+                                <div className="grid grid-cols-2 gap-2">
+                                  {["01 Light Natural", "02 Golden Beige", "03 Warm Sand"].map((v) => (
+                                    <button
+                                      key={v}
+                                      type="button"
+                                      onClick={() => setSelectedVariant(v)}
+                                      className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all ${
+                                        selectedVariant === v
+                                          ? "border-indigo-600 bg-indigo-50/50 text-indigo-600"
+                                          : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                                      }`}
+                                    >
+                                      {v}
+                                    </button>
+                                  ))}
+                                </div>
+
+                                <div className="space-y-2 pt-2">
+                                  <label className="font-bold text-slate-800 text-xs block">
+                                    Alamat Pengiriman Utama
+                                  </label>
+                                  <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="font-bold text-slate-900">Hibban Nazala</span>
+                                      <span className="px-2 py-0.2 rounded-full text-[10px] font-semibold bg-slate-200 text-slate-700">
+                                        Alamat utama
+                                      </span>
+                                    </div>
+                                    <p className="text-slate-500 text-[11px]">+62 896-2427-2784</p>
+                                    <p className="text-slate-700 font-medium">
+                                      DKI JAKARTA, KOTA JAKARTA PUSAT, KEMAYORAN, 10650
+                                    </p>
+                                    <p className="text-slate-500 text-[11px]">
+                                      Jl. Taruna Jaya No.42, RT.011, RW.002, Serdang
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-center space-y-1 text-slate-600">
+                                <p className="font-semibold text-slate-800">Campaign Tanpa Pengiriman Sampel Fisik</p>
+                                <p className="text-xs text-slate-500">
+                                  Campaign ini berbasis komisi afiliasi murni. Anda dapat langsung menyematkan link keranjang kuning pada video TikTok Anda.
+                                </p>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>

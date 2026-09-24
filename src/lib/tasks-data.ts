@@ -1,4 +1,14 @@
-import { RawDataVideo, RawDataLive, RawDataSales, CampaignSalesAwarenessSummary } from "@/types";
+import {
+  RawDataVideo,
+  RawDataLive,
+  RawDataSales,
+  CampaignSalesAwarenessSummary,
+  CampaignPlatformType,
+  TikTokGoBenefitType,
+  RawTikTokGoVideo,
+  RawTikTokGoLiveProduct,
+  RawTikTokGoLiveRoom,
+} from "@/types";
 
 export interface CreatorTaskItem {
   id: string;
@@ -9,6 +19,7 @@ export interface CreatorTaskItem {
   commissionRateText: string;
   productId: string;
   creatorUsername: string;
+  platformType?: CampaignPlatformType;
   status:
     | "PENDING_REVIEW"
     | "SAMPLE_DISPATCHED"
@@ -17,7 +28,16 @@ export interface CreatorTaskItem {
     | "REJECTED";
   rejectionReason?: string;
   
-  // Logistics
+  // TikTok Go Specific Meta
+  locationId?: string;
+  locationName?: string;
+  merchantName?: string;
+  industryCategory?: string;
+  benefitType?: TikTokGoBenefitType;
+  benefitData?: string;
+  outletAddress?: string;
+
+  // Logistics (TikTok Shop Physical Courier)
   courierName?: string;
   trackingNumber?: string;
   dispatchedDate?: string;
@@ -49,13 +69,20 @@ export interface CreatorTaskItem {
     commentsCount: string;
     postDate: string;
     isBasketVerified: boolean;
+    isLocationVerified?: boolean;
+    locationName?: string;
   };
 
-  // Raw Ingestion Datasets & Summary Analytics
+  // Raw Ingestion Datasets & Summary Analytics (TikTok Shop)
   rawVideos?: RawDataVideo[];
   rawLives?: RawDataLive[];
   rawSales?: RawDataSales[];
   salesSummary?: CampaignSalesAwarenessSummary;
+
+  // Raw Ingestion Datasets (TikTok Go)
+  rawGoVideos?: RawTikTokGoVideo[];
+  rawGoLiveProducts?: RawTikTokGoLiveProduct[];
+  rawGoLiveRooms?: RawTikTokGoLiveRoom[];
 }
 
 export const initialCreatorTasks: CreatorTaskItem[] = [
@@ -323,6 +350,162 @@ export const initialCreatorTasks: CreatorTaskItem[] = [
     sowChecklist: [
       "Visualisasi tekstur gel yang meleleh di kulit",
       "Klaim perbaikan skin barrier dalam 7 hari",
+    ],
+  },
+  {
+    id: "task-5",
+    campaignId: "5",
+    campaignTitle: "[SOLARIA] Weekend Feast & Dine-in Voucher Experience",
+    brandName: "Solaria Indonesia",
+    bannerUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop",
+    commissionRateText: "Komisi 15%",
+    productId: "172989182390",
+    creatorUsername: "@banibanzl",
+    platformType: "TIKTOK_GO",
+    status: "VIDEO_DETECTED",
+    deadlineDate: "05 Oct 2026",
+    daysRemaining: 18,
+    locationId: "loc_solaria_gandaria_6912",
+    locationName: "Solaria - Mall Gandaria City, Jakarta Selatan",
+    merchantName: "PT Solaria Boga Utama",
+    industryCategory: "Dining",
+    benefitType: "VOUCHER_DIGITAL",
+    benefitData: "SOLARIA-CREAVY-9912",
+    outletAddress: "Gandaria City Mall, Lantai UG Unit 24-25, Kebayoran Lama, Jakarta Selatan",
+    mandatoryHashtags: ["#SolariaID", "#SolariaGandaria", "#TikTokGoFood", "#Creavy"],
+    mandatoryMentions: ["@solaria.indonesia"],
+    targetAffiliateLink: "https://vt.tiktok.com/ZS2GoSolariaGancit/",
+    sowChecklist: [
+      "Kunjungi outlet Solaria Mall Gandaria City (tunjukkan kode voucher di kasir)",
+      "Review minimal 2 menu andalan (Nasi Goreng Kepiting / Cordon Bleu)",
+      "Wajib menyematkan Pin Tag Lokasi Hijau (POI): Solaria - Gandaria City Mall",
+      "Wajib tautkan keranjang voucher TikTok Go di video",
+    ],
+    detectedVideo: {
+      videoId: "7283918291048",
+      videoUrl: "https://www.tiktok.com/@banibanzl/video/7283918291048",
+      title: "Makan Kenyang Berdua di Solaria Gandaria City Cuma 100rb Pake Voucher TikTok Go! 🍛✨",
+      coverUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=400&auto=format&fit=crop",
+      viewsCount: "42.1K",
+      likesCount: "3.4K",
+      commentsCount: "215",
+      postDate: "21 Sep 2026 13:10",
+      isBasketVerified: true,
+      isLocationVerified: true,
+      locationName: "Solaria - Mall Gandaria City",
+    },
+    rawGoVideos: [
+      {
+        industry: "Dining",
+        creatorType: "Local Food Explorer",
+        postId: "7283918291048",
+        postTitle: "Makan Kenyang Berdua di Solaria Gandaria City Cuma 100rb Pake Voucher TikTok Go! 🍛✨",
+        postDate: "2026-09-21 13:10:00",
+        currentStatus: "Active & Approved",
+        duration: "48s",
+        taskType: "Local Merchant Promotion",
+        locationId: "loc_solaria_gandaria_6912",
+        locationName: "Solaria - Mall Gandaria City",
+        productId: "172989182390",
+        productName: "Voucher Dine In Solaria Rp 100.000 (All Menu)",
+        locationRegion: "DKI Jakarta",
+        locationCity: "Jakarta Selatan",
+        merchant: "PT Solaria Boga Utama",
+        creatorName: "@banibanzl",
+        creatorId: "7082194812",
+        postLink: "https://www.tiktok.com/@banibanzl/video/7283918291048",
+        salesValue: 4850000,
+        orders: 38,
+        redemptionAmount: 3200000,
+        redeemedOrders: 25,
+        videoViews: 42100,
+        ctr: "4.82%",
+        cvr: "3.24%",
+        aov: 127631,
+        videoCompletionRate: "18.4%",
+        likeRate: "6.8%",
+        commentRate: "1.2%",
+      },
+    ],
+    rawGoLiveRooms: [
+      {
+        roomId: "live_room_go_88192",
+        liveTitle: "Makan Siang Bareng di Solaria Gandaria! Review Menu Favorit & Spill Voucher Diskon 🍗",
+        liveStartTime: "2026-09-21 12:00:00",
+        liveEndTime: "2026-09-21 14:00:00",
+        liveDuration: "120 min",
+        creatorName: "@banibanzl",
+        creatorId: "7082194812",
+        liveType: "Local Services Live",
+        salesValue: 1650000,
+        orders: 33,
+        redemptionAmount: 1200000,
+        redeemedOrders: 24,
+        viewers: 8940,
+        liveEntryRate: "14.2%",
+        cvr: "4.1%",
+        aov: 50000,
+      },
+    ],
+    rawGoLiveProducts: [
+      {
+        roomId: "live_room_go_88192",
+        liveTitle: "Makan Siang Bareng di Solaria Gandaria! Review Menu Favorit & Spill Voucher Diskon 🍗",
+        creatorId: "7082194812",
+        productName: "Voucher Paket Nasi Goreng Solaria Rp 50.000",
+        productId: "172989182390",
+        merchant: "PT Solaria Boga Utama",
+        merchantId: "merch_solaria_01",
+        salesValue: 1650000,
+        orders: 33,
+        aov: 50000,
+      },
+    ],
+    salesSummary: {
+      productId: "172989182390",
+      creatorUsername: "@banibanzl",
+      totalViews: 42100,
+      totalLikes: 3400,
+      totalLiveDurationMinutes: 120,
+      totalLivePeakViewers: 420,
+      totalItemsSold: 71,
+      totalGmv: 6500000,
+      redemptionAmount: 4400000,
+      redeemedOrders: 49,
+      estimatedCommission: 975000,
+      settledCommission: 660000,
+      videoCount: 1,
+      liveCount: 1,
+    },
+  },
+  {
+    id: "task-6",
+    campaignId: "6",
+    campaignTitle: "[PULLMAN HOTEL] Luxury Staycation & Weekend Buffet Experience",
+    brandName: "Pullman Hotels & Resorts",
+    bannerUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
+    commissionRateText: "Komisi 12%",
+    productId: "172989182399",
+    creatorUsername: "@banibanzl",
+    platformType: "TIKTOK_GO",
+    status: "SAMPLE_DISPATCHED",
+    deadlineDate: "15 Oct 2026",
+    daysRemaining: 28,
+    locationId: "loc_pullman_cp_8819",
+    locationName: "Pullman Jakarta Central Park",
+    merchantName: "Accor Hotels Indonesia",
+    industryCategory: "Accommodations",
+    benefitType: "OUTLET_PASS_LINK",
+    benefitData: "https://docs.google.com/spreadsheets/d/creavy-pullman-creator-pass-banibanzl/view",
+    outletAddress: "Podomoro City, Jl. Letjen S. Parman No.Kav. 28, Grogol petamburan, Jakarta Barat",
+    mandatoryHashtags: ["#PullmanJakarta", "#StaycationJakarta", "#TikTokGoTravel", "#Creavy"],
+    mandatoryMentions: ["@pullmanjakartacp"],
+    targetAffiliateLink: "https://vt.tiktok.com/ZS2GoPullmanCP/",
+    sowChecklist: [
+      "Bawa pass digital Creavy dan tunjukkan ke front desk Pullman Central Park saat check-in",
+      "Buat video Room Tour Deluxe Room + Sunday Brunch buffet highlight",
+      "Wajib pasang pin tag lokasi hijau: Pullman Jakarta Central Park",
+      "Sematkan tautan voucher staycation TikTok Go di video postingan",
     ],
   },
 ];
