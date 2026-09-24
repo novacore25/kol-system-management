@@ -19,16 +19,17 @@
   "17": "Product Requirements, Unique UX & Brand Identity",
   "18": "schema.ts",
   "19": "package.json",
-  "20": "ApplicationReviewTable.tsx",
+  "20": "auth.ts",
   "21": "types/index.ts",
   "22": "compilerOptions",
   "23": "dependencies",
   "24": "devDependencies",
-  "25": "scripts",
+  "25": "url/route.ts",
   "26": "postcss.config.mjs",
   "27": "wilayah.ts",
   "28": "README.md",
   "29": "react",
   "30": "detect/route.ts",
-  "31": "onboarding/page.tsx"
+  "31": "CreatorRegistrationForm.tsx",
+  "32": "logout/route.ts"
 }

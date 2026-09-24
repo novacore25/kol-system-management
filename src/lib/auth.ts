@@ -10,8 +10,22 @@ export interface AuthSessionUser {
   email: string;
   name?: string;
   avatarUrl?: string;
-  role: "ADMIN" | "PIC" | "CREATOR" | "BRAND";
+  role: "ADMIN" | "CREATOR";
   creatorProfileId?: string;
+}
+
+export function isAdminEmail(email: string): boolean {
+  const adminEmailsEnv = process.env.ADMIN_EMAILS || "";
+  const adminList = adminEmailsEnv
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+
+  // If email matches any configured admin email, treat as ADMIN
+  if (adminList.includes(email.toLowerCase())) {
+    return true;
+  }
+  return false;
 }
 
 export async function createSessionToken(user: AuthSessionUser): Promise<string> {

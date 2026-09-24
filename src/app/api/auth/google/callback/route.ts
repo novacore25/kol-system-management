@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
 import { users, creatorProfiles, tiktokAccounts, shippingAddresses } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { createSessionToken } from "@/lib/auth";
+import { createSessionToken, isAdminEmail } from "@/lib/auth";
 
 interface GoogleUserInfo {
   id: string;
@@ -95,13 +95,15 @@ export async function GET(req: NextRequest) {
       .then((rows) => rows[0]);
 
     let userId: string;
+    const isUserAdmin = isAdminEmail(googleUser.email);
+    const assignedRole: "ADMIN" | "CREATOR" = isUserAdmin ? "ADMIN" : (existingUser?.role === "ADMIN" ? "ADMIN" : "CREATOR");
 
     if (!existingUser) {
       const [newUser] = await db
         .insert(users)
         .values({
           email: googleUser.email,
-          role: "CREATOR",
+          role: assignedRole,
           avatarUrl: googleUser.picture || null,
           phoneNumber: registrationData?.whatsappNumber || null,
           isActive: true,
@@ -111,13 +113,14 @@ export async function GET(req: NextRequest) {
       existingUser = newUser;
     } else {
       userId = existingUser.id;
-      // Update avatar if not set
-      if (!existingUser.avatarUrl && googleUser.picture) {
-        await db
-          .update(users)
-          .set({ avatarUrl: googleUser.picture })
-          .where(eq(users.id, userId));
-      }
+      // Update avatar or promote to admin if configured
+      await db
+        .update(users)
+        .set({
+          avatarUrl: googleUser.picture || existingUser.avatarUrl,
+          role: assignedRole,
+        })
+        .where(eq(users.id, userId));
     }
 
     // 5. If registration form data was submitted, persist Creator Profile, TikTok Account & Address
@@ -215,7 +218,7 @@ export async function GET(req: NextRequest) {
       email: googleUser.email,
       name: googleUser.name,
       avatarUrl: googleUser.picture,
-      role: existingUser.role,
+      role: assignedRole,
       creatorProfileId,
     });
 
