@@ -20,234 +20,26 @@ import {
 } from "@heroui/react";
 import { CampaignCard, CampaignData } from "@/components/campaign/CampaignCard";
 
-// Mock data riil campaign seperti di Gro Creator (Putri, Wardah, Make Over, Kahf)
-const initialCampaigns: CampaignData[] = [
-  {
-    id: "1",
-    title: "[AFFILIATE CIRCLE] PUTRI 15 DAYS CHALLENGE: ROAD TO PAYDAY!",
-    brandName: "putri",
-    category: "Hair & Body",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 15%",
-    isFreeSample: false,
-    sampleQuota: 100,
-    sampleStockRemaining: 100,
-    startDate: "15 Sep 2026",
-    endDate: "30 Sep 2026",
-    daysRemaining: 13,
-    mandatoryHashtags: ["#PutriHairCare", "#RoadToPayday", "#HairRoutine"],
-    mandatoryMentions: ["@putri.indonesia"],
-    sowItems: [
-      "Wajib video durasi minimal 30 detik",
-      "Tampilkan produk Putri Hair Care dengan jelas di video",
-      "Sertakan link keranjang kuning resmi",
-      "Posting video sebelum 30 Sep 2026",
-    ],
-  },
-  {
-    id: "2",
-    title: "[AFFILIATE CIRCLE] SEPTEMBER - [BAU] [SEP-OCT] TWC",
-    brandName: "Wardah",
-    category: "Beauty & Skincare",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 18%",
-    isFreeSample: true,
-    sampleQuota: 100,
-    sampleStockRemaining: 100,
-    startDate: "16 Sep 2026",
-    endDate: "11 Nov 2026",
-    daysRemaining: 55,
-    mandatoryHashtags: ["#WardahBeauty", "#TwoWayCake", "#SkinVerse"],
-    mandatoryMentions: ["@wardahbeauty"],
-    sowItems: [
-      "Review coverage Two Way Cake di kulit",
-      "Angle video natural daylight",
-      "Wajib menyematkan link keranjang kuning resmi",
-    ],
-  },
-  {
-    id: "3",
-    title: "[AFFILIATE CIRCLE] RACING CONTENT WARDAH SKINVERSE - SKIN LONGEVITY [NO SEEDING]",
-    brandName: "Wardah",
-    category: "Beauty & Skincare",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 20%",
-    isFreeSample: false,
-    sampleQuota: 1000,
-    sampleStockRemaining: 779,
-    startDate: "16 Sep 2026",
-    endDate: "06 Oct 2026",
-    daysRemaining: 19,
-    mandatoryHashtags: ["#WardahSkinverse", "#SkinLongevity", "#GlowSeharian"],
-    mandatoryMentions: ["@wardahbeauty"],
-    sowItems: [
-      "Edukasi konsep Skin Longevity Wardah",
-      "Durasi video 45 - 60 detik",
-      "Klaim produk teruji klinis",
-    ],
-  },
-  {
-    id: "4",
-    title: "[AFFILIATE CIRCLE] SEPTEMBER - [THREADS] [NEW LAUNCH] STAYLOCK NEW SHADES PHASE 2",
-    brandName: "Wardah",
-    category: "Beauty & Makeup",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 18%",
-    isFreeSample: true,
-    sampleQuota: 100,
-    sampleStockRemaining: 100,
-    startDate: "16 Sep 2026",
-    endDate: "10 Oct 2026",
-    daysRemaining: 23,
-    mandatoryHashtags: ["#StaylockLip", "#NewShades", "#WardahLipCream"],
-    mandatoryMentions: ["@wardahbeauty"],
-    sowItems: [
-      "Swatch seluruh shade baru Staylock",
-      "Uji transferproof & ketahanan bibir",
-      "Sertakan link keranjang kuning produk",
-    ],
-  },
-  {
-    id: "5",
-    title: "[AFFILIATE CIRCLE] RTP IG STORY MAKE OVER CHALLENGE! 📱🔥",
-    brandName: "Make Over",
-    category: "Beauty & Makeup",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 20%",
-    isFreeSample: true,
-    sampleQuota: 200,
-    sampleStockRemaining: 45,
-    startDate: "10 Sep 2026",
-    endDate: "28 Sep 2026",
-    daysRemaining: 11,
-    mandatoryHashtags: ["#MakeOverID", "#PowerstayComplexion", "#MakeOverChallenge"],
-    mandatoryMentions: ["@makeoverid"],
-    sowItems: [
-      "Unggah transisi make-up look menggunakan produk Make Over",
-      "Tampilkan ketahanan shade 12 jam",
-      "Sertakan link keranjang kuning resmi",
-    ],
-  },
-  {
-    id: "6",
-    title: "Aggregator Kahf X Qarrar - Men Care Grooming Series",
-    brandName: "Kahf",
-    category: "Men Grooming",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 15%",
-    isFreeSample: true,
-    sampleQuota: 150,
-    sampleStockRemaining: 150,
-    startDate: "01 Sep 2026",
-    endDate: "30 Sep 2026",
-    daysRemaining: 13,
-    mandatoryHashtags: ["#KahfEveryday", "#KahfMenCare", "#JalanYangKupilih"],
-    mandatoryMentions: ["@kahfeveryday"],
-    sowItems: [
-      "Tutorial grooming harian pria menggunakan Kahf Face Wash & Sunscreen",
-      "Tone video aktif dan natural",
-      "Sematkan link keranjang kuning afiliasi",
-    ],
-  },
-  {
-    id: "7",
-    title: "[SOLARIA] Weekend Dine-in Feast Voucher Promo - Gandaria City",
-    brandName: "Solaria",
-    category: "Dining & Kuliner",
-    platformType: "TIKTOK_GO",
-    locationName: "Solaria - Mall Gandaria City, Jakarta Selatan",
-    locationId: "loc_solaria_gandaria_6912",
-    benefitType: "VOUCHER_DIGITAL",
-    benefitData: "SOLARIA-VIP-VOUCHER",
-    outletAddress: "Mall Gandaria City Lantai UG Unit 24, Jl. Sultan Iskandar Muda, Jakarta Selatan",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 15%",
-    isFreeSample: false,
-    sampleQuota: 100,
-    sampleStockRemaining: 82,
-    startDate: "20 Sep 2026",
-    endDate: "15 Oct 2026",
-    daysRemaining: 21,
-    mandatoryHashtags: ["#SolariaID", "#SolariaGandaria", "#TikTokGoFood", "#Creavy"],
-    mandatoryMentions: ["@solaria.indonesia"],
-    sowItems: [
-      "Datang langsung ke outlet Solaria Mall Gandaria City & nikmati menu andalan",
-      "Review jujur minimal 2 menu andalan dengan porsi & suasana resto",
-      "Wajib sematkan Pin Tag Lokasi Hijau resmi: Solaria - Mall Gandaria City",
-      "Tautkan keranjang voucher TikTok Go di postingan video",
-    ],
-  },
-  {
-    id: "8",
-    title: "[PULLMAN HOTEL] Staycation Deluxe & Weekend Buffet Brunch",
-    brandName: "Pullman",
-    category: "Accommodations",
-    platformType: "TIKTOK_GO",
-    locationName: "Pullman Jakarta Central Park",
-    locationId: "loc_pullman_cp_8819",
-    benefitType: "OUTLET_PASS_LINK",
-    benefitData: "https://creavy.id/pass/pullman-deluxe-pass",
-    outletAddress: "Podomoro City, Jl. Letjen S. Parman No.Kav. 28, Jakarta Barat",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 12%",
-    isFreeSample: false,
-    sampleQuota: 50,
-    sampleStockRemaining: 34,
-    startDate: "18 Sep 2026",
-    endDate: "20 Oct 2026",
-    daysRemaining: 26,
-    mandatoryHashtags: ["#PullmanJakarta", "#StaycationJakarta", "#TikTokGoTravel", "#Creavy"],
-    mandatoryMentions: ["@pullmanjakartacp"],
-    sowItems: [
-      "Tunjukkan pass digital Creavy saat check-in di resepsionis Pullman CP",
-      "Buat video room tour Deluxe Room & suasana dining weekend brunch",
-      "Wajib pasang pin tag lokasi hijau: Pullman Jakarta Central Park",
-      "Sematkan tautan voucher staycation TikTok Go di video postingan",
-    ],
-  },
-  {
-    id: "9",
-    title: "[KOPI KENANGAN] Sultan Pass Voucher Series - Jakarta Outlets",
-    brandName: "Kopi Kenangan",
-    category: "Dining & Beverage",
-    platformType: "TIKTOK_GO",
-    locationName: "Kopi Kenangan - Senayan City, Jakarta Pusat",
-    locationId: "loc_kopikenangan_senci",
-    benefitType: "VOUCHER_DIGITAL",
-    benefitData: "KENANGAN-SULTAN-PASS",
-    outletAddress: "Senayan City Mall Lantai LG Unit 12, Jl. Asia Afrika, Jakarta Pusat",
-    bannerUrl: "",
-    commissionType: "COMMISSION_ONLY",
-    commissionRateText: "Komisi 15%",
-    isFreeSample: false,
-    sampleQuota: 300,
-    sampleStockRemaining: 210,
-    startDate: "15 Sep 2026",
-    endDate: "10 Oct 2026",
-    daysRemaining: 16,
-    mandatoryHashtags: ["#KopiKenangan", "#KenanganSultanPass", "#TikTokGoFood", "#Creavy"],
-    mandatoryMentions: ["@kopikenangan.id"],
-    sowItems: [
-      "Beli dan review varian Kopi Kenangan Mantan / Avocado Coffee",
-      "Wajib menyematkan Pin Tag Lokasi Hijau outlet resmi",
-      "Tautkan keranjang voucher TikTok Go di video TikTok Anda",
-    ],
-  },
-];
+const initialCampaigns: CampaignData[] = [];
 
 export default function HomePage() {
+  const [campaigns, setCampaigns] = useState<CampaignData[]>(initialCampaigns);
   const [searchQuery, setSearchQuery] = useState("");
   const [platformFilter, setPlatformFilter] = useState<"ALL" | "TIKTOK_SHOP" | "TIKTOK_GO">("ALL");
   const [dateFilter, setDateFilter] = useState("Semua");
   const [showDateDropdown, setShowDateDropdown] = useState(false);
+
+  // Load campaigns from API / DB
+  React.useEffect(() => {
+    fetch("/api/campaigns")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setCampaigns(data);
+        }
+      })
+      .catch((err) => console.error("Error loading campaigns:", err));
+  }, []);
 
   // Filter State
   const {
@@ -272,7 +64,7 @@ export default function HomePage() {
     setQuotaStatus("Semua");
   };
 
-  const filteredCampaigns = initialCampaigns.filter((campaign) => {
+  const filteredCampaigns = campaigns.filter((campaign) => {
     // Platform filter
     if (platformFilter === "TIKTOK_SHOP" && campaign.platformType === "TIKTOK_GO") return false;
     if (platformFilter === "TIKTOK_GO" && campaign.platformType !== "TIKTOK_GO") return false;

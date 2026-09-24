@@ -962,7 +962,7 @@
       "file_type": "code",
       "norm_label": "navbar()",
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L35"
+      "source_location": "L33"
     },
     {
       "id": "src_components_tasks_videodetectioncard_videodetectioncard",
@@ -5320,7 +5320,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L33",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -6486,7 +6486,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L19",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -6510,7 +6510,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L33",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -8725,7 +8725,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L35",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -9983,5 +9983,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "054d0c00f8f8c04ffc85b7522f39032f6dfcb8ce"
+  "built_at_commit": "937f5b1fd627496eb3844584426840d9db084f36"
 }

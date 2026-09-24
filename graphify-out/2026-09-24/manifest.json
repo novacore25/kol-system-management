@@ -168,15 +168,15 @@
     "semantic_hash": ""
   },
   "src/components/navigation/MobileBottomNav.tsx": {
-    "mtime": 1789628471.6582892,
-    "seen": 1789628658.2215066,
-    "ast_hash": "1c56bf2f6cd6e8941794b1572a72f2a0",
+    "mtime": 1790229713.482524,
+    "seen": 1790229772.7692645,
+    "ast_hash": "8cbd60c8f35811ae2e174569f7304d36",
     "semantic_hash": ""
   },
   "src/components/navigation/Navbar.tsx": {
-    "mtime": 1789621227.4607577,
-    "seen": 1789621515.1905115,
-    "ast_hash": "4d6b49a98c9ec98babb2e518fe338e7b",
+    "mtime": 1790229704.8893988,
+    "seen": 1790229772.7692645,
+    "ast_hash": "f846d17a036dc051c0a38d9382ae53a7",
     "semantic_hash": ""
   },
   "src/db/index.ts": {
@@ -198,9 +198,9 @@
     "semantic_hash": ""
   },
   "src/types/index.ts": {
-    "mtime": 1790220982.838502,
-    "seen": 1790221460.5020175,
-    "ast_hash": "26bc2d19573aaa0b54f8d573036c21ef",
+    "mtime": 1790229551.3410833,
+    "seen": 1790229772.770277,
+    "ast_hash": "5488741c3769a7f7f1b4a223f77037ac",
     "semantic_hash": ""
   },
   "tailwind.config.ts": {
@@ -390,9 +390,9 @@
     "semantic_hash": ""
   },
   "src/app/api/auth/google/callback/route.ts": {
-    "mtime": 1790226562.07574,
-    "seen": 1790226610.269648,
-    "ast_hash": "af05982672a4682709cfa9d75538d012",
+    "mtime": 1790229738.5989165,
+    "seen": 1790229772.7672231,
+    "ast_hash": "cab996591cec44fd60344e665b4d59ba",
     "semantic_hash": ""
   },
   "src/app/api/auth/google/url/route.ts": {
@@ -414,9 +414,15 @@
     "semantic_hash": ""
   },
   "src/lib/auth.ts": {
-    "mtime": 1790226395.2629514,
-    "seen": 1790226610.2718456,
-    "ast_hash": "25f580e9d508c5ed79f35016065fe73c",
+    "mtime": 1790229559.0835085,
+    "seen": 1790229772.770277,
+    "ast_hash": "bea242876337cc8111f013aa7bb25b7a",
+    "semantic_hash": ""
+  },
+  "src/middleware.ts": {
+    "mtime": 1790229689.68616,
+    "seen": 1790229772.770277,
+    "ast_hash": "8f382e095a79cbef94d78615a759105c",
     "semantic_hash": ""
   }
 }

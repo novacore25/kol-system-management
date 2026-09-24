@@ -24,47 +24,7 @@ export default function MyCampaignsPage() {
     setTimeout(() => setCopiedResi(null), 2000);
   };
 
-  const myCampaigns = [
-    {
-      id: "1",
-      title: "[AFFILIATE CIRCLE] SEPTEMBER - [BAU] [SEP-OCT] TWC",
-      brandName: "Wardah",
-      startDate: "16 Sep 2026",
-      endDate: "11 Nov 2026",
-      tiktokHandle: "banibanzl",
-      status: "DISETUJUI",
-      sampleStatus: "SEDANG_DIKIRIM",
-      courierName: "J&T Express",
-      trackingNumber: "JT88291048201",
-      courierUrl: "https://www.jet.co.id/track",
-      taskStatusText: "Sampel dalam perjalanan kurir",
-    },
-    {
-      id: "2",
-      title: "[AFFILIATE CIRCLE] EARTH Reactivate & Hunting Creator L1-L3 Sep 2026",
-      brandName: "Earth Love Life",
-      startDate: "01 Sep 2026",
-      endDate: "30 Sep 2026",
-      tiktokHandle: "banibanzl",
-      status: "DITINJAU",
-      sampleStatus: "MENUNGGU_REVIEW",
-      taskStatusText: "Menunggu kurasi admin",
-    },
-    {
-      id: "3",
-      title: "Aggregator Kahf X Qarrar - Men Care Grooming Series",
-      brandName: "Kahf",
-      startDate: "01 Aug 2026",
-      endDate: "30 Sep 2026",
-      tiktokHandle: "hibban_nzl",
-      status: "SELESAI",
-      sampleStatus: "DITERIMA",
-      courierName: "SiCepat",
-      trackingNumber: "004128919201",
-      courierUrl: "https://sicepat.com/checkAwb",
-      taskStatusText: "Video TikTok terdeteksi live",
-    },
-  ];
+  const [myCampaigns, setMyCampaigns] = useState<any[]>([]);
 
   const counts = {
     SEMUA: myCampaigns.length,
@@ -145,101 +105,116 @@ export default function MyCampaignsPage() {
       </div>
 
       {/* 3-Column Clean Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((campaign) => (
-          <div
-            key={campaign.id}
-            className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between gap-4 hover:shadow transition-shadow"
-          >
-            <div className="space-y-3">
-              {/* Brand Mini & Status */}
-              <div className="flex items-center justify-between">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
-                  {campaign.brandName}
+      {filtered.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((campaign) => (
+            <div
+              key={campaign.id}
+              className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm flex flex-col justify-between gap-4 hover:shadow transition-shadow"
+            >
+              <div className="space-y-3">
+                {/* Brand Mini & Status */}
+                <div className="flex items-center justify-between">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                    {campaign.brandName}
+                  </span>
+
+                  {campaign.status === "DISETUJUI" && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" />
+                      <span>Disetujui</span>
+                    </span>
+                  )}
+                  {campaign.status === "DITINJAU" && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      <span>Ditinjau</span>
+                    </span>
+                  )}
+                  {campaign.status === "SELESAI" && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" />
+                      <span>Selesai</span>
+                    </span>
+                  )}
+                </div>
+
+                {/* Title & Periode */}
+                <div className="space-y-1">
+                  <h3 className="font-bold text-sm text-slate-900 line-clamp-2 leading-snug">
+                    {campaign.title}
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    {campaign.startDate} - {campaign.endDate}
+                  </p>
+                </div>
+
+                {/* TikTok Account */}
+                <div className="flex items-center gap-1.5 text-xs text-slate-600">
+                  <span className="w-2 h-2 rounded-full bg-slate-900" />
+                  <span className="font-medium">@{campaign.tiktokHandle}</span>
+                </div>
+
+                {/* Simple Resi Box if shipped */}
+                {campaign.trackingNumber && (
+                  <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1.5 text-xs">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-slate-700 font-bold text-[11px]">
+                        <Truck className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>{campaign.courierName}</span>
+                      </div>
+                      <span className="text-[10px] text-emerald-600 font-semibold">
+                        {campaign.sampleStatus === "SEDANG_DIKIRIM" ? "Dalam Pengiriman" : "Sampel Diterima"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between bg-white px-2 py-1 rounded-lg border border-slate-200 text-[11px]">
+                      <span className="font-mono font-semibold text-slate-800">
+                        {campaign.trackingNumber}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopyResi(campaign.trackingNumber!)}
+                        className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-600 hover:text-indigo-800"
+                      >
+                        <Copy className="w-3 h-3" />
+                        <span>{copiedResi === campaign.trackingNumber ? "Tersalin!" : "Salin"}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom Row */}
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs text-slate-400 font-medium">
+                  {campaign.taskStatusText}
                 </span>
 
-                {campaign.status === "DISETUJUI" && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" />
-                    <span>Disetujui</span>
-                  </span>
-                )}
-                {campaign.status === "DITINJAU" && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    <span>Ditinjau</span>
-                  </span>
-                )}
-                {campaign.status === "SELESAI" && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" />
-                    <span>Selesai</span>
-                  </span>
-                )}
+                <Link
+                  href={`/my-tasks/${campaign.id}`}
+                  className="px-5 py-1.5 rounded-xl border border-indigo-500 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
+                >
+                  Detail
+                </Link>
               </div>
-
-              {/* Title & Periode */}
-              <div className="space-y-1">
-                <h3 className="font-bold text-sm text-slate-900 line-clamp-2 leading-snug">
-                  {campaign.title}
-                </h3>
-                <p className="text-[11px] text-slate-400">
-                  {campaign.startDate} - {campaign.endDate}
-                </p>
-              </div>
-
-              {/* TikTok Account */}
-              <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                <span className="w-2 h-2 rounded-full bg-slate-900" />
-                <span className="font-medium">@{campaign.tiktokHandle}</span>
-              </div>
-
-              {/* Simple Resi Box if shipped */}
-              {campaign.trackingNumber && (
-                <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1.5 text-xs">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-slate-700 font-bold text-[11px]">
-                      <Truck className="w-3.5 h-3.5 text-indigo-600" />
-                      <span>{campaign.courierName}</span>
-                    </div>
-                    <span className="text-[10px] text-emerald-600 font-semibold">
-                      {campaign.sampleStatus === "SEDANG_DIKIRIM" ? "Dalam Pengiriman" : "Sampel Diterima"}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between bg-white px-2 py-1 rounded-lg border border-slate-200 text-[11px]">
-                    <span className="font-mono font-semibold text-slate-800">
-                      {campaign.trackingNumber}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleCopyResi(campaign.trackingNumber!)}
-                      className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-600 hover:text-indigo-800"
-                    >
-                      <Copy className="w-3 h-3" />
-                      <span>{copiedResi === campaign.trackingNumber ? "Tersalin!" : "Salin"}</span>
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
-
-            {/* Bottom Row */}
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-              <span className="text-xs text-slate-400 font-medium">
-                {campaign.taskStatusText}
-              </span>
-
-              <Link
-                href={`/my-tasks/${campaign.id}`}
-                className="px-5 py-1.5 rounded-xl border border-indigo-500 text-xs font-semibold text-indigo-600 hover:bg-indigo-50 transition-colors shadow-sm"
-              >
-                Detail
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-12 text-center space-y-3 shadow-sm">
+          <p className="text-sm font-semibold text-slate-800">Belum Ada Campaign yang Diikuti</p>
+          <p className="text-xs text-slate-400 max-w-sm mx-auto">
+            Kamu belum mengajukan atau mengikuti campaign manapun. Buka katalog campaign sekarang untuk memilih produk dan meminta sampel gratis!
+          </p>
+          <Link
+            href="/"
+            className="inline-block px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-purple-600 text-white text-xs font-bold shadow-md shadow-brand-500/25"
+          >
+            Lihat Katalog Campaign
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

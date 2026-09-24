@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Layers,
   Plus,
@@ -46,101 +46,42 @@ interface CampaignAdminItem {
   hashtags: string[];
 }
 
-const initialCampaigns: CampaignAdminItem[] = [
-  {
-    id: "1",
-    title: "[MAKE OVER] Velvet Mattifying Cushion Special 9.9",
-    brandName: "Make Over Indonesia",
-    platformType: "TIKTOK_SHOP",
-    productId: "172981928391",
-    commissionRate: "18%",
-    sampleQuota: 100,
-    approvedCount: 42,
-    deadlineDate: "30 Sep 2026",
-    status: "ACTIVE",
-    hashtags: ["#MakeOver99", "#VelvetCushion", "#Creavy"],
-  },
-  {
-    id: "2",
-    title: "[EMINA] Glossy Tinted Glow Balm x Daily Fresh",
-    brandName: "Emina Cosmetics",
-    platformType: "TIKTOK_SHOP",
-    productId: "172981928392",
-    commissionRate: "15%",
-    sampleQuota: 50,
-    approvedCount: 18,
-    deadlineDate: "05 Oct 2026",
-    status: "ACTIVE",
-    hashtags: ["#EminaGlowBalm", "#DailySchoolLook", "#Creavy"],
-  },
-  {
-    id: "3",
-    title: "[KAHF] Oil and Acne Care Face Wash Seeding",
-    brandName: "Kahf Men",
-    platformType: "TIKTOK_SHOP",
-    productId: "172981928393",
-    commissionRate: "20%",
-    sampleQuota: 80,
-    approvedCount: 35,
-    deadlineDate: "30 Sep 2026",
-    status: "ACTIVE",
-    hashtags: ["#KahfMen", "#AcneCareFaceWash", "#Creavy"],
-  },
-  {
-    id: "4",
-    title: "[SKINTIFIC] 5X Ceramide Barrier Repair Moisture Gel",
-    brandName: "Skintific Indonesia",
-    platformType: "TIKTOK_SHOP",
-    productId: "172981928394",
-    commissionRate: "16%",
-    sampleQuota: 60,
-    approvedCount: 60,
-    deadlineDate: "10 Oct 2026",
-    status: "COMPLETED",
-    hashtags: ["#SkintificID", "#5XCeramide", "#Creavy"],
-  },
-  {
-    id: "5",
-    title: "[SOLARIA] Weekend Dine-in Feast Voucher Promo - Gandaria City",
-    brandName: "Solaria Indonesia",
-    platformType: "TIKTOK_GO",
-    locationId: "loc_solaria_gandaria_6912",
-    locationName: "Solaria - Mall Gandaria City, Jakarta Selatan",
-    industryCategory: "Dining",
-    benefitType: "VOUCHER_DIGITAL",
-    benefitData: "SOLARIA-VIP-VOUCHER",
-    productId: "172989182390",
-    commissionRate: "15%",
-    sampleQuota: 100,
-    approvedCount: 48,
-    deadlineDate: "15 Oct 2026",
-    status: "ACTIVE",
-    hashtags: ["#SolariaID", "#SolariaGandaria", "#TikTokGoFood", "#Creavy"],
-  },
-  {
-    id: "6",
-    title: "[PULLMAN HOTEL] Staycation Deluxe & Weekend Buffet Brunch",
-    brandName: "Pullman Hotels & Resorts",
-    platformType: "TIKTOK_GO",
-    locationId: "loc_pullman_cp_8819",
-    locationName: "Pullman Jakarta Central Park",
-    industryCategory: "Accommodations",
-    benefitType: "OUTLET_PASS_LINK",
-    benefitData: "https://docs.google.com/spreadsheets/d/creavy-pullman-pass",
-    productId: "172989182399",
-    commissionRate: "12%",
-    sampleQuota: 50,
-    approvedCount: 32,
-    deadlineDate: "20 Oct 2026",
-    status: "ACTIVE",
-    hashtags: ["#PullmanJakarta", "#StaycationJakarta", "#Creavy"],
-  },
-];
+const initialCampaigns: CampaignAdminItem[] = [];
 
 export default function AdminCampaignsPage() {
   const [campaigns, setCampaigns] = useState<CampaignAdminItem[]>(initialCampaigns);
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  // Load campaigns from API/DB
+  useEffect(() => {
+    fetch("/api/campaigns")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped: CampaignAdminItem[] = data.map((d: any) => ({
+            id: d.id,
+            title: d.title,
+            brandName: d.brandName,
+            platformType: d.platformType,
+            locationId: d.locationId,
+            locationName: d.locationName,
+            industryCategory: d.industryCategory,
+            benefitType: d.benefitType,
+            benefitData: d.benefitData,
+            productId: d.productId || d.locationId || "PROD-GENERAL",
+            commissionRate: d.commissionRateText || "15%",
+            sampleQuota: d.sampleQuota || 50,
+            approvedCount: 0,
+            deadlineDate: d.endDate || "30 Sep 2026",
+            status: "ACTIVE",
+            hashtags: d.mandatoryHashtags || ["#Creavy"],
+          }));
+          setCampaigns(mapped);
+        }
+      })
+      .catch((err) => console.error("Error loading campaigns:", err));
+  }, []);
 
   // Form State
   const [newCampaign, setNewCampaign] = useState({
@@ -163,10 +104,41 @@ export default function AdminCampaignsPage() {
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const handleCreateCampaign = (onClose: () => void) => {
-    if (!newCampaign.title || !newCampaign.productId || !newCampaign.brandName) {
-      alert("Harap lengkapi Judul, Brand, dan TikTok Product ID!");
+  const handleCreateCampaign = async (onClose: () => void) => {
+    if (!newCampaign.title || !newCampaign.brandName) {
+      alert("Harap lengkapi Judul dan Brand!");
       return;
+    }
+
+    const payload = {
+      title: newCampaign.title,
+      brandName: newCampaign.brandName,
+      platformType: newCampaign.platformType,
+      locationId: newCampaign.locationId,
+      locationName: newCampaign.locationName,
+      industryCategory: newCampaign.industryCategory,
+      benefitType: newCampaign.benefitType,
+      benefitData: newCampaign.benefitData,
+      commissionRateText: newCampaign.commissionRate,
+      sampleQuota: Number(newCampaign.sampleQuota),
+      mandatoryHashtags: newCampaign.hashtags.split(",").map((h) => h.trim()),
+      mandatoryMentions: newCampaign.mentions.split(",").map((m) => m.trim()),
+      sowItems: newCampaign.sow.split("\n").filter(Boolean),
+    };
+
+    try {
+      const res = await fetch("/api/campaigns", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const resData = await res.json();
+      if (!res.ok) {
+        console.warn("API returned error, adding to local state:", resData.error);
+      }
+    } catch (e) {
+      console.error("Error saving campaign to DB:", e);
     }
 
     const created: CampaignAdminItem = {
@@ -179,7 +151,7 @@ export default function AdminCampaignsPage() {
       industryCategory: newCampaign.industryCategory,
       benefitType: newCampaign.benefitType,
       benefitData: newCampaign.benefitData,
-      productId: newCampaign.productId,
+      productId: newCampaign.productId || newCampaign.locationId || "PROD-101",
       commissionRate: newCampaign.commissionRate,
       sampleQuota: Number(newCampaign.sampleQuota),
       approvedCount: 0,
@@ -188,9 +160,9 @@ export default function AdminCampaignsPage() {
       hashtags: newCampaign.hashtags.split(",").map((h) => h.trim()),
     };
 
-    setCampaigns([created, ...campaigns]);
+    setCampaigns((prev) => [created, ...prev]);
     onClose();
-    setToastMessage(`Campaign "${created.title}" berhasil dibuat dan Product ID ${created.productId} berhasil dikunci!`);
+    setToastMessage(`Campaign "${created.title}" berhasil dibuat!`);
     setTimeout(() => setToastMessage(null), 4000);
   };
 
