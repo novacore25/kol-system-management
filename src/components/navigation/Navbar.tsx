@@ -9,7 +9,6 @@ import {
   NavbarContent,
   NavbarItem,
   Button,
-  Chip,
   Avatar,
   Dropdown,
   DropdownTrigger,
@@ -26,7 +25,6 @@ import {
   Users,
   LogOut,
   User,
-  ShieldCheck,
   Wallet,
   LogIn,
 } from "lucide-react";
@@ -37,6 +35,8 @@ export function Navbar() {
   const router = useRouter();
   const [session, setSession] = useState<AuthSessionUser | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const isInAdminArea = pathname.startsWith("/admin");
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -59,13 +59,11 @@ export function Navbar() {
     router.refresh();
   };
 
-  const isAdmin = session?.role === "ADMIN";
-
   return (
     <HeroNavbar isBordered maxWidth="xl" className="bg-background/85 backdrop-blur-md sticky top-0 z-50">
       {/* BRAND LOGO */}
       <NavbarBrand>
-        <Link href={isAdmin ? "/admin" : "/"} className="flex items-center gap-2.5 group">
+        <Link href={isInAdminArea ? "/admin" : "/"} className="flex items-center gap-2.5 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-purple-600 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
             <Sparkles className="w-5 h-5" />
           </div>
@@ -74,26 +72,18 @@ export function Navbar() {
               <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-slate-900 via-purple-950 to-slate-800 dark:from-white dark:via-purple-200 dark:to-slate-200 bg-clip-text text-transparent">
                 Creavy
               </span>
-              {isAdmin ? (
-                <Chip size="sm" variant="solid" color="danger" className="text-[10px] font-black tracking-wider px-1.5 h-5">
-                  ADMIN
-                </Chip>
-              ) : (
-                <Chip size="sm" variant="flat" color="secondary" className="text-[10px] font-bold h-5">
-                  CREATOR
-                </Chip>
-              )}
             </div>
             <p className="text-[10px] text-default-400 font-medium tracking-wide">
-              {isAdmin ? "Admin & Management Portal" : "Let's grow together"}
+              {isInAdminArea ? "Internal Operations" : "Let's grow together"}
             </p>
           </div>
         </Link>
       </NavbarBrand>
 
-      {/* NAVIGATION LINKS BASED ON ROLE */}
+      {/* NAVIGATION LINKS */}
       <NavbarContent className="hidden md:flex gap-5" justify="center">
-        {isAdmin ? (
+        {isInAdminArea ? (
+          // Only shown when explicitly inside /admin
           <>
             <NavbarItem isActive={pathname === "/admin"}>
               <Link
@@ -103,7 +93,7 @@ export function Navbar() {
                 }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
-                Dashboard Admin
+                Dashboard
               </Link>
             </NavbarItem>
             <NavbarItem isActive={pathname === "/admin/campaigns"}>
@@ -114,7 +104,7 @@ export function Navbar() {
                 }`}
               >
                 <FolderKanban className="w-4 h-4" />
-                Kelola Campaign
+                Campaigns
               </Link>
             </NavbarItem>
             <NavbarItem isActive={pathname === "/admin/import"}>
@@ -125,7 +115,7 @@ export function Navbar() {
                 }`}
               >
                 <FileSpreadsheet className="w-4 h-4" />
-                Ingestion Data
+                Ingestion
               </Link>
             </NavbarItem>
             <NavbarItem isActive={pathname === "/admin/logistics"}>
@@ -136,7 +126,7 @@ export function Navbar() {
                 }`}
               >
                 <Package className="w-4 h-4" />
-                Logistik & Sampel
+                Logistik
               </Link>
             </NavbarItem>
             <NavbarItem isActive={pathname === "/admin/applications"}>
@@ -147,11 +137,12 @@ export function Navbar() {
                 }`}
               >
                 <Users className="w-4 h-4" />
-                Approval Kreator
+                Approval
               </Link>
             </NavbarItem>
           </>
         ) : (
+          // Public & Creator View (ZERO admin hints)
           <>
             <NavbarItem isActive={pathname === "/"}>
               <Link
@@ -208,9 +199,6 @@ export function Navbar() {
                   <span className="text-xs font-bold text-foreground leading-none">
                     {session.name || session.email.split("@")[0]}
                   </span>
-                  <span className="text-[10px] text-default-400 font-semibold">
-                    {isAdmin ? "Admin Agency" : "Kreator"}
-                  </span>
                 </div>
               </div>
             </DropdownTrigger>
@@ -220,25 +208,14 @@ export function Navbar() {
                 <p className="font-bold text-xs text-brand-600 truncate">{session.email}</p>
               </DropdownItem>
 
-              {isAdmin ? (
-                <DropdownItem
-                  key="admin_dash"
-                  as={Link}
-                  href="/admin"
-                  startContent={<ShieldCheck className="w-4 h-4 text-danger-500" />}
-                >
-                  Dashboard Admin
-                </DropdownItem>
-              ) : (
-                <DropdownItem
-                  key="creator_profile"
-                  as={Link}
-                  href="/profile"
-                  startContent={<User className="w-4 h-4 text-brand-600" />}
-                >
-                  Profil & Pengaturan
-                </DropdownItem>
-              )}
+              <DropdownItem
+                key="creator_profile"
+                as={Link}
+                href="/profile"
+                startContent={<User className="w-4 h-4 text-brand-600" />}
+              >
+                Profil & Pengaturan
+              </DropdownItem>
 
               <DropdownItem
                 key="logout"
@@ -261,7 +238,7 @@ export function Navbar() {
             startContent={<LogIn className="w-4 h-4" />}
             className="bg-gradient-to-r from-brand-600 to-purple-600 text-white font-bold text-xs shadow-md shadow-brand-500/25"
           >
-            Masuk / Daftar
+            Masuk / Hubungkan TikTok
           </Button>
         )}
       </NavbarContent>

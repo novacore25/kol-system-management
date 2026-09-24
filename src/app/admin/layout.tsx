@@ -15,23 +15,23 @@ export default function AdminLayout({
       <header className="border-b border-divider/60 bg-card px-4 sm:px-8 py-3 flex items-center justify-between sticky top-0 z-40">
         <div className="flex items-center gap-3">
           <Link href="/admin" className="font-extrabold text-base text-foreground tracking-tight flex items-center gap-2">
-            <span className="w-8 h-8 rounded-lg bg-brand-600 text-white flex items-center justify-center font-black text-sm">
-              N
+            <span className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 via-purple-600 to-pink-500 text-white flex items-center justify-center font-black text-sm">
+              C
             </span>
-            <span>Nusantara Agency Portal</span>
+            <span>Creavy Operations</span>
           </Link>
-          <Chip size="sm" color="secondary" variant="flat" className="hidden sm:inline-flex text-[10px] font-bold">
-            Internal Operations
+          <Chip size="sm" color="danger" variant="flat" className="hidden sm:inline-flex text-[10px] font-bold">
+            Admin Internal
           </Chip>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-right hidden sm:block">
-            <p className="text-xs font-bold text-foreground">PIC Outreach Team</p>
-            <p className="text-[10px] text-default-400">admin@nusantaracreator.com</p>
+            <p className="text-xs font-bold text-foreground">PIC & Operations Team</p>
+            <p className="text-[10px] text-default-400">admin@creavy.id</p>
           </div>
-          <div className="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900 text-brand-700 dark:text-brand-300 flex items-center justify-center font-bold text-xs">
-            OP
+          <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+            AD
           </div>
         </div>
       </header>

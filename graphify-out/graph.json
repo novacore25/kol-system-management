@@ -17,30 +17,17 @@
       "source_location": "L7"
     },
     {
-      "id": "src_components_navigation_appheader_notificationitem",
-      "label": "NotificationItem",
+      "id": "src_lib_admin_data_adminapplicationitem",
+      "label": "AdminApplicationItem",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "notificationitem",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L16"
-    },
-    {
-      "id": "src_lib_auth_authsessionuser",
-      "label": "AuthSessionUser",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "auth.ts",
-      "file_type": "code",
-      "norm_label": "authsessionuser",
-      "source_file": "src/lib/auth.ts",
-      "source_location": "L8"
+      "norm_label": "adminapplicationitem",
+      "source_file": "src/lib/admin-data.ts",
+      "source_location": "L1"
     },
     {
       "id": "src_lib_tasks_data_creatortaskitem",
@@ -433,17 +420,30 @@
       "source_location": "L28"
     },
     {
-      "id": "src_lib_admin_data_adminapplicationitem",
-      "label": "AdminApplicationItem",
+      "id": "src_components_navigation_appheader_notificationitem",
+      "label": "NotificationItem",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 29,
       "community_name": "react",
       "file_type": "code",
-      "norm_label": "adminapplicationitem",
-      "source_file": "src/lib/admin-data.ts",
-      "source_location": "L1"
+      "norm_label": "notificationitem",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L16"
+    },
+    {
+      "id": "src_lib_auth_authsessionuser",
+      "label": "AuthSessionUser",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "authsessionuser",
+      "source_file": "src/lib/auth.ts",
+      "source_location": "L8"
     },
     {
       "id": "src_components_profile_wilayahselect_selectedwilayah",
@@ -506,67 +506,67 @@
       "file_type": "code",
       "norm_label": "createsessiontoken()",
       "source_file": "src/lib/auth.ts",
+      "source_location": "L31"
+    },
+    {
+      "id": "src_lib_auth_isadminemail",
+      "label": "isAdminEmail()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "schema.ts",
+      "file_type": "code",
+      "norm_label": "isadminemail()",
+      "source_file": "src/lib/auth.ts",
       "source_location": "L17"
     },
     {
-      "id": "src_app_layout_rootlayout",
-      "label": "RootLayout()",
+      "id": "src_app_admin_applications_page_applicationsreviewpage",
+      "label": "ApplicationsReviewPage()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "rootlayout()",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L16"
+      "norm_label": "applicationsreviewpage()",
+      "source_file": "src/app/admin/applications/page.tsx",
+      "source_location": "L4"
     },
     {
-      "id": "src_app_providers_providers",
-      "label": "Providers()",
+      "id": "src_app_admin_logistics_page_logisticspage",
+      "label": "LogisticsPage()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "providers()",
-      "source_file": "src/app/providers.tsx",
-      "source_location": "L6"
+      "norm_label": "logisticspage()",
+      "source_file": "src/app/admin/logistics/page.tsx",
+      "source_location": "L4"
     },
     {
-      "id": "src_components_navigation_appheader_appheader",
-      "label": "AppHeader()",
+      "id": "src_components_admin_applicationreviewtable_applicationreviewtable",
+      "label": "ApplicationReviewTable()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "appheader()",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L65"
+      "norm_label": "applicationreviewtable()",
+      "source_file": "src/components/admin/ApplicationReviewTable.tsx",
+      "source_location": "L45"
     },
     {
-      "id": "src_components_navigation_appheader_appheader_handleclickoutside",
-      "label": "handleClickOutside()",
+      "id": "src_components_admin_samplelogisticstable_samplelogisticstable",
+      "label": "SampleLogisticsTable()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "handleclickoutside()",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L78"
-    },
-    {
-      "id": "src_components_navigation_appsidebar_appsidebar",
-      "label": "AppSidebar()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "appsidebar()",
-      "source_file": "src/components/navigation/AppSidebar.tsx",
-      "source_location": "L15"
+      "norm_label": "samplelogisticstable()",
+      "source_file": "src/components/admin/SampleLogisticsTable.tsx",
+      "source_location": "L42"
     },
     {
       "id": "src_app_api_auth_me_route_get",
@@ -590,7 +590,7 @@
       "file_type": "code",
       "norm_label": "getcurrentsession()",
       "source_file": "src/lib/auth.ts",
-      "source_location": "L34"
+      "source_location": "L48"
     },
     {
       "id": "src_lib_auth_verifysessiontoken",
@@ -602,7 +602,19 @@
       "file_type": "code",
       "norm_label": "verifysessiontoken()",
       "source_file": "src/lib/auth.ts",
-      "source_location": "L25"
+      "source_location": "L39"
+    },
+    {
+      "id": "src_middleware_middleware",
+      "label": "middleware()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "auth.ts",
+      "file_type": "code",
+      "norm_label": "middleware()",
+      "source_file": "src/middleware.ts",
+      "source_location": "L8"
     },
     {
       "id": "src_components_tasks_taskcard_taskcard",
@@ -614,18 +626,6 @@
       "file_type": "code",
       "norm_label": "taskcard()",
       "source_file": "src/components/tasks/TaskCard.tsx",
-      "source_location": "L25"
-    },
-    {
-      "id": "src_components_tasks_videodetectioncard_videodetectioncard",
-      "label": "VideoDetectionCard()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "videodetectioncard()",
-      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
       "source_location": "L25"
     },
     {
@@ -749,18 +749,6 @@
       "source_location": "L65"
     },
     {
-      "id": "src_app_admin_applications_page_applicationsreviewpage",
-      "label": "ApplicationsReviewPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "applicationsreviewpage()",
-      "source_file": "src/app/admin/applications/page.tsx",
-      "source_location": "L4"
-    },
-    {
       "id": "src_app_admin_campaigns_page_admincampaignspage",
       "label": "AdminCampaignsPage()",
       "_callable": true,
@@ -797,18 +785,6 @@
       "source_location": "L7"
     },
     {
-      "id": "src_app_admin_logistics_page_logisticspage",
-      "label": "LogisticsPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "logisticspage()",
-      "source_file": "src/app/admin/logistics/page.tsx",
-      "source_location": "L4"
-    },
-    {
       "id": "src_app_admin_page_admindashboardpage",
       "label": "AdminDashboardPage()",
       "_callable": true,
@@ -831,6 +807,18 @@
       "norm_label": "earningspage()",
       "source_file": "src/app/earnings/page.tsx",
       "source_location": "L84"
+    },
+    {
+      "id": "src_app_layout_rootlayout",
+      "label": "RootLayout()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "rootlayout()",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L16"
     },
     {
       "id": "src_app_my_tasks_id_page_campaigndetailpage",
@@ -881,6 +869,18 @@
       "source_location": "L5"
     },
     {
+      "id": "src_app_providers_providers",
+      "label": "Providers()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "providers()",
+      "source_file": "src/app/providers.tsx",
+      "source_location": "L6"
+    },
+    {
       "id": "src_components_admin_adminsidebar_adminsidebar",
       "label": "AdminSidebar()",
       "_callable": true,
@@ -891,30 +891,6 @@
       "norm_label": "adminsidebar()",
       "source_file": "src/components/admin/AdminSidebar.tsx",
       "source_location": "L17"
-    },
-    {
-      "id": "src_components_admin_applicationreviewtable_applicationreviewtable",
-      "label": "ApplicationReviewTable()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "applicationreviewtable()",
-      "source_file": "src/components/admin/ApplicationReviewTable.tsx",
-      "source_location": "L45"
-    },
-    {
-      "id": "src_components_admin_samplelogisticstable_samplelogisticstable",
-      "label": "SampleLogisticsTable()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "samplelogisticstable()",
-      "source_file": "src/components/admin/SampleLogisticsTable.tsx",
-      "source_location": "L42"
     },
     {
       "id": "src_components_campaign_campaigncard_campaigncard",
@@ -929,6 +905,42 @@
       "source_location": "L55"
     },
     {
+      "id": "src_components_navigation_appheader_appheader",
+      "label": "AppHeader()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appheader()",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L65"
+    },
+    {
+      "id": "src_components_navigation_appheader_appheader_handleclickoutside",
+      "label": "handleClickOutside()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "handleclickoutside()",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L78"
+    },
+    {
+      "id": "src_components_navigation_appsidebar_appsidebar",
+      "label": "AppSidebar()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appsidebar()",
+      "source_file": "src/components/navigation/AppSidebar.tsx",
+      "source_location": "L15"
+    },
+    {
       "id": "src_components_navigation_mobilebottomnav_mobilebottomnav",
       "label": "MobileBottomNav()",
       "_callable": true,
@@ -938,7 +950,7 @@
       "file_type": "code",
       "norm_label": "mobilebottomnav()",
       "source_file": "src/components/navigation/MobileBottomNav.tsx",
-      "source_location": "L9"
+      "source_location": "L18"
     },
     {
       "id": "src_components_navigation_navbar_navbar",
@@ -950,7 +962,19 @@
       "file_type": "code",
       "norm_label": "navbar()",
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L15"
+      "source_location": "L35"
+    },
+    {
+      "id": "src_components_tasks_videodetectioncard_videodetectioncard",
+      "label": "VideoDetectionCard()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "videodetectioncard()",
+      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
+      "source_location": "L25"
     },
     {
       "id": "src_app_api_tasks_detect_route_post",
@@ -2648,114 +2672,92 @@
       "source_location": "L38"
     },
     {
-      "id": "next_config",
-      "label": "next.config.ts",
+      "id": "src_app_admin_applications_page",
+      "label": "applications/page.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "next.config.ts",
-      "source_file": "next.config.ts",
+      "norm_label": "applications/page.tsx",
+      "source_file": "src/app/admin/applications/page.tsx",
       "source_location": "L1"
     },
     {
-      "id": "next_config_nextconfig",
-      "label": "nextConfig",
+      "id": "src_app_admin_logistics_page",
+      "label": "logistics/page.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "nextconfig",
-      "source_file": "next.config.ts",
-      "source_location": "L3"
-    },
-    {
-      "id": "src_app_layout",
-      "label": "app/layout.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "app/layout.tsx",
-      "source_file": "src/app/layout.tsx",
+      "norm_label": "logistics/page.tsx",
+      "source_file": "src/app/admin/logistics/page.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_app_layout_inter",
-      "label": "inter",
+      "id": "src_components_admin_applicationreviewtable",
+      "label": "ApplicationReviewTable.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "inter",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L9"
-    },
-    {
-      "id": "src_app_layout_metadata",
-      "label": "metadata",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "metadata",
-      "source_file": "src/app/layout.tsx",
-      "source_location": "L11"
-    },
-    {
-      "id": "src_app_providers",
-      "label": "providers.tsx",
-      "_origin": "ast",
-      "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "code",
-      "norm_label": "providers.tsx",
-      "source_file": "src/app/providers.tsx",
+      "norm_label": "applicationreviewtable.tsx",
+      "source_file": "src/components/admin/ApplicationReviewTable.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_components_navigation_appheader",
-      "label": "AppHeader.tsx",
+      "id": "src_components_admin_applicationreviewtable_rejection_reasons",
+      "label": "REJECTION_REASONS",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "appheader.tsx",
-      "source_file": "src/components/navigation/AppHeader.tsx",
+      "norm_label": "rejection_reasons",
+      "source_file": "src/components/admin/ApplicationReviewTable.tsx",
+      "source_location": "L37"
+    },
+    {
+      "id": "src_components_admin_samplelogisticstable",
+      "label": "SampleLogisticsTable.tsx",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "ApplicationReviewTable.tsx",
+      "file_type": "code",
+      "norm_label": "samplelogisticstable.tsx",
+      "source_file": "src/components/admin/SampleLogisticsTable.tsx",
       "source_location": "L1"
     },
     {
-      "id": "src_components_navigation_appheader_initialnotifications",
-      "label": "initialNotifications",
+      "id": "src_components_admin_samplelogisticstable_couriers",
+      "label": "COURIERS",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "initialnotifications",
-      "source_file": "src/components/navigation/AppHeader.tsx",
-      "source_location": "L26"
+      "norm_label": "couriers",
+      "source_file": "src/components/admin/SampleLogisticsTable.tsx",
+      "source_location": "L33"
     },
     {
-      "id": "src_components_navigation_appsidebar",
-      "label": "AppSidebar.tsx",
+      "id": "src_lib_admin_data",
+      "label": "admin-data.ts",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
+      "community_name": "ApplicationReviewTable.tsx",
       "file_type": "code",
-      "norm_label": "appsidebar.tsx",
-      "source_file": "src/components/navigation/AppSidebar.tsx",
+      "norm_label": "admin-data.ts",
+      "source_file": "src/lib/admin-data.ts",
       "source_location": "L1"
     },
     {
-      "id": "ref_next",
-      "label": "next",
+      "id": "src_lib_admin_data_initialapplications",
+      "label": "initialApplications",
       "_origin": "ast",
       "community": 2,
-      "community_name": "app/layout.tsx",
-      "file_type": "concept",
-      "norm_label": "next",
-      "source_file": "package.json",
-      "source_location": "L23"
+      "community_name": "ApplicationReviewTable.tsx",
+      "file_type": "code",
+      "norm_label": "initialapplications",
+      "source_file": "src/lib/admin-data.ts",
+      "source_location": "L33"
     },
     {
       "id": "src_app_api_auth_me_route",
@@ -2791,6 +2793,39 @@
       "source_location": "L4"
     },
     {
+      "id": "src_middleware",
+      "label": "middleware.ts",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "auth.ts",
+      "file_type": "code",
+      "norm_label": "middleware.ts",
+      "source_file": "src/middleware.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_middleware_config",
+      "label": "config",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "auth.ts",
+      "file_type": "code",
+      "norm_label": "config",
+      "source_file": "src/middleware.ts",
+      "source_location": "L45"
+    },
+    {
+      "id": "src_middleware_jwt_secret",
+      "label": "JWT_SECRET",
+      "_origin": "ast",
+      "community": 20,
+      "community_name": "auth.ts",
+      "file_type": "code",
+      "norm_label": "jwt_secret",
+      "source_file": "src/middleware.ts",
+      "source_location": "L4"
+    },
+    {
       "id": "ref_jose",
       "label": "jose",
       "_origin": "ast",
@@ -2813,17 +2848,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_tasks_videodetectioncard",
-      "label": "VideoDetectionCard.tsx",
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "types/index.ts",
-      "file_type": "code",
-      "norm_label": "videodetectioncard.tsx",
-      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_lib_tasks_data",
       "label": "tasks-data.ts",
       "_origin": "ast",
@@ -2833,6 +2857,17 @@
       "norm_label": "tasks-data.ts",
       "source_file": "src/lib/tasks-data.ts",
       "source_location": "L1"
+    },
+    {
+      "id": "src_lib_tasks_data_initialcreatortasks",
+      "label": "initialCreatorTasks",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "types/index.ts",
+      "file_type": "code",
+      "norm_label": "initialcreatortasks",
+      "source_file": "src/lib/tasks-data.ts",
+      "source_location": "L88"
     },
     {
       "id": "src_lib_tiktok",
@@ -3504,15 +3539,26 @@
       "source_location": "L53"
     },
     {
-      "id": "src_app_admin_applications_page",
-      "label": "applications/page.tsx",
+      "id": "next_config",
+      "label": "next.config.ts",
       "_origin": "ast",
       "community": 29,
       "community_name": "react",
       "file_type": "code",
-      "norm_label": "applications/page.tsx",
-      "source_file": "src/app/admin/applications/page.tsx",
+      "norm_label": "next.config.ts",
+      "source_file": "next.config.ts",
       "source_location": "L1"
+    },
+    {
+      "id": "next_config_nextconfig",
+      "label": "nextConfig",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "nextconfig",
+      "source_file": "next.config.ts",
+      "source_location": "L3"
     },
     {
       "id": "src_app_admin_campaigns_page",
@@ -3559,17 +3605,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_app_admin_logistics_page",
-      "label": "logistics/page.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "logistics/page.tsx",
-      "source_file": "src/app/admin/logistics/page.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "src_app_admin_page",
       "label": "admin/page.tsx",
       "_origin": "ast",
@@ -3601,6 +3636,39 @@
       "norm_label": "mockcommissions",
       "source_file": "src/app/earnings/page.tsx",
       "source_location": "L33"
+    },
+    {
+      "id": "src_app_layout",
+      "label": "app/layout.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "app/layout.tsx",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_app_layout_inter",
+      "label": "inter",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "inter",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L9"
+    },
+    {
+      "id": "src_app_layout_metadata",
+      "label": "metadata",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "metadata",
+      "source_file": "src/app/layout.tsx",
+      "source_location": "L11"
     },
     {
       "id": "src_app_my_tasks_id_page",
@@ -3658,6 +3726,17 @@
       "source_location": "L1"
     },
     {
+      "id": "src_app_providers",
+      "label": "providers.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "providers.tsx",
+      "source_file": "src/app/providers.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "src_components_admin_adminsidebar",
       "label": "AdminSidebar.tsx",
       "_origin": "ast",
@@ -3669,50 +3748,6 @@
       "source_location": "L1"
     },
     {
-      "id": "src_components_admin_applicationreviewtable",
-      "label": "ApplicationReviewTable.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "applicationreviewtable.tsx",
-      "source_file": "src/components/admin/ApplicationReviewTable.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_admin_applicationreviewtable_rejection_reasons",
-      "label": "REJECTION_REASONS",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "rejection_reasons",
-      "source_file": "src/components/admin/ApplicationReviewTable.tsx",
-      "source_location": "L37"
-    },
-    {
-      "id": "src_components_admin_samplelogisticstable",
-      "label": "SampleLogisticsTable.tsx",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "samplelogisticstable.tsx",
-      "source_file": "src/components/admin/SampleLogisticsTable.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_components_admin_samplelogisticstable_couriers",
-      "label": "COURIERS",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "couriers",
-      "source_file": "src/components/admin/SampleLogisticsTable.tsx",
-      "source_location": "L33"
-    },
-    {
       "id": "src_components_campaign_campaigncard",
       "label": "CampaignCard.tsx",
       "_origin": "ast",
@@ -3721,6 +3756,39 @@
       "file_type": "code",
       "norm_label": "campaigncard.tsx",
       "source_file": "src/components/campaign/CampaignCard.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_navigation_appheader",
+      "label": "AppHeader.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appheader.tsx",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_components_navigation_appheader_initialnotifications",
+      "label": "initialNotifications",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "initialnotifications",
+      "source_file": "src/components/navigation/AppHeader.tsx",
+      "source_location": "L26"
+    },
+    {
+      "id": "src_components_navigation_appsidebar",
+      "label": "AppSidebar.tsx",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "code",
+      "norm_label": "appsidebar.tsx",
+      "source_file": "src/components/navigation/AppSidebar.tsx",
       "source_location": "L1"
     },
     {
@@ -3746,37 +3814,15 @@
       "source_location": "L1"
     },
     {
-      "id": "src_lib_admin_data",
-      "label": "admin-data.ts",
+      "id": "src_components_tasks_videodetectioncard",
+      "label": "VideoDetectionCard.tsx",
       "_origin": "ast",
       "community": 29,
       "community_name": "react",
       "file_type": "code",
-      "norm_label": "admin-data.ts",
-      "source_file": "src/lib/admin-data.ts",
+      "norm_label": "videodetectioncard.tsx",
+      "source_file": "src/components/tasks/VideoDetectionCard.tsx",
       "source_location": "L1"
-    },
-    {
-      "id": "src_lib_admin_data_initialapplications",
-      "label": "initialApplications",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "initialapplications",
-      "source_file": "src/lib/admin-data.ts",
-      "source_location": "L33"
-    },
-    {
-      "id": "src_lib_tasks_data_initialcreatortasks",
-      "label": "initialCreatorTasks",
-      "_origin": "ast",
-      "community": 29,
-      "community_name": "react",
-      "file_type": "code",
-      "norm_label": "initialcreatortasks",
-      "source_file": "src/lib/tasks-data.ts",
-      "source_location": "L88"
     },
     {
       "id": "ref_clsx",
@@ -3810,6 +3856,17 @@
       "norm_label": "lucide-react",
       "source_file": "package.json",
       "source_location": "L22"
+    },
+    {
+      "id": "ref_next",
+      "label": "next",
+      "_origin": "ast",
+      "community": 29,
+      "community_name": "react",
+      "file_type": "concept",
+      "norm_label": "next",
+      "source_file": "package.json",
+      "source_location": "L23"
     },
     {
       "id": "ref_react",
@@ -4387,7 +4444,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/app/api/auth/google/callback/route.ts",
-      "source_location": "L213",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "src_app_api_auth_google_callback_route_get",
+      "target": "src_lib_auth_isadminemail",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/app/api/auth/google/callback/route.ts",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -4459,7 +4528,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/auth.ts",
-      "source_location": "L39",
+      "source_location": "L53",
       "weight": 1.0
     },
     {
@@ -4979,6 +5048,18 @@
       "weight": 1.0
     },
     {
+      "source": "src_app_api_auth_google_callback_route",
+      "target": "src_lib_auth_isadminemail",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/app/api/auth/google/callback/route.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "src_app_api_auth_me_route",
       "target": "src_lib_auth_getcurrentsession",
       "relation": "imports",
@@ -5216,6 +5297,30 @@
       "context": "import",
       "source_file": "src/components/admin/SampleLogisticsTable.tsx",
       "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_navigation_mobilebottomnav",
+      "target": "src_lib_auth_authsessionuser",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/navigation/MobileBottomNav.tsx",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_navigation_navbar",
+      "target": "src_lib_auth_authsessionuser",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/navigation/Navbar.tsx",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -6326,6 +6431,30 @@
     },
     {
       "source": "src_components_navigation_mobilebottomnav",
+      "target": "ref_clsx",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/navigation/MobileBottomNav.tsx",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_navigation_mobilebottomnav",
+      "target": "src_lib_auth",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/navigation/MobileBottomNav.tsx",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_navigation_mobilebottomnav",
       "target": "ref_react",
       "relation": "imports_from",
       "_origin": "ast",
@@ -6349,18 +6478,6 @@
       "weight": 1.0
     },
     {
-      "source": "src_components_navigation_mobilebottomnav",
-      "target": "ref_clsx",
-      "relation": "imports_from",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "import",
-      "source_file": "src/components/navigation/MobileBottomNav.tsx",
-      "source_location": "L7",
-      "weight": 1.0
-    },
-    {
       "source": "src_components_navigation_navbar",
       "target": "ref_lucide_react",
       "relation": "imports_from",
@@ -6369,7 +6486,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L13",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -6386,6 +6503,18 @@
     },
     {
       "source": "src_components_navigation_navbar",
+      "target": "src_lib_auth",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/components/navigation/Navbar.tsx",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "src_components_navigation_navbar",
       "target": "ref_heroui_react",
       "relation": "imports_from",
       "_origin": "ast",
@@ -6393,7 +6522,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L5",
+      "source_location": "L6",
       "weight": 1.0
     },
     {
@@ -6646,6 +6775,18 @@
       "context": "import",
       "source_file": "src/lib/tiktok.ts",
       "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "src_middleware",
+      "target": "ref_jose",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "src/middleware.ts",
+      "source_location": "L2",
       "weight": 1.0
     },
     {
@@ -8573,7 +8714,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/navigation/MobileBottomNav.tsx",
-      "source_location": "L9",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -8584,7 +8725,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/navigation/Navbar.tsx",
-      "source_location": "L15",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -9106,7 +9247,7 @@
     },
     {
       "source": "src_lib_auth",
-      "target": "src_lib_auth_createsessiontoken",
+      "target": "src_lib_auth_isadminemail",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -9117,24 +9258,24 @@
     },
     {
       "source": "src_lib_auth",
+      "target": "src_lib_auth_createsessiontoken",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/auth.ts",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_auth",
       "target": "src_lib_auth_verifysessiontoken",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/auth.ts",
-      "source_location": "L25",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_auth",
-      "target": "src_lib_auth_getcurrentsession",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/auth.ts",
-      "source_location": "L34",
+      "source_location": "L39",
       "weight": 1.0
     },
     {
@@ -9146,6 +9287,17 @@
       "confidence_score": 1.0,
       "source_file": "src/lib/auth.ts",
       "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_auth",
+      "target": "src_lib_auth_getcurrentsession",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/auth.ts",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -9289,6 +9441,39 @@
       "confidence_score": 1.0,
       "source_file": "src/lib/wilayah.ts",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "src_middleware",
+      "target": "src_middleware_jwt_secret",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/middleware.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "src_middleware",
+      "target": "src_middleware_config",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/middleware.ts",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "src_middleware",
+      "target": "src_middleware_middleware",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/middleware.ts",
+      "source_location": "L8",
       "weight": 1.0
     },
     {
@@ -9798,5 +9983,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a9644f1f7e18116d2284b4b298b50343c148d711"
+  "built_at_commit": "054d0c00f8f8c04ffc85b7522f39032f6dfcb8ce"
 }
