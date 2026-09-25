@@ -27,9 +27,8 @@ export async function POST(req: NextRequest) {
     };
     const state = Buffer.from(JSON.stringify(statePayload)).toString("base64url");
 
-    // Scopes requested from TikTok
-    // user.info.basic, user.info.profile, user.info.stats
-    const scopes = "user.info.basic,user.info.profile,user.info.stats";
+    // Scopes requested from TikTok (default to standard user.info.basic)
+    const scopes = process.env.TIKTOK_SCOPES || "user.info.basic";
 
     const params = new URLSearchParams({
       client_key: clientKey,
