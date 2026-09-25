@@ -150,9 +150,9 @@
     "semantic_hash": ""
   },
   "src/app/page.tsx": {
-    "mtime": 1790221148.339274,
-    "seen": 1790221460.5000136,
-    "ast_hash": "b375a198013ca6d2de4fd0f1843de32c",
+    "mtime": 1790237222.973372,
+    "seen": 1790237454.911557,
+    "ast_hash": "41c8b56aa36497c053d065845b87ee7b",
     "semantic_hash": ""
   },
   "src/app/providers.tsx": {
@@ -300,9 +300,9 @@
     "semantic_hash": ""
   },
   "src/lib/admin-data.ts": {
-    "mtime": 1789625794.581752,
-    "seen": 1789625887.739437,
-    "ast_hash": "8d64d0fd59f3dab4dcca0e7674033671",
+    "mtime": 1790237136.2918484,
+    "seen": 1790237454.9125812,
+    "ast_hash": "306bbdd5b615f1bec5233243b2a7dea5",
     "semantic_hash": ""
   },
   "src/app/api/tasks/detect/route.ts": {
@@ -318,9 +318,9 @@
     "semantic_hash": ""
   },
   "src/app/my-tasks/page.tsx": {
-    "mtime": 1789628541.5912097,
-    "seen": 1789628658.2205112,
-    "ast_hash": "5c35610a19c2e3e497679e8215fda6fc",
+    "mtime": 1790237270.3689206,
+    "seen": 1790237454.911557,
+    "ast_hash": "0df4269949f9e1b0e96f08ea30317fc2",
     "semantic_hash": ""
   },
   "src/components/tasks/TaskCard.tsx": {
@@ -336,9 +336,9 @@
     "semantic_hash": ""
   },
   "src/lib/tasks-data.ts": {
-    "mtime": 1790221052.176628,
-    "seen": 1790221460.5020175,
-    "ast_hash": "6d7f5a889bc2cefb1cca81553a6d1aaa",
+    "mtime": 1790237125.9283288,
+    "seen": 1790237454.9125812,
+    "ast_hash": "225ab525b8ffbb8f0a645fd6abbd2f3f",
     "semantic_hash": ""
   },
   "src/app/protocol/page.tsx": {
@@ -360,9 +360,9 @@
     "semantic_hash": ""
   },
   "src/app/earnings/page.tsx": {
-    "mtime": 1790218842.7999542,
-    "seen": 1790219071.6457517,
-    "ast_hash": "8d95fb8bac0b4bb8e16a33a8950bb1ed",
+    "mtime": 1790237311.4159298,
+    "seen": 1790237454.911557,
+    "ast_hash": "dde0dea1f20d94de5a26880b57f27827",
     "semantic_hash": ""
   },
   "README.md": {
@@ -372,9 +372,9 @@
     "semantic_hash": ""
   },
   "src/app/admin/campaigns/page.tsx": {
-    "mtime": 1790221360.4435315,
-    "seen": 1790221460.5000136,
-    "ast_hash": "3a1f63a1bbe36e6d951f4829dd1a6060",
+    "mtime": 1790237407.5261412,
+    "seen": 1790237454.9100368,
+    "ast_hash": "4aa5233b10976a894b6a5d24a06efa68",
     "semantic_hash": ""
   },
   "src/app/admin/import/page.tsx": {
@@ -423,6 +423,12 @@
     "mtime": 1790229689.68616,
     "seen": 1790229772.770277,
     "ast_hash": "8f382e095a79cbef94d78615a759105c",
+    "semantic_hash": ""
+  },
+  "src/app/api/campaigns/route.ts": {
+    "mtime": 1790237155.4943125,
+    "seen": 1790237454.911038,
+    "ast_hash": "389494b189740b6fd17594b5eeb3b6a9",
     "semantic_hash": ""
   }
 }

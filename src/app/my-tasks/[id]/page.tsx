@@ -45,7 +45,7 @@ export default function CampaignDetailPage() {
 
   const salesSummary = task.salesSummary || {
     productId: task.productId || "172981928391",
-    creatorUsername: task.creatorUsername || "@banibanzl",
+    creatorUsername: task.creatorUsername || "@creator",
     totalViews: 53420,
     totalLikes: 4290,
     totalLiveDurationMinutes: 150,
@@ -120,7 +120,7 @@ export default function CampaignDetailPage() {
               <span className="text-slate-400 block text-[11px]">Akun terdaftar:</span>
               <div className="flex items-center gap-1.5 font-semibold text-slate-800">
                 <span className="w-2 h-2 rounded-full bg-slate-900" />
-                <span>{task.creatorUsername || "banibanzl"}</span>
+                <span>{task.creatorUsername || "creator"}</span>
               </div>
             </div>
 
@@ -415,7 +415,7 @@ export default function CampaignDetailPage() {
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/80 text-xs text-slate-600 space-y-1">
                 <p className="font-bold text-slate-800">Video belum terdeteksi</p>
                 <p className="text-slate-500">
-                  Setelah upload video ke akun TikTok {task.creatorUsername || "@banibanzl"} dengan hashtag wajib {isTikTokGo ? "dan menyematkan Pin Tag Lokasi Hijau resmi" : ""}, sistem akan mendeteksinya secara otomatis dalam waktu 15–30 menit.
+                  Setelah upload video ke akun TikTok {task.creatorUsername || "@creator"} dengan hashtag wajib {isTikTokGo ? "dan menyematkan Pin Tag Lokasi Hijau resmi" : ""}, sistem akan mendeteksinya secara otomatis dalam waktu 15–30 menit.
                 </p>
               </div>
             )}
@@ -438,7 +438,7 @@ export default function CampaignDetailPage() {
                   </span>
                 </div>
                 <p className="text-xs text-emerald-300/80">
-                  Seluruh performa views video, voucher terjual (Sales Value), dan voucher di-redeem di kasir diatribusikan ke akun <strong className="text-white">{task.creatorUsername || "@banibanzl"}</strong>.
+                  Seluruh performa views video, voucher terjual (Sales Value), dan voucher di-redeem di kasir diatribusikan ke akun <strong className="text-white">{task.creatorUsername || "@creator"}</strong>.
                 </p>
               </div>
 
@@ -460,7 +460,7 @@ export default function CampaignDetailPage() {
                   </span>
                 </div>
                 <p className="text-xs text-slate-400">
-                  Semua performa views video, sesi LIVE, dan penjualan keranjang kuning diatribusikan ke akun <strong className="text-white">{task.creatorUsername || "@banibanzl"}</strong>.
+                  Semua performa views video, sesi LIVE, dan penjualan keranjang kuning diatribusikan ke akun <strong className="text-white">{task.creatorUsername || "@creator"}</strong>.
                 </p>
               </div>
 

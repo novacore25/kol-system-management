@@ -119,7 +119,7 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="p-3 bg-default-50 dark:bg-default-100/50 rounded-2xl flex items-center justify-between text-xs">
-            <span className="font-bold text-default-700">Hibban Nazala (@banibanzl)</span>
+            <span className="font-bold text-default-700">Pendaftar Campaign Terbaru</span>
             <Chip size="sm" color="warning" variant="flat" className="font-bold text-[10px]">
               Menunggu Review
             </Chip>

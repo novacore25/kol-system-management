@@ -8,14 +8,29 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Only protect /admin routes
+  // 1. ADMIN ROUTES
   if (pathname.startsWith("/admin")) {
-    const token = req.cookies.get("creavy_session")?.value;
+    // Allow public access to /admin/login
+    if (pathname === "/admin/login") {
+      const token = req.cookies.get("creavy_session")?.value;
+      if (token) {
+        try {
+          const { payload } = await jwtVerify(token, JWT_SECRET);
+          if ((payload as any).role === "ADMIN") {
+            // Already logged in as admin, redirect directly to admin dashboard
+            return NextResponse.redirect(new URL("/admin", req.url));
+          }
+        } catch {
+          // Token invalid, proceed to login page
+        }
+      }
+      return NextResponse.next();
+    }
 
+    // Protect all other /admin/* routes
+    const token = req.cookies.get("creavy_session")?.value;
     if (!token) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/register";
-      url.searchParams.set("returnUrl", pathname);
+      const url = new URL("/admin/login", req.url);
       url.searchParams.set("error", "login_required");
       return NextResponse.redirect(url);
     }
@@ -25,16 +40,39 @@ export async function middleware(req: NextRequest) {
       const role = (payload as any).role;
 
       if (role !== "ADMIN") {
-        // Creators attempting to access admin routes are redirected to creator tasks
-        const url = req.nextUrl.clone();
-        url.pathname = "/my-tasks";
+        // Logged in user is not an admin, deny and redirect to admin login with error
+        const url = new URL("/admin/login", req.url);
+        url.searchParams.set("error", "not_admin");
         return NextResponse.redirect(url);
       }
     } catch {
-      // Invalid/expired token
-      const url = req.nextUrl.clone();
-      url.pathname = "/register";
+      // Expired or invalid token
+      const url = new URL("/admin/login", req.url);
+      url.searchParams.set("error", "session_expired");
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // 2. CREATOR PROTECTED ROUTES (/my-tasks, /earnings, /profile)
+  if (
+    pathname.startsWith("/my-tasks") ||
+    pathname.startsWith("/earnings") ||
+    pathname.startsWith("/profile")
+  ) {
+    const token = req.cookies.get("creavy_session")?.value;
+    if (!token) {
+      const url = new URL("/login", req.url);
       url.searchParams.set("returnUrl", pathname);
+      url.searchParams.set("error", "login_required");
+      return NextResponse.redirect(url);
+    }
+
+    try {
+      await jwtVerify(token, JWT_SECRET);
+    } catch {
+      const url = new URL("/login", req.url);
+      url.searchParams.set("returnUrl", pathname);
+      url.searchParams.set("error", "session_expired");
       return NextResponse.redirect(url);
     }
   }
@@ -43,5 +81,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    "/admin/:path*",
+    "/my-tasks/:path*",
+    "/earnings/:path*",
+    "/profile/:path*",
+  ],
 };

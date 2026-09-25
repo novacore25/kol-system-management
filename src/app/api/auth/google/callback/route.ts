@@ -212,7 +212,12 @@ export async function GET(req: NextRequest) {
       creatorProfileId = existingProfile.id;
     }
 
-    // 6. Create Auth Session Token
+    // 6. Security Check for Admin Portal Login
+    if (returnUrl.startsWith("/admin") && assignedRole !== "ADMIN") {
+      return NextResponse.redirect(`${appUrl}/admin/login?error=not_admin`);
+    }
+
+    // 7. Create Auth Session Token
     const sessionToken = await createSessionToken({
       id: userId,
       email: googleUser.email,
@@ -222,8 +227,9 @@ export async function GET(req: NextRequest) {
       creatorProfileId,
     });
 
-    // 7. Set HTTP-only Cookie and Redirect
-    const response = NextResponse.redirect(`${appUrl}${returnUrl}`);
+    // 8. Set HTTP-only Cookie and Redirect
+    const destination = assignedRole === "ADMIN" && !returnUrl.startsWith("/admin") ? "/admin" : returnUrl;
+    const response = NextResponse.redirect(`${appUrl}${destination}`);
     response.cookies.set("creavy_session", sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",

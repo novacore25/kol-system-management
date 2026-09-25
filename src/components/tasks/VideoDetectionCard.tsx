@@ -36,7 +36,7 @@ export function VideoDetectionCard({ task }: { task: CreatorTaskItem }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           taskId: task.id,
-          tiktokHandle: "@banibanzl",
+          tiktokHandle: task.creatorUsername || "@creator",
         }),
       });
 

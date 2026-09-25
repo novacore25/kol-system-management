@@ -50,6 +50,7 @@ export interface CampaignData {
   mandatoryMentions: string[];
   sowItems: string[];
   targetAffiliateLink?: string;
+  productVariants?: string[];
 }
 
 export function CampaignCard({ campaign }: { campaign: CampaignData }) {
@@ -68,8 +69,18 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
   } = useDisclosure();
 
   const [applyStep, setApplyStep] = useState(1);
-  const [selectedAccount, setSelectedAccount] = useState("banibanzl");
-  const [selectedVariant, setSelectedVariant] = useState("01 Light Natural");
+  const [userProfile, setUserProfile] = useState<{
+    user: any;
+    creator: any;
+    shippingAddresses: any[];
+    tiktokAccount: any;
+  } | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState("");
+  const [selectedVariant, setSelectedVariant] = useState(
+    campaign.productVariants && campaign.productVariants.length > 0
+      ? campaign.productVariants[0]
+      : "Default Variant"
+  );
   const [agreedToMOU, setAgreedToMOU] = useState(false);
   const [copied, setCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -83,7 +94,25 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleOpenApply = () => {
+  const handleOpenApply = async () => {
+    try {
+      const res = await fetch("/api/profile");
+      if (res.status === 401) {
+        window.location.href = `/login?returnUrl=${encodeURIComponent(window.location.pathname)}`;
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        setUserProfile(data);
+        if (data.tiktokAccount) {
+          setSelectedAccount(data.tiktokAccount.handle);
+        } else if (data.creator?.tiktokHandle) {
+          setSelectedAccount(data.creator.tiktokHandle);
+        }
+      }
+    } catch {
+      // fallback
+    }
     setApplyStep(1);
     setSubmitted(false);
     setAgreedToMOU(false);
@@ -374,69 +403,56 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
                         </div>
 
                         {/* Account Cards */}
-                        <div className="space-y-2">
-                          <label
-                            onClick={() => setSelectedAccount("banibanzl")}
-                            className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                              selectedAccount === "banibanzl"
-                                ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
-                                : "border-slate-200 hover:bg-slate-50"
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
-                                TT
-                              </div>
-                              <div>
-                                <div className="flex items-center gap-1.5">
-                                  <span className="font-bold text-slate-900 text-xs">banibanzl</span>
-                                  <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">
-                                    Memenuhi syarat
-                                  </span>
+                        {userProfile?.tiktokAccount ? (
+                          <div className="space-y-2">
+                            <label
+                              onClick={() => setSelectedAccount(userProfile.tiktokAccount.handle)}
+                              className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
+                                selectedAccount === userProfile.tiktokAccount.handle
+                                  ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
+                                  : "border-slate-200 hover:bg-slate-50"
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
+                                  {userProfile.tiktokAccount.avatarUrl ? (
+                                    <img src={userProfile.tiktokAccount.avatarUrl} alt="" className="w-full h-full object-cover" />
+                                  ) : (
+                                    "TT"
+                                  )}
                                 </div>
-                                <p className="text-[11px] text-slate-400">Flw: 1.1K | GMV: -</p>
-                              </div>
-                            </div>
-                            <input
-                              type="radio"
-                              name="media_account"
-                              checked={selectedAccount === "banibanzl"}
-                              onChange={() => setSelectedAccount("banibanzl")}
-                              className="text-indigo-600 focus:ring-indigo-500"
-                            />
-                          </label>
-
-                          <label
-                            onClick={() => setSelectedAccount("hibban_nzl")}
-                            className={`flex items-center justify-between p-3.5 rounded-2xl border cursor-pointer transition-all ${
-                              selectedAccount === "hibban_nzl"
-                                ? "border-indigo-600 bg-indigo-50/40 shadow-sm"
-                                : "border-slate-200 hover:bg-slate-50"
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white flex items-center justify-center font-bold text-xs">
-                                IG
-                              </div>
-                              <div>
-                                <div className="flex items-center gap-1.5">
-                                  <span className="font-bold text-slate-900 text-xs">hibban_nzl</span>
-                                  <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-slate-100 text-slate-600">
-                                    Instagram
-                                  </span>
+                                <div>
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-bold text-slate-900 text-xs">@{userProfile.tiktokAccount.handle}</span>
+                                    <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 text-emerald-700">
+                                      Terverifikasi
+                                    </span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-400">
+                                    Followers: {userProfile.tiktokAccount.followerCount ? userProfile.tiktokAccount.followerCount.toLocaleString("id-ID") : "0"}
+                                  </p>
                                 </div>
-                                <p className="text-[11px] text-slate-400">Flw: 1.2K | GMV: -</p>
                               </div>
-                            </div>
-                            <input
-                              type="radio"
-                              name="media_account"
-                              checked={selectedAccount === "hibban_nzl"}
-                              onChange={() => setSelectedAccount("hibban_nzl")}
-                              className="text-indigo-600 focus:ring-indigo-500"
-                            />
-                          </label>
-                        </div>
+                              <input
+                                type="radio"
+                                name="media_account"
+                                checked={selectedAccount === userProfile.tiktokAccount.handle}
+                                onChange={() => setSelectedAccount(userProfile.tiktokAccount.handle)}
+                                className="text-indigo-600 focus:ring-indigo-500"
+                              />
+                            </label>
+                          </div>
+                        ) : (
+                          <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-amber-800 space-y-2">
+                            <p className="font-semibold text-xs">Belum ada akun TikTok yang terhubung</p>
+                            <p className="text-[11px] text-amber-700">
+                              Untuk mendaftar campaign dan memvalidasi tugas SOW, silakan hubungkan akun TikTok di Profil.
+                            </p>
+                            <Link href="/profile" className="inline-block text-xs font-bold text-indigo-600 hover:underline">
+                              Buka Pengaturan Profil &rarr;
+                            </Link>
+                          </div>
+                        )}
 
                         <div className="pt-1 text-center">
                           <Link
@@ -534,21 +550,39 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
                                   <label className="font-bold text-slate-800 text-xs block">
                                     Alamat Pengiriman Utama
                                   </label>
-                                  <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-1">
-                                    <div className="flex items-center justify-between">
-                                      <span className="font-bold text-slate-900">Hibban Nazala</span>
-                                      <span className="px-2 py-0.2 rounded-full text-[10px] font-semibold bg-slate-200 text-slate-700">
-                                        Alamat utama
-                                      </span>
+                                  {userProfile?.shippingAddresses && userProfile.shippingAddresses.length > 0 ? (
+                                    <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-1">
+                                      <div className="flex items-center justify-between">
+                                        <span className="font-bold text-slate-900">
+                                          {userProfile.shippingAddresses[0].recipientName || userProfile.user?.name || "Kreator"}
+                                        </span>
+                                        <span className="px-2 py-0.2 rounded-full text-[10px] font-semibold bg-slate-200 text-slate-700">
+                                          Alamat utama
+                                        </span>
+                                      </div>
+                                      <p className="text-slate-500 text-[11px]">{userProfile.shippingAddresses[0].phone}</p>
+                                      <p className="text-slate-700 font-medium text-xs">
+                                        {[
+                                          userProfile.shippingAddresses[0].provinceName,
+                                          userProfile.shippingAddresses[0].regencyName,
+                                          userProfile.shippingAddresses[0].districtName,
+                                          userProfile.shippingAddresses[0].postalCode,
+                                        ]
+                                          .filter(Boolean)
+                                          .join(", ")}
+                                      </p>
+                                      <p className="text-slate-500 text-[11px]">
+                                        {userProfile.shippingAddresses[0].street}
+                                      </p>
                                     </div>
-                                    <p className="text-slate-500 text-[11px]">+62 896-2427-2784</p>
-                                    <p className="text-slate-700 font-medium">
-                                      DKI JAKARTA, KOTA JAKARTA PUSAT, KEMAYORAN, 10650
-                                    </p>
-                                    <p className="text-slate-500 text-[11px]">
-                                      Jl. Taruna Jaya No.42, RT.011, RW.002, Serdang
-                                    </p>
-                                  </div>
+                                  ) : (
+                                    <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl space-y-2">
+                                      <p className="text-xs text-slate-600">Belum ada alamat pengiriman tersimpan.</p>
+                                      <Link href="/profile" className="inline-block text-xs font-bold text-indigo-600 hover:underline">
+                                        + Tambah Alamat di Profil
+                                      </Link>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             ) : (

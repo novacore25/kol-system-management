@@ -1,7 +1,7 @@
 {
   "0": "TikTok API & Ecosystem Integration Guide",
   "1": "What You Must Do When Invoked",
-  "2": "ApplicationReviewTable.tsx",
+  "2": "app/layout.tsx",
   "3": "graphify reference: extra exports and benchmark",
   "4": "graphify reference: query, path, explain",
   "5": "User Flows, Role Permissions, and Business Rules",
@@ -31,5 +31,8 @@
   "29": "react",
   "30": "detect/route.ts",
   "31": "CreatorRegistrationForm.tsx",
-  "32": "logout/route.ts"
+  "32": "logout/route.ts",
+  "33": "callback/route.ts",
+  "34": "campaigns/route.ts",
+  "35": "middleware.ts"
 }

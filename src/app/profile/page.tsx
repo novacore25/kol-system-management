@@ -78,26 +78,22 @@ export default function ProfilePage() {
 
   // User Profile State
   const [profile, setProfile] = useState({
-    fullName: "Hibban Nazala",
-    email: "hibbannezel@gmail.com",
-    phone: "+62 896-2427-2784",
-    gender: "Laki-laki",
+    fullName: "Kreator Creavy",
+    email: "",
+    phone: "-",
+    gender: "Belum disetel",
   });
 
+  const [connectedTiktok, setConnectedTiktok] = useState<{
+    handle: string;
+    displayName: string;
+    avatarUrl?: string;
+    followerCount?: number;
+    isVerified?: boolean;
+  } | null>(null);
+
   // Addresses State
-  const [addresses, setAddresses] = useState([
-    {
-      id: "1",
-      recipientName: "Hibban Nazala",
-      phone: "+62 896-2427-2784",
-      province: "DKI JAKARTA",
-      city: "KOTA JAKARTA PUSAT",
-      district: "KEMAYORAN",
-      postalCode: "10650",
-      street: "Jl. Taruna Jaya No.42, RT.011, RW.002, Serdang",
-      isDefault: true,
-    },
-  ]);
+  const [addresses, setAddresses] = useState<any[]>([]);
 
   const [newAddress, setNewAddress] = useState({
     recipientName: "",
@@ -111,21 +107,55 @@ export default function ProfilePage() {
   });
 
   // Bank Accounts State
-  const [bankAccounts, setBankAccounts] = useState([
-    {
-      id: "1",
-      bankName: "BANK CENTRAL ASIA",
-      accountNumber: "8832216606",
-      accountHolder: "Hibban Nazala",
-      isDefault: true,
-    },
-  ]);
+  const [bankAccounts, setBankAccounts] = useState<any[]>([]);
 
   const [newBank, setNewBank] = useState({
     bankName: POPULAR_BANKS[0],
     accountNumber: "",
     accountHolder: "",
   });
+
+  // Load Real Profile Data
+  React.useEffect(() => {
+    fetch("/api/profile")
+      .then((res) => {
+        if (!res.ok) {
+          window.location.href = "/login?returnUrl=/profile";
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data) return;
+        setProfile({
+          fullName: data.profile?.fullName || data.user?.name || "Kreator Creavy",
+          email: data.user?.email || "",
+          phone: data.profile?.whatsappNumber || "-",
+          gender: "Belum disetel",
+        });
+
+        if (data.addresses && Array.isArray(data.addresses) && data.addresses.length > 0) {
+          setAddresses(data.addresses);
+        }
+
+        if (data.profile?.bankName) {
+          setBankAccounts([
+            {
+              id: "1",
+              bankName: data.profile.bankName,
+              accountNumber: data.profile.bankAccountNumber || "-",
+              accountHolder: data.profile.bankAccountHolder || data.profile.fullName || "-",
+              isDefault: true,
+            },
+          ]);
+        }
+
+        if (data.tiktokAccount) {
+          setConnectedTiktok(data.tiktokAccount);
+        }
+      })
+      .catch((err) => console.error("Error loading profile:", err));
+  }, []);
 
   const handleSaveAddress = (onClose: () => void) => {
     if (!newAddress.recipientName || !newAddress.street) return;
@@ -296,46 +326,41 @@ export default function ProfilePage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {/* Card TikTok */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
-                TT
-              </div>
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-xs text-slate-900">banibanzl</span>
-                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px] font-bold">
-                    ✓
-                  </span>
+          {connectedTiktok ? (
+            /* Card TikTok */
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs overflow-hidden">
+                  {connectedTiktok.avatarUrl ? (
+                    <img src={connectedTiktok.avatarUrl} alt={connectedTiktok.displayName} className="w-full h-full object-cover" />
+                  ) : (
+                    "TT"
+                  )}
                 </div>
-                <p className="text-[11px] text-slate-400">Followers: 1,1 rb</p>
-              </div>
-            </div>
-
-            <button type="button" className="text-slate-400 hover:text-slate-600 p-1">
-              <Pencil className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Card Instagram */}
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white flex items-center justify-center font-bold text-xs">
-                IG
-              </div>
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-bold text-xs text-slate-900">hibban_nzl</span>
+                <div className="space-y-0.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-bold text-xs text-slate-900">@{connectedTiktok.handle}</span>
+                    {connectedTiktok.isVerified && (
+                      <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px] font-bold">
+                        ✓
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-400">
+                    Followers: {connectedTiktok.followerCount ? connectedTiktok.followerCount.toLocaleString("id-ID") : "0"}
+                  </p>
                 </div>
-                <p className="text-[11px] text-slate-400">Followers: 1,2 rb</p>
               </div>
-            </div>
 
-            <button type="button" className="text-slate-400 hover:text-slate-600 p-1">
-              <Pencil className="w-3.5 h-3.5" />
-            </button>
-          </div>
+              <span className="px-2 py-0.5 text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full">
+                Terhubung
+              </span>
+            </div>
+          ) : (
+            <div className="col-span-full bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 text-center">
+              <p className="text-xs text-slate-500">Belum ada akun TikTok yang terhubung.</p>
+            </div>
+          )}
         </div>
       </div>
 
