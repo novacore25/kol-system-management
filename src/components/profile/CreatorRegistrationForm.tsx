@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardBody,
@@ -77,6 +77,14 @@ function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
 export function CreatorRegistrationForm() {
   const [step, setStep] = useState(1);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [isTikTokLoading, setIsTikTokLoading] = useState(false);
+  const [connectedTikTok, setConnectedTikTok] = useState<{
+    handle: string;
+    displayName: string;
+    avatarUrl?: string;
+    followerCount?: number;
+    isVerified?: boolean;
+  } | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -103,6 +111,45 @@ export function CreatorRegistrationForm() {
 
   const [submitted, setSubmitted] = useState(false);
 
+  // Restore draft state and check for TikTok OAuth callback on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const stepParam = params.get("step");
+    if (stepParam) {
+      setStep(parseInt(stepParam, 10) || 1);
+    }
+
+    // Restore draft form data
+    const savedDraft = localStorage.getItem("creavy_registration_draft");
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        setFormData((prev) => ({ ...prev, ...parsed }));
+      } catch (e) {
+        console.warn("Failed to restore form draft:", e);
+      }
+    }
+
+    // Check cookie or url for TikTok data
+    const match = document.cookie.match(/creavy_tiktok_pending=([^;]+)/);
+    if (match) {
+      try {
+        const tiktokData = JSON.parse(decodeURIComponent(match[1]));
+        setConnectedTikTok(tiktokData);
+        if (tiktokData.handle) {
+          setFormData((prev) => ({ ...prev, tiktokHandle: `@${tiktokData.handle}` }));
+        }
+      } catch (e) {
+        console.warn("Failed to parse tiktok pending cookie:", e);
+      }
+    } else if (params.get("handle")) {
+      const h = params.get("handle") || "";
+      setFormData((prev) => ({ ...prev, tiktokHandle: `@${h}` }));
+    }
+  }, []);
+
   const handleWilayahChange = (wilayah: SelectedWilayah) => {
     setFormData((prev) => ({
       ...prev,
@@ -121,10 +168,42 @@ export function CreatorRegistrationForm() {
     setStep((prev) => Math.max(prev - 1, 1));
   };
 
+  // Trigger TikTok OAuth
+  const handleTikTokConnect = async () => {
+    try {
+      setIsTikTokLoading(true);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("creavy_registration_draft", JSON.stringify(formData));
+      }
+
+      const res = await fetch("/api/auth/tiktok/url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ returnUrl: "/register?step=4" }),
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Gagal memuat URL TikTok Login. Silakan coba lagi.");
+        setIsTikTokLoading(false);
+      }
+    } catch (err) {
+      console.error("TikTok Auth error:", err);
+      alert("Terjadi kesalahan saat menghubungkan ke TikTok.");
+      setIsTikTokLoading(false);
+    }
+  };
+
   // Trigger Google OAuth with current registration data encoded in state
   const handleGoogleSubmit = async () => {
     try {
       setIsGoogleLoading(true);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("creavy_registration_draft");
+      }
+
       const res = await fetch("/api/auth/google/url", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -430,20 +509,82 @@ export function CreatorRegistrationForm() {
             <div className="space-y-1">
               <h3 className="text-lg font-extrabold text-foreground">Hubungkan Akun TikTok & Google Kamu</h3>
               <p className="text-xs text-default-500 max-w-sm mx-auto">
-                Dengan menghubungkan akun TikTok & profil Google, sistem Creavy otomatis mendeteksi upload video kamu dan memvalidasi akun.
+                Dengan menghubungkan akun TikTok & profil Google, sistem Creavy otomatis mendeteksi upload video kamu dan memvalidasi tugas SOW.
               </p>
             </div>
 
             <div className="max-w-md mx-auto space-y-4 text-left">
-              <Input
-                label="Handle Akun TikTok (@username)"
-                placeholder="@banibanzl"
-                value={formData.tiktokHandle}
-                onChange={(e) => setFormData({ ...formData, tiktokHandle: e.target.value })}
-                variant="bordered"
-                description="Masukkan username TikTok yang kamu gunakan untuk konten affiliate / TikTok Go."
-                isRequired
-              />
+              {connectedTikTok ? (
+                /* Card Akun TikTok Terverifikasi */
+                <div className="p-4 bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-2xl flex items-center justify-between shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs overflow-hidden border-2 border-emerald-500 shrink-0">
+                      {connectedTikTok.avatarUrl ? (
+                        <img src={connectedTikTok.avatarUrl} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        "TT"
+                      )}
+                    </div>
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-bold text-xs text-slate-900 dark:text-white">
+                          @{connectedTikTok.handle}
+                        </span>
+                        <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-emerald-500 text-white flex items-center gap-0.5">
+                          ✓ Terverifikasi TikTok
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        {connectedTikTok.displayName} • Followers: {connectedTikTok.followerCount ? connectedTikTok.followerCount.toLocaleString("id-ID") : "0"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant="light"
+                    color="primary"
+                    onClick={handleTikTokConnect}
+                    className="text-xs font-semibold"
+                  >
+                    Ganti
+                  </Button>
+                </div>
+              ) : (
+                /* Tombol Login TikTok OAuth */
+                <div className="space-y-3">
+                  <Button
+                    type="button"
+                    onClick={handleTikTokConnect}
+                    isDisabled={isTikTokLoading}
+                    className="w-full bg-slate-950 dark:bg-white text-white dark:text-slate-900 font-bold py-6 rounded-2xl flex items-center justify-center gap-2.5 hover:bg-slate-900 shadow-md transition-all text-xs"
+                  >
+                    {isTikTokLoading ? (
+                      <Spinner size="sm" color="white" />
+                    ) : (
+                      <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.29 0 .58.04.85.12V9.3a6.34 6.34 0 0 0-.85-.06A6.33 6.33 0 0 0 3.15 15.6a6.34 6.34 0 0 0 6.33 6.33c3.5 0 6.33-2.83 6.33-6.33V9.08a8.28 8.28 0 0 0 4.88 1.57V7.22a4.83 4.83 0 0 1-1.1-.53z" />
+                      </svg>
+                    )}
+                    <span>{isTikTokLoading ? "Membuka Otorisasi TikTok..." : "Hubungkan Akun TikTok (Login TikTok API)"}</span>
+                  </Button>
+
+                  <div className="flex items-center gap-2 my-1">
+                    <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
+                    <span className="text-[11px] text-slate-400 font-medium">atau ketik manual</span>
+                    <div className="h-px bg-slate-200 dark:bg-slate-800 flex-1" />
+                  </div>
+
+                  <Input
+                    label="Handle Akun TikTok (@username)"
+                    placeholder="@username_kamu"
+                    value={formData.tiktokHandle}
+                    onChange={(e) => setFormData({ ...formData, tiktokHandle: e.target.value })}
+                    variant="bordered"
+                    description="Username TikTok yang kamu gunakan untuk konten affiliate / TikTok Go."
+                  />
+                </div>
+              )}
 
               <div className="p-4 bg-default-50 dark:bg-default-100/50 rounded-2xl border border-divider/60 space-y-2.5">
                 <p className="font-bold text-xs flex items-center gap-1.5 text-brand-600">
