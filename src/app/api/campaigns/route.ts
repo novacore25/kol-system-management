@@ -44,6 +44,8 @@ export async function GET(req: NextRequest) {
       mandatoryHashtags: (c.mandatoryHashtags as string[]) || [],
       mandatoryMentions: (c.mandatoryMentions as string[]) || [],
       sowItems: ((c.sowChecklist as any[]) || []).map((s) => (typeof s === "string" ? s : s.title)),
+      brief: (c as any).brief || undefined,
+      campaignVariants: ((c as any).campaignVariants as string[]) || [],
       targetAffiliateLink: c.targetAffiliateLink || undefined,
       soundUrl: c.soundUrl || undefined,
       productSkus: (c.productSkus as any[]) || [],

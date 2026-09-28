@@ -28,9 +28,13 @@ import {
 export interface CampaignData {
   id: string;
   title: string;
+  slug?: string;
   brandName: string;
   category: string;
   bannerUrl: string;
+  description?: string;
+  brief?: string;
+  campaignVariants?: string[];
   platformType?: "TIKTOK_SHOP" | "TIKTOK_GO";
   locationName?: string;
   locationId?: string;
@@ -138,9 +142,9 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
       {/* Gro Creator Clean White Card Layout */}
       <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm hover:shadow transition-shadow flex flex-col justify-between gap-4">
         {/* Top Section */}
-        <div className="flex items-start gap-4">
+        <Link href={`/campaign/${campaign.slug || campaign.id}`} className="flex items-start gap-4 group">
           {/* Brand Square Box */}
-          <div className="w-20 h-20 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center shrink-0 p-2 text-center shadow-inner">
+          <div className="w-20 h-20 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center shrink-0 p-2 text-center shadow-inner group-hover:border-indigo-300 transition-colors">
             <span className="font-extrabold text-sm text-slate-800 uppercase tracking-tight line-clamp-2">
               {campaign.brandName}
             </span>
@@ -148,7 +152,7 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
 
           {/* Right Campaign Info */}
           <div className="flex-1 space-y-2">
-            <h3 className="font-bold text-sm text-slate-900 leading-snug line-clamp-2">
+            <h3 className="font-bold text-sm text-slate-900 leading-snug line-clamp-2 group-hover:text-indigo-600 transition-colors">
               {campaign.title}
             </h3>
 
@@ -208,7 +212,7 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
               </span>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Bottom Section (Quota & Actions) */}
         <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
@@ -217,20 +221,18 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
           </span>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={onOpenDetail}
+            <Link
+              href={`/campaign/${campaign.slug || campaign.id}`}
               className="px-4 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
             >
               Detail
-            </button>
-            <button
-              type="button"
-              onClick={handleOpenApply}
+            </Link>
+            <Link
+              href={`/campaign/${campaign.slug || campaign.id}`}
               className="px-4 py-1.5 rounded-xl bg-indigo-600 text-xs font-semibold text-white hover:bg-indigo-700 transition-colors shadow-sm"
             >
               Daftar Campaign
-            </button>
+            </Link>
           </div>
         </div>
       </div>
