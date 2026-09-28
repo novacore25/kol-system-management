@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
   try {
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-    const redirectUri = `${appUrl}/api/auth/google/callback`;
+    const redirectUri = process.env.GOOGLE_REDIRECT_URI || `${appUrl}${req.nextUrl.pathname}`;
 
     if (!clientId || !clientSecret) {
       throw new Error("Missing Google OAuth credentials in environment");
