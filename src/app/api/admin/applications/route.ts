@@ -11,9 +11,12 @@ import {
 } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 import { getCurrentSession } from "@/lib/auth";
+import { ensureDbColumns } from "@/db/ensure-schema";
 
 export async function GET() {
   try {
+    await ensureDbColumns();
+
     const session = await getCurrentSession();
     if (!session || (session.role as string) !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

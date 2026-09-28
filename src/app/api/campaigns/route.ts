@@ -3,9 +3,12 @@ import { db } from "@/db";
 import { campaigns } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { getCurrentSession } from "@/lib/auth";
+import { ensureDbColumns } from "@/db/ensure-schema";
 
 export async function GET(req: NextRequest) {
   try {
+    await ensureDbColumns();
+
     const allCampaigns = await db
       .select()
       .from(campaigns)

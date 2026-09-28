@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { campaigns, campaignApplications, creatorProfiles, tiktokAccounts } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getCurrentSession } from "@/lib/auth";
+import { ensureDbColumns } from "@/db/ensure-schema";
 
 // GET /api/campaigns/[slug] — public, no auth needed
 export async function GET(
@@ -10,6 +11,8 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    await ensureDbColumns();
+
     const { slug } = await params;
     const [campaign] = await db
       .select()
