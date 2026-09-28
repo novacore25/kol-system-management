@@ -54,6 +54,7 @@ export async function GET(
         typeof s === "string" ? s : s.title
       ),
       brief: (campaign as any).brief || null,
+      campaignVariants: ((campaign as any).campaignVariants as string[]) || [],
       targetAffiliateLink: campaign.targetAffiliateLink,
       productSkus: (campaign.productSkus as any[]) || [],
       status: campaign.status,
@@ -72,7 +73,14 @@ export async function POST(
   try {
     const { slug } = await params;
     const body = await req.json();
-    const { applicantName, applicantWhatsapp, applicantTiktokHandle, applicantFollowerCount } = body;
+    const {
+      applicantName,
+      applicantWhatsapp,
+      applicantTiktokHandle,
+      applicantFollowerCount,
+      selectedVariant,
+      shippingAddressSnapshot,
+    } = body;
 
     if (!applicantName || !applicantWhatsapp || !applicantTiktokHandle) {
       return NextResponse.json(
@@ -81,14 +89,13 @@ export async function POST(
       );
     }
 
-    // Check if user is logged in — if so, link application to their profile
+    // Check if user is logged in — link application to their profile
     const session = await getCurrentSession();
     let creatorProfileId: string | null = null;
 
     if (session?.creatorProfileId) {
       creatorProfileId = session.creatorProfileId;
     } else if (session?.id) {
-      // Try looking up creator profile by user id
       const profiles = await db
         .select({ id: creatorProfiles.id })
         .from(creatorProfiles)
@@ -152,27 +159,31 @@ export async function POST(
       }
     }
 
-    // Insert application — linked to profile if logged in, guest otherwise
+    // Build internal notes (selected variant info)
+    const internalNotes = selectedVariant ? `Varian dipilih: ${selectedVariant}` : null;
+
+    // Insert application
     const [newApp] = await db
       .insert(campaignApplications)
       .values({
         campaignId: campaign.id,
         creatorProfileId: creatorProfileId as any,
         tiktokAccountId: null as any,
-        shippingAddressSnapshot: null as any,
+        shippingAddressSnapshot: (shippingAddressSnapshot || null) as any,
         status: "PENDING_REVIEW",
         applicantName: String(applicantName).trim(),
         applicantWhatsapp: String(applicantWhatsapp).trim(),
         applicantTiktokHandle: String(applicantTiktokHandle).trim(),
         applicantFollowerCount: applicantFollowerCount ? String(applicantFollowerCount).trim() : null,
-        isGuestApply: !creatorProfileId, // false if linked to profile, true if guest
+        isGuestApply: !creatorProfileId,
+        internalNotes: internalNotes as any,
       } as any)
       .returning({ id: campaignApplications.id });
 
     return NextResponse.json({
       success: true,
       applicationId: newApp.id,
-      linked: !!creatorProfileId, // tells frontend if it's linked to their profile
+      linked: !!creatorProfileId,
       message: `Pendaftaranmu untuk campaign "${campaign.title}" berhasil dikirim! Tim kami akan menghubungimu via WhatsApp dalam 1-3 hari kerja.`,
     });
   } catch (err: any) {

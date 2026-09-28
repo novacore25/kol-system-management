@@ -100,6 +100,7 @@ export async function POST(req: NextRequest) {
         startDate = new Date().toISOString(),
         endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         brief = "",
+        campaignVariants = [],
       } = item;
 
       // Use provided slug exactly if given — no timestamp suffix so the preview link matches reality
@@ -144,6 +145,7 @@ export async function POST(req: NextRequest) {
             required: true,
           })),
           brief: brief || null,
+          campaignVariants: campaignVariants as any,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
           createdBy: session.id,

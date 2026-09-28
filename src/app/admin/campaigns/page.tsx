@@ -123,6 +123,9 @@ export default function AdminCampaignsPage() {
   ];
   const [sowItems, setSowItems] = useState<string[]>(DEFAULT_SOW);
 
+  // Product variants — opsional (shade, rasa, ukuran, dll)
+  const [campaignVariants, setCampaignVariants] = useState<string[]>([]);
+
   // SKU Products List inside Modal
   const [skuList, setSkuList] = useState<SkuProductItem[]>([]);
 
@@ -181,6 +184,7 @@ export default function AdminCampaignsPage() {
       setCampaignSlug("");
       setSlugEdited(false);
       setSowItems(DEFAULT_SOW);
+      setCampaignVariants([]);
       const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
       setNewCampaign({
         title: "",
@@ -371,6 +375,7 @@ export default function AdminCampaignsPage() {
         mandatoryMentions: newCampaign.mentions.split(",").map((m) => m.trim()),
         sowItems: sowItems.filter(Boolean),
         brief: newCampaign.brief,
+        campaignVariants: campaignVariants.filter(Boolean),
         endDate: newCampaign.deadlineDate
           ? new Date(newCampaign.deadlineDate).toISOString()
           : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -399,6 +404,7 @@ export default function AdminCampaignsPage() {
       setCampaignSlug("");
       setSlugEdited(false);
       setSowItems(DEFAULT_SOW);
+      setCampaignVariants([]);
       const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
       setNewCampaign({
         title: "",
@@ -433,6 +439,7 @@ export default function AdminCampaignsPage() {
     setCampaignSlug("");
     setSlugEdited(false);
     setSowItems(DEFAULT_SOW);
+    setCampaignVariants([]);
     const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
     setNewCampaign({
       title: "",
@@ -1126,6 +1133,59 @@ export default function AdminCampaignsPage() {
                     {sowItems.length === 0 && (
                       <p className="text-[11px] text-slate-400 text-center py-2 italic">
                         Belum ada poin SOW. Klik "Tambah Poin" untuk menambahkan.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* 6b. Varian Produk (opsional) */}
+                <div className="p-4 bg-violet-50 border border-violet-200 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4 text-violet-600" />
+                      <span className="font-bold text-xs text-slate-900">Varian Produk</span>
+                      <span className="text-[10px] text-slate-500 bg-white border border-violet-200 px-1.5 py-0.5 rounded">{campaignVariants.length} varian</span>
+                      <span className="text-[10px] text-violet-500 bg-white border border-violet-200 px-1.5 py-0.5 rounded">Opsional</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setCampaignVariants([...campaignVariants, ""])}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-600 text-white text-[11px] font-semibold hover:bg-violet-700 transition-colors"
+                    >
+                      <Plus className="w-3 h-3" />
+                      Tambah Varian
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-slate-500">
+                    Opsional. Isi jika produk punya pilihan varian (shade, rasa, ukuran, dll). Jika kosong, kreator tidak perlu memilih — produk dikirim sesuai SKU.
+                  </p>
+                  <div className="space-y-2">
+                    {campaignVariants.map((v, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-violet-400 w-5 text-right shrink-0">{idx + 1}.</span>
+                        <input
+                          type="text"
+                          value={v}
+                          onChange={(e) => {
+                            const updated = [...campaignVariants];
+                            updated[idx] = e.target.value;
+                            setCampaignVariants(updated);
+                          }}
+                          placeholder={`Nama varian ke-${idx + 1} (mis. 01 Light Natural)`}
+                          className="flex-1 px-2.5 py-1.5 border border-violet-200 rounded-lg text-xs focus:outline-none focus:border-violet-400 bg-white"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setCampaignVariants(campaignVariants.filter((_, i) => i !== idx))}
+                          className="p-1 rounded text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-colors shrink-0"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                    {campaignVariants.length === 0 && (
+                      <p className="text-[11px] text-slate-400 text-center py-2 italic">
+                        Tidak ada varian — kreator tidak perlu memilih. Produk dikirim sesuai SKU.
                       </p>
                     )}
                   </div>
