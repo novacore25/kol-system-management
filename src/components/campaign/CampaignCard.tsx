@@ -322,6 +322,29 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
                     </p>
                   </div>
                 )}
+
+                {campaign.targetAffiliateLink && (
+                  <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex items-center justify-between gap-2">
+                    <div className="space-y-0.5">
+                      <span className="font-bold text-amber-900 text-xs flex items-center gap-1.5">
+                        <ShoppingBag className="w-3.5 h-3.5 text-amber-600" />
+                        Link Showcase Produk Resmi:
+                      </span>
+                      <p className="text-[11px] text-amber-800">
+                        Tambahkan produk ini ke showcase TikTok kamu untuk keranjang kuning video.
+                      </p>
+                    </div>
+                    <a
+                      href={campaign.targetAffiliateLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] shrink-0 transition-colors shadow-sm"
+                    >
+                      <span>Buka Link Showcase</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                )}
               </ModalBody>
 
               <ModalFooter className="border-t border-slate-100 py-3 flex justify-between">

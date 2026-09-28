@@ -181,6 +181,10 @@ export const campaigns = pgTable("campaigns", {
   category: text("category").notNull(), // Beauty, Tech, Food, etc.
   
   platformType: campaignPlatformTypeEnum("platform_type").default("TIKTOK_SHOP").notNull(),
+  productId: text("product_id"), // TikTok Shop Product ID (e.g. 1736993709100336445)
+  tiktokCampaignId: text("tiktok_campaign_id"), // TikTok Partner Campaign ID (e.g. 7672980751684912916)
+  salePrice: text("sale_price"), // Harga jual e.g. Rp259.500
+  shopName: text("shop_name"), // Nama toko e.g. MilkyBoost
   locationId: text("location_id"), // Tag Lokasi POI ID untuk TikTok Go
   locationName: text("location_name"), // Nama Outlet / Tempat / Hotel
   merchantName: text("merchant_name"),

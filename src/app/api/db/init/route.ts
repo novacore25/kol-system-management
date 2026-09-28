@@ -284,6 +284,12 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+
+      -- Safe column additions for campaigns table
+      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_id" text;
+      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "tiktok_campaign_id" text;
+      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "sale_price" text;
+      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "shop_name" text;
     `);
 
     // 3. Query all table names in public schema to confirm
