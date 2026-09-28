@@ -296,24 +296,24 @@ export function SampleLogisticsTable() {
       </div>
 
       {/* MODAL INPUT RESI */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
-        <ModalContent>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center" backdrop="blur">
+        <ModalContent className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-2xl">
           {(onClose) => (
             <>
-              <ModalHeader className="flex items-center gap-2">
+              <ModalHeader className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                 <PackageCheck className="w-5 h-5 text-indigo-600" />
-                <span>Input Resi Pengiriman Sampel</span>
+                <span className="font-bold text-slate-900 dark:text-white">Input Resi Pengiriman Sampel</span>
               </ModalHeader>
-              <ModalBody className="space-y-4">
-                <div className="p-3 bg-default-50 dark:bg-default-100/40 rounded-xl space-y-1 text-xs">
-                  <p className="font-bold text-foreground">
+              <ModalBody className="space-y-4 py-4">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl space-y-1 text-xs border border-slate-100 dark:border-slate-700">
+                  <p className="font-bold text-slate-900 dark:text-white">
                     {activeItem?.creatorName} ({activeItem?.tiktokHandle})
                   </p>
-                  <p className="text-default-500">
-                    Campaign: <strong>{activeItem?.campaignTitle}</strong>
+                  <p className="text-slate-500 dark:text-slate-400">
+                    Campaign: <strong className="text-slate-700 dark:text-slate-300">{activeItem?.campaignTitle}</strong>
                   </p>
                   {activeItem?.selectedVariant && activeItem?.selectedVariant !== "-" && (
-                    <p className="text-violet-700 font-semibold">
+                    <p className="text-violet-700 dark:text-violet-400 font-semibold">
                       Varian: <strong>{activeItem?.selectedVariant}</strong>
                     </p>
                   )}
@@ -342,12 +342,12 @@ export function SampleLogisticsTable() {
                   size="sm"
                 />
 
-                <p className="text-[11px] text-default-400">
+                <p className="text-[11px] text-slate-400">
                   Nomor resi yang diinput akan langsung muncul di halaman <strong>Campaign Saya</strong> kreator.
                 </p>
               </ModalBody>
-              <ModalFooter>
-                <Button size="sm" variant="flat" onClick={onClose} disabled={saving}>
+              <ModalFooter className="border-t border-slate-100 dark:border-slate-800 pt-3">
+                <Button size="sm" variant="flat" onClick={onClose} disabled={saving} className="font-semibold">
                   Batal
                 </Button>
                 <Button

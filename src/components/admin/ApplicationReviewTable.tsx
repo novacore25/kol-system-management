@@ -467,33 +467,33 @@ export function ApplicationReviewTable() {
       </div>
 
       {/* MODAL 1: APPROVE MODAL */}
-      <Modal isOpen={isApproveOpen} onOpenChange={onApproveChange} placement="center">
-        <ModalContent>
+      <Modal isOpen={isApproveOpen} onOpenChange={onApproveChange} placement="center" backdrop="blur">
+        <ModalContent className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-2xl">
           {(onClose) => (
             <>
-              <ModalHeader className="flex items-center gap-2">
+              <ModalHeader className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                 <CheckCircle2 className="w-5 h-5 text-success" />
-                <span>Setujui Pendaftar Campaign</span>
+                <span className="font-bold text-slate-900 dark:text-white">Setujui Pendaftar Campaign</span>
               </ModalHeader>
-              <ModalBody className="space-y-3">
-                <p className="text-xs text-default-600">
+              <ModalBody className="space-y-3 py-4">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   Kamu akan menyetujui kreator{" "}
-                  <strong>{selectedApp?.creatorName}</strong> ({selectedApp?.tiktokHandle}) untuk campaign{" "}
-                  <strong>{selectedApp?.campaignTitle}</strong>.
+                  <strong className="text-slate-900 dark:text-white">{selectedApp?.creatorName}</strong> ({selectedApp?.tiktokHandle}) untuk campaign{" "}
+                  <strong className="text-slate-900 dark:text-white">{selectedApp?.campaignTitle}</strong>.
                 </p>
                 {selectedApp?.selectedVariant && selectedApp?.selectedVariant !== "-" && (
-                  <div className="p-2.5 bg-violet-50 rounded-xl border border-violet-200 text-xs text-violet-800">
+                  <div className="p-2.5 bg-violet-50 dark:bg-violet-950/40 rounded-xl border border-violet-200 dark:border-violet-900 text-xs text-violet-800 dark:text-violet-300">
                     <strong>Varian Sampel:</strong> {selectedApp.selectedVariant}
                   </div>
                 )}
-                <div className="bg-success-50 dark:bg-success-950/40 p-3 rounded-xl border border-success-200">
-                  <p className="text-[11px] text-success-800 dark:text-success-300 font-medium">
-                    Kreator akan otomatis masuk ke antrean <strong>Logistik &amp; Resi Sampel</strong> untuk pengiriman sampel produk.
+                <div className="bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-xl border border-emerald-200 dark:border-emerald-900">
+                  <p className="text-[11px] text-emerald-800 dark:text-emerald-300 font-medium">
+                    ✓ Kreator akan otomatis masuk ke antrean <strong>Logistik &amp; Resi Sampel</strong> untuk pengiriman sampel produk.
                   </p>
                 </div>
               </ModalBody>
-              <ModalFooter>
-                <Button size="sm" variant="flat" onClick={onClose} disabled={actionLoading}>
+              <ModalFooter className="border-t border-slate-100 dark:border-slate-800 pt-3">
+                <Button size="sm" variant="flat" onClick={onClose} disabled={actionLoading} className="font-semibold">
                   Batal
                 </Button>
                 <Button
@@ -512,18 +512,18 @@ export function ApplicationReviewTable() {
       </Modal>
 
       {/* MODAL 2: REJECT MODAL */}
-      <Modal isOpen={isRejectOpen} onOpenChange={onRejectChange} placement="center">
-        <ModalContent>
+      <Modal isOpen={isRejectOpen} onOpenChange={onRejectChange} placement="center" backdrop="blur">
+        <ModalContent className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-2xl">
           {(onClose) => (
             <>
-              <ModalHeader className="flex items-center gap-2">
+              <ModalHeader className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
                 <XCircle className="w-5 h-5 text-danger" />
-                <span>Tolak Pendaftar Campaign</span>
+                <span className="font-bold text-slate-900 dark:text-white">Tolak Pendaftar Campaign</span>
               </ModalHeader>
-              <ModalBody className="space-y-3">
-                <p className="text-xs text-default-600">
+              <ModalBody className="space-y-3 py-4">
+                <p className="text-xs text-slate-600 dark:text-slate-300">
                   Pilih alasan penolakan untuk kreator{" "}
-                  <strong>{selectedApp?.creatorName}</strong>:
+                  <strong className="text-slate-900 dark:text-white">{selectedApp?.creatorName}</strong>:
                 </p>
                 <Select
                   label="Alasan Penolakan"
@@ -539,8 +539,8 @@ export function ApplicationReviewTable() {
                   ))}
                 </Select>
               </ModalBody>
-              <ModalFooter>
-                <Button size="sm" variant="flat" onClick={onClose} disabled={actionLoading}>
+              <ModalFooter className="border-t border-slate-100 dark:border-slate-800 pt-3">
+                <Button size="sm" variant="flat" onClick={onClose} disabled={actionLoading} className="font-semibold">
                   Batal
                 </Button>
                 <Button
