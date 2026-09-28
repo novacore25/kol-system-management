@@ -28,11 +28,11 @@ export async function GET() {
         shippingAddressSnapshot: campaignApplications.shippingAddressSnapshot,
         appliedAt: campaignApplications.appliedAt,
         reviewedAt: campaignApplications.reviewedAt,
-        applicantName: (campaignApplications as any).applicantName,
-        applicantWhatsapp: (campaignApplications as any).applicantWhatsapp,
-        applicantTiktokHandle: (campaignApplications as any).applicantTiktokHandle,
-        applicantFollowerCount: (campaignApplications as any).applicantFollowerCount,
-        isGuestApply: (campaignApplications as any).isGuestApply,
+        applicantName: campaignApplications.applicantName,
+        applicantWhatsapp: campaignApplications.applicantWhatsapp,
+        applicantTiktokHandle: campaignApplications.applicantTiktokHandle,
+        applicantFollowerCount: campaignApplications.applicantFollowerCount,
+        isGuestApply: campaignApplications.isGuestApply,
         
         // Campaign info
         campaignId: campaigns.id,

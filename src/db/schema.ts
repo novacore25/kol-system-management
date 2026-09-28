@@ -220,6 +220,10 @@ export const campaigns = pgTable("campaigns", {
   sowChecklist: jsonb("sow_checklist").$type<{ id: string; title: string; required: boolean }[]>().default([]).notNull(),
   dosAndDonts: jsonb("dos_and_donts").$type<{ type: "DO" | "DONT"; text: string }[]>().default([]).notNull(),
   
+  // Brief campaign dan opsi varian produk
+  brief: text("brief"),
+  campaignVariants: jsonb("campaign_variants").$type<string[]>().default([]).notNull(),
+  
   startDate: timestamp("start_date", { withTimezone: true }).notNull(),
   endDate: timestamp("end_date", { withTimezone: true }).notNull(),
   deadlineDaysAfterSample: integer("deadline_days_after_sample").default(7).notNull(), // wajib posting max 7 hari setelah sampel diterima
@@ -242,17 +246,22 @@ export const campaignApplications = pgTable("campaign_applications", {
     .references(() => campaigns.id, { onDelete: "cascade" })
     .notNull(),
   creatorProfileId: uuid("creator_profile_id")
-    .references(() => creatorProfiles.id, { onDelete: "cascade" })
-    .notNull(),
+    .references(() => creatorProfiles.id, { onDelete: "cascade" }),
   tiktokAccountId: uuid("tiktok_account_id")
-    .references(() => tiktokAccounts.id, { onDelete: "restrict" })
-    .notNull(),
+    .references(() => tiktokAccounts.id, { onDelete: "restrict" }),
   status: applicationStatusEnum("status").default("PENDING_REVIEW").notNull(),
   rejectionReason: text("rejection_reason"),
   internalNotes: text("internal_notes"),
   
   // Snapshot alamat yang dipilih kreator saat mendaftar
-  shippingAddressSnapshot: jsonb("shipping_address_snapshot").notNull(),
+  shippingAddressSnapshot: jsonb("shipping_address_snapshot"),
+  
+  // Data pendaftaran (jika guest apply atau fallback)
+  applicantName: text("applicant_name"),
+  applicantWhatsapp: text("applicant_whatsapp"),
+  applicantTiktokHandle: text("applicant_tiktok_handle"),
+  applicantFollowerCount: text("applicant_follower_count"),
+  isGuestApply: boolean("is_guest_apply").default(false),
   
   appliedAt: timestamp("applied_at", { withTimezone: true }).defaultNow().notNull(),
   reviewedAt: timestamp("reviewed_at", { withTimezone: true }),

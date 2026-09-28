@@ -26,9 +26,9 @@ export async function GET() {
         shippingAddressSnapshot: campaignApplications.shippingAddressSnapshot,
         appliedAt: campaignApplications.appliedAt,
         reviewedAt: campaignApplications.reviewedAt,
-        applicantName: (campaignApplications as any).applicantName,
-        applicantWhatsapp: (campaignApplications as any).applicantWhatsapp,
-        applicantTiktokHandle: (campaignApplications as any).applicantTiktokHandle,
+        applicantName: campaignApplications.applicantName,
+        applicantWhatsapp: campaignApplications.applicantWhatsapp,
+        applicantTiktokHandle: campaignApplications.applicantTiktokHandle,
         
         // Campaign info
         campaignId: campaigns.id,
