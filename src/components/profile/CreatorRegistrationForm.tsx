@@ -132,21 +132,36 @@ export function CreatorRegistrationForm() {
       }
     }
 
-    // Check cookie or url for TikTok data
+    // Check cookie or URL query params for TikTok verified data
+    let foundTikTok = false;
     const match = document.cookie.match(/creavy_tiktok_pending=([^;]+)/);
     if (match) {
       try {
         const tiktokData = JSON.parse(decodeURIComponent(match[1]));
-        setConnectedTikTok(tiktokData);
-        if (tiktokData.handle) {
+        if (tiktokData && tiktokData.handle) {
+          setConnectedTikTok(tiktokData);
           setFormData((prev) => ({ ...prev, tiktokHandle: `@${tiktokData.handle}` }));
+          foundTikTok = true;
         }
       } catch (e) {
         console.warn("Failed to parse tiktok pending cookie:", e);
       }
-    } else if (params.get("handle")) {
-      const h = params.get("handle") || "";
-      setFormData((prev) => ({ ...prev, tiktokHandle: `@${h}` }));
+    }
+
+    if (!foundTikTok && params.get("handle")) {
+      const handle = params.get("handle") || "";
+      const displayName = params.get("name") || handle;
+      const avatarUrl = params.get("avatar") || "";
+      const followerCount = parseInt(params.get("followers") || "0", 10) || 0;
+
+      setConnectedTikTok({
+        handle,
+        displayName,
+        avatarUrl,
+        followerCount,
+        isVerified: true,
+      });
+      setFormData((prev) => ({ ...prev, tiktokHandle: `@${handle}` }));
     }
   }, []);
 

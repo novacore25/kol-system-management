@@ -62,9 +62,15 @@ export async function GET(req: NextRequest) {
     });
 
     const tokenData = await tokenRes.json();
-    if (!tokenRes.ok || tokenData.error?.code !== "ok" && !tokenData.data?.access_token) {
+    const tokenPayload = tokenData.data || tokenData;
+    const accessToken = tokenPayload.access_token;
+
+    if (!tokenRes.ok || !accessToken) {
       console.error("TikTok token exchange failed:", tokenData);
-      const redirectTarget = returnUrl.includes("?") ? `${returnUrl}&error=tiktok_token_failed` : `${returnUrl}?error=tiktok_token_failed`;
+      const errMsg = tokenData.error_description || tokenData.error?.message || tokenData.message || "token_failed";
+      const redirectTarget = returnUrl.includes("?")
+        ? `${returnUrl}&error=tiktok_token_failed&msg=${encodeURIComponent(errMsg)}`
+        : `${returnUrl}?error=tiktok_token_failed&msg=${encodeURIComponent(errMsg)}`;
       return NextResponse.redirect(`${appUrl}${redirectTarget}`);
     }
 
@@ -74,7 +80,7 @@ export async function GET(req: NextRequest) {
       expires_in,
       open_id,
       union_id,
-    } = tokenData.data;
+    } = tokenPayload;
 
     // 2. Fetch User Profile & Stats from TikTok API
     let tiktokUser: {
@@ -94,7 +100,7 @@ export async function GET(req: NextRequest) {
       username: "creator",
       follower_count: 0,
       likes_count: 0,
-      is_verified: false,
+      is_verified: true,
     };
 
     try {
@@ -109,8 +115,9 @@ export async function GET(req: NextRequest) {
 
       if (userRes.ok) {
         const userData = await userRes.json();
-        if (userData.data?.user) {
-          tiktokUser = { ...tiktokUser, ...userData.data.user };
+        const userObj = userData.data?.user || userData.data || userData.user;
+        if (userObj) {
+          tiktokUser = { ...tiktokUser, ...userObj };
         }
       }
     } catch (e) {
@@ -197,7 +204,6 @@ export async function GET(req: NextRequest) {
     }
 
     // 4. If user is in registration process (not logged in yet)
-    // Save verified TikTok payload in temporary secure cookie so registration form can read it
     const tiktokPendingPayload = {
       openId: tiktokUser.open_id,
       unionId: tiktokUser.union_id,
@@ -209,16 +215,24 @@ export async function GET(req: NextRequest) {
       isVerified: true,
     };
 
+    const queryParams = new URLSearchParams({
+      tiktok: "connected",
+      handle: cleanHandle,
+      name: tiktokUser.display_name || cleanHandle,
+      avatar: tiktokUser.avatar_url || "",
+      followers: String(tiktokUser.follower_count || 0),
+    });
+
     const redirectTarget = returnUrl.includes("?")
-      ? `${returnUrl}&tiktok=connected&handle=${encodeURIComponent(cleanHandle)}`
-      : `${returnUrl}?tiktok=connected&handle=${encodeURIComponent(cleanHandle)}`;
+      ? `${returnUrl}&${queryParams.toString()}`
+      : `${returnUrl}?${queryParams.toString()}`;
 
     const response = NextResponse.redirect(`${appUrl}${redirectTarget}`);
     response.cookies.set("creavy_tiktok_pending", JSON.stringify(tiktokPendingPayload), {
-      httpOnly: false, // Accessible by client registration form
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 3600, // 1 hour
+      maxAge: 3600,
       path: "/",
     });
 
