@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ChevronDown,
   Bell,
@@ -66,6 +67,7 @@ export function AppHeader() {
   const [notifications, setNotifications] = useState<NotificationItem[]>(initialNotifications);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
@@ -129,6 +131,9 @@ export function AppHeader() {
     if (email) return email.slice(0, 2).toUpperCase();
     return "CR";
   };
+
+  // Hide creator header on admin routes (admin has its own header in admin/layout.tsx)
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <header className="h-16 bg-white border-b border-slate-200/80 px-6 flex items-center justify-between sticky top-0 z-40">

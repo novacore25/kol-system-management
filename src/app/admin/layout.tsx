@@ -1,8 +1,7 @@
 import React from "react";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import Link from "next/link";
-import { ShieldCheck, Bell } from "lucide-react";
-import { Chip, Button } from "@heroui/react";
+import { Chip } from "@heroui/react";
 
 export default function AdminLayout({
   children,
@@ -27,7 +26,7 @@ export default function AdminLayout({
 
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-right hidden sm:block">
-            <p className="text-xs font-bold text-foreground">PIC & Operations Team</p>
+            <p className="text-xs font-bold text-foreground">PIC &amp; Operations Team</p>
             <p className="text-[10px] text-default-400">admin@creavy.id</p>
           </div>
           <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">

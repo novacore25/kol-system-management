@@ -32,6 +32,9 @@ export function MobileBottomNav() {
 
   const isAdmin = session?.role === "ADMIN";
 
+  // Hide creator mobile nav on admin routes (admin has its own nav)
+  if (pathname.startsWith("/admin")) return null;
+
   const navItems = isAdmin
     ? [
         {

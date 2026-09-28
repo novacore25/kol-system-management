@@ -15,6 +15,9 @@ import clsx from "clsx";
 export function AppSidebar() {
   const pathname = usePathname();
 
+  // Hide creator sidebar on admin routes
+  if (pathname.startsWith("/admin")) return null;
+
   const menuItems = [
     {
       label: "Beranda",
