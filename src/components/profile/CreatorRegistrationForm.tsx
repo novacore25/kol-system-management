@@ -25,6 +25,7 @@ import {
   ArrowLeft,
   Building,
   ShieldCheck,
+  Info,
 } from "lucide-react";
 import { WilayahSelect, SelectedWilayah } from "./WilayahSelect";
 
@@ -76,6 +77,7 @@ function GoogleIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 export function CreatorRegistrationForm() {
   const [step, setStep] = useState(1);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isTikTokLoading, setIsTikTokLoading] = useState(false);
   const [connectedTikTok, setConnectedTikTok] = useState<{
@@ -119,6 +121,21 @@ export function CreatorRegistrationForm() {
     const stepParam = params.get("step");
     if (stepParam) {
       setStep(parseInt(stepParam, 10) || 1);
+    }
+
+    const noticeParam = params.get("notice");
+    if (noticeParam === "not_registered") {
+      setNotice("Akun Google kamu belum terdaftar sebagai kreator Creavy. Silakan isi form 4 langkah di bawah ini untuk menyelesaikan pendaftaran!");
+    }
+
+    const emailParam = params.get("email");
+    const nameParam = params.get("name");
+    if (emailParam || nameParam) {
+      setFormData((prev) => ({
+        ...prev,
+        ...(emailParam ? { email: emailParam } : {}),
+        ...(nameParam && !prev.fullName ? { fullName: nameParam } : {}),
+      }));
     }
 
     // Restore draft form data
@@ -329,6 +346,22 @@ export function CreatorRegistrationForm() {
           Masuk dengan Google
         </Button>
       </div>
+
+      {/* Notice Banner if redirected from login */}
+      {notice && (
+        <div className="bg-amber-500/10 border-b border-amber-500/20 px-6 py-3 flex items-start gap-3">
+          <Info className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+          <div className="text-xs text-amber-900 dark:text-amber-200">
+            <span className="font-bold block">Akun Belum Terdaftar</span>
+            <span>{notice}</span>
+            {formData.email && (
+              <span className="block mt-0.5 font-semibold text-amber-700 dark:text-amber-300">
+                Email: {formData.email}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Progress Steps Header */}
       <CardHeader className="flex flex-col gap-3 p-6 bg-default-50/50 border-b border-divider/60">

@@ -104,6 +104,7 @@ export async function GET(req: NextRequest) {
     }
 
     // 4. Find or Create User in Database
+    const isUserAdmin = isAdminEmail(googleUser.email);
     let existingUser = await db
       .select()
       .from(users)
@@ -111,8 +112,13 @@ export async function GET(req: NextRequest) {
       .limit(1)
       .then((rows) => rows[0]);
 
+    // If user clicked login but has NOT registered yet and is NOT admin -> redirect to registration form
+    if (!existingUser && !registrationData && !isUserAdmin) {
+      const regUrl = `${appUrl}/register?notice=not_registered&email=${encodeURIComponent(googleUser.email)}&name=${encodeURIComponent(googleUser.name)}`;
+      return NextResponse.redirect(regUrl);
+    }
+
     let userId: string;
-    const isUserAdmin = isAdminEmail(googleUser.email);
     const assignedRole: "ADMIN" | "CREATOR" = isUserAdmin ? "ADMIN" : (existingUser?.role === "ADMIN" ? "ADMIN" : "CREATOR");
 
     const validPhone = registrationData?.whatsappNumber && registrationData.whatsappNumber.trim().length > 3
