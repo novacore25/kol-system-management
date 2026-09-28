@@ -9,55 +9,34 @@ export async function GET() {
   const pool = new Pool({ connectionString });
   const client = await pool.connect();
 
+  const results: Record<string, string> = {};
+
   try {
-    // 1. Create Enums if not exist
+    // ── 1. ENUMS ──────────────────────────────────────────────────────────────
+    await client.query(`
+      DO $$ BEGIN CREATE TYPE "public"."application_status" AS ENUM('PENDING_REVIEW','APPROVED','REJECTED','WAITLISTED'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."campaign_status" AS ENUM('DRAFT','ACTIVE','PAUSED','COMPLETED','ARCHIVED'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."commission_type" AS ENUM('COMMISSION_ONLY','FIXED_FEE','HYBRID'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."creator_tier" AS ENUM('TIER_1','TIER_2','TIER_3','TIER_4','TIER_5'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."user_role" AS ENUM('ADMIN','PIC','CREATOR','BRAND'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."shipment_status" AS ENUM('LABEL_CREATED','PICKED_UP','IN_TRANSIT','DELIVERED','RETURNED'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."task_status" AS ENUM('WAITING_SAMPLE','SAMPLE_DELIVERED','WAITING_POST','DETECTED_ACTIVE','VERIFIED_COMPLETE','FLAGGED_OR_REMOVED'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."campaign_platform_type" AS ENUM('TIKTOK_SHOP','TIKTOK_GO'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."content_type" AS ENUM('VIDEO','LIVE','SHOWCASE'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."order_status" AS ENUM('AWAITING_PAYMENT','PAID','IN_TRANSIT','DELIVERED','SETTLED','CANCELLED','REFUNDED'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN CREATE TYPE "public"."tiktok_go_benefit_type" AS ENUM('VOUCHER_DIGITAL','OUTLET_PASS_LINK'); EXCEPTION WHEN duplicate_object THEN null; END $$;
+    `);
+    results.enums = "ok";
+
+    // ── 1b. ENUM VALUE ADDITIONS ──────────────────────────────────────────────
     await client.query(`
       DO $$ BEGIN
-        CREATE TYPE "public"."application_status" AS ENUM('PENDING_REVIEW', 'APPROVED', 'REJECTED', 'WAITLISTED');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."campaign_status" AS ENUM('DRAFT', 'ACTIVE', 'PAUSED', 'COMPLETED', 'ARCHIVED');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."commission_type" AS ENUM('COMMISSION_ONLY', 'FIXED_FEE', 'HYBRID');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."creator_tier" AS ENUM('TIER_1', 'TIER_2', 'TIER_3', 'TIER_4', 'TIER_5');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."user_role" AS ENUM('ADMIN', 'PIC', 'CREATOR', 'BRAND');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."shipment_status" AS ENUM('LABEL_CREATED', 'PICKED_UP', 'IN_TRANSIT', 'DELIVERED', 'RETURNED');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."task_status" AS ENUM('WAITING_SAMPLE', 'SAMPLE_DELIVERED', 'WAITING_POST', 'DETECTED_ACTIVE', 'VERIFIED_COMPLETE', 'FLAGGED_OR_REMOVED');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."campaign_platform_type" AS ENUM('TIKTOK_SHOP', 'TIKTOK_GO');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."content_type" AS ENUM('VIDEO', 'LIVE', 'SHOWCASE');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."order_status" AS ENUM('AWAITING_PAYMENT', 'PAID', 'IN_TRANSIT', 'DELIVERED', 'SETTLED', 'CANCELLED', 'REFUNDED');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
-
-      DO $$ BEGIN
-        CREATE TYPE "public"."tiktok_go_benefit_type" AS ENUM('VOUCHER_DIGITAL', 'OUTLET_PASS_LINK');
-      EXCEPTION WHEN duplicate_object THEN null; END $$;
+        ALTER TYPE "public"."user_role" ADD VALUE IF NOT EXISTS 'PENDING_ADMIN';
+      EXCEPTION WHEN others THEN null; END $$;
     `);
+    results.enum_pending_admin = "ok";
 
-    // 2. Create Tables if not exist
+    // ── 2. TABLES (each in its own query so failures are isolated) ────────────
     await client.query(`
       CREATE TABLE IF NOT EXISTS "users" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
@@ -70,7 +49,10 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.users = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "creator_profiles" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "user_id" uuid NOT NULL REFERENCES "users"("id") ON DELETE cascade,
@@ -86,7 +68,10 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.creator_profiles = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "shipping_addresses" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "creator_profile_id" uuid NOT NULL REFERENCES "creator_profiles"("id") ON DELETE cascade,
@@ -100,7 +85,10 @@ export async function GET() {
         "is_default" boolean DEFAULT false NOT NULL,
         "created_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.shipping_addresses = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "tiktok_accounts" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "creator_profile_id" uuid NOT NULL REFERENCES "creator_profiles"("id") ON DELETE cascade,
@@ -120,7 +108,11 @@ export async function GET() {
         "last_synced_at" timestamp with time zone,
         "created_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.tiktok_accounts = "ok";
 
+    // campaigns — FULL schema including ALL columns (new installs get everything)
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "campaigns" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "title" text NOT NULL,
@@ -131,6 +123,10 @@ export async function GET() {
         "description" text NOT NULL,
         "category" text NOT NULL,
         "platform_type" "campaign_platform_type" DEFAULT 'TIKTOK_SHOP' NOT NULL,
+        "product_id" text,
+        "tiktok_campaign_id" text,
+        "sale_price" text,
+        "shop_name" text,
         "location_id" text,
         "location_name" text,
         "merchant_name" text,
@@ -145,6 +141,7 @@ export async function GET() {
         "sample_stock_remaining" integer DEFAULT 100 NOT NULL,
         "target_affiliate_link" text,
         "sound_url" text,
+        "product_skus" jsonb DEFAULT '[]'::jsonb NOT NULL,
         "mandatory_hashtags" jsonb DEFAULT '[]'::jsonb NOT NULL,
         "mandatory_mentions" jsonb DEFAULT '[]'::jsonb NOT NULL,
         "sow_checklist" jsonb DEFAULT '[]'::jsonb NOT NULL,
@@ -157,21 +154,33 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.campaigns = "ok";
 
+    // campaign_applications — nullable FKs + guest apply columns built-in
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "campaign_applications" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "campaign_id" uuid NOT NULL REFERENCES "campaigns"("id") ON DELETE cascade,
-        "creator_profile_id" uuid NOT NULL REFERENCES "creator_profiles"("id") ON DELETE cascade,
-        "tiktok_account_id" uuid NOT NULL REFERENCES "tiktok_accounts"("id") ON DELETE restrict,
+        "creator_profile_id" uuid REFERENCES "creator_profiles"("id") ON DELETE cascade,
+        "tiktok_account_id" uuid REFERENCES "tiktok_accounts"("id") ON DELETE restrict,
         "status" "application_status" DEFAULT 'PENDING_REVIEW' NOT NULL,
         "rejection_reason" text,
         "internal_notes" text,
-        "shipping_address_snapshot" jsonb NOT NULL,
+        "shipping_address_snapshot" jsonb,
+        "applicant_name" text,
+        "applicant_whatsapp" text,
+        "applicant_tiktok_handle" text,
+        "applicant_follower_count" text,
+        "is_guest_apply" boolean DEFAULT false,
         "applied_at" timestamp with time zone DEFAULT now() NOT NULL,
         "reviewed_at" timestamp with time zone,
         "reviewed_by" uuid REFERENCES "users"("id") ON DELETE no action
       );
+    `);
+    results.campaign_applications = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "campaign_tasks" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "application_id" uuid NOT NULL REFERENCES "campaign_applications"("id") ON DELETE cascade,
@@ -193,7 +202,10 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.campaign_tasks = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "sample_shipments" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "application_id" uuid NOT NULL REFERENCES "campaign_applications"("id") ON DELETE cascade,
@@ -206,7 +218,10 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.sample_shipments = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "audit_logs" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "user_id" uuid REFERENCES "users"("id"),
@@ -216,7 +231,10 @@ export async function GET() {
         "metadata" jsonb,
         "created_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.audit_logs = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "raw_data_videos" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "campaign_id" uuid REFERENCES "campaigns"("id") ON DELETE set null,
@@ -237,7 +255,10 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.raw_data_videos = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "raw_data_lives" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "campaign_id" uuid REFERENCES "campaigns"("id") ON DELETE set null,
@@ -258,7 +279,10 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.raw_data_lives = "ok";
 
+    await client.query(`
       CREATE TABLE IF NOT EXISTS "raw_data_sales" (
         "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
         "campaign_id" uuid REFERENCES "campaigns"("id") ON DELETE set null,
@@ -284,47 +308,63 @@ export async function GET() {
         "created_at" timestamp with time zone DEFAULT now() NOT NULL,
         "updated_at" timestamp with time zone DEFAULT now() NOT NULL
       );
+    `);
+    results.raw_data_sales = "ok";
 
-      -- Safe column additions for campaigns table
-      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_id" text;
-      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "tiktok_campaign_id" text;
-      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "sale_price" text;
-      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "shop_name" text;
-      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_skus" jsonb DEFAULT '[]'::jsonb;
+    // ── 3. ALTER TABLE — safe additions for existing production DBs ───────────
+    // Each ALTER is its own call so one failure doesn't block the others
 
-      -- Safe column additions for campaign_applications (simple apply by non-registered creators)
-      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_name" text;
-      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_whatsapp" text;
-      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_tiktok_handle" text;
-      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_follower_count" text;
-      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "is_guest_apply" boolean DEFAULT false;
+    // campaigns: columns added after initial deploy
+    await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_id" text;`);
+    await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "tiktok_campaign_id" text;`);
+    await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "sale_price" text;`);
+    await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "shop_name" text;`);
+    await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_skus" jsonb DEFAULT '[]'::jsonb;`);
+    results.campaigns_alter = "ok";
 
-      -- Make creator_profile_id and tiktok_account_id nullable for guest applications
-      ALTER TABLE "campaign_applications" ALTER COLUMN "creator_profile_id" DROP NOT NULL;
-      ALTER TABLE "campaign_applications" ALTER COLUMN "tiktok_account_id" DROP NOT NULL;
-      ALTER TABLE "campaign_applications" ALTER COLUMN "shipping_address_snapshot" DROP NOT NULL;
+    // campaign_applications: guest apply columns
+    await client.query(`ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_name" text;`);
+    await client.query(`ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_whatsapp" text;`);
+    await client.query(`ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_tiktok_handle" text;`);
+    await client.query(`ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_follower_count" text;`);
+    await client.query(`ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "is_guest_apply" boolean DEFAULT false;`);
+    results.applications_alter = "ok";
+
+    // Make FK columns nullable (.catch so they don't fail if already nullable)
+    await client.query(`ALTER TABLE "campaign_applications" ALTER COLUMN "creator_profile_id" DROP NOT NULL;`).catch(() => null);
+    await client.query(`ALTER TABLE "campaign_applications" ALTER COLUMN "tiktok_account_id" DROP NOT NULL;`).catch(() => null);
+    await client.query(`ALTER TABLE "campaign_applications" ALTER COLUMN "shipping_address_snapshot" DROP NOT NULL;`).catch(() => null);
+    results.applications_nullable = "ok";
+
+    // ── 4. Confirm all tables ─────────────────────────────────────────────────
+    const tablesRes = await client.query(`
+      SELECT table_name FROM information_schema.tables
+      WHERE table_schema = 'public' ORDER BY table_name;
     `);
 
-    // 3. Query all table names in public schema to confirm
-    const tablesRes = await client.query(`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
-      ORDER BY table_name;
+    // ── 5. Show columns in campaigns table for verification ───────────────────
+    const columnsRes = await client.query(`
+      SELECT column_name, data_type, is_nullable
+      FROM information_schema.columns
+      WHERE table_schema = 'public' AND table_name = 'campaigns'
+      ORDER BY ordinal_position;
     `);
 
     return NextResponse.json({
       status: "success",
-      message: "Database tables and enums initialized successfully!",
+      message: "Database fully initialized and migrated!",
+      steps: results,
       tables: tablesRes.rows.map((r) => r.table_name),
+      campaigns_columns: columnsRes.rows.map((r) => r.column_name),
     });
   } catch (error: any) {
     console.error("Database initialization error:", error);
     return NextResponse.json(
-      { status: "error", message: error.message },
+      { status: "error", message: error.message, steps: results },
       { status: 500 }
     );
   } finally {
     client.release();
+    await pool.end();
   }
 }
