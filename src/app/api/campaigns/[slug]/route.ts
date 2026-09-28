@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { campaigns, campaignApplications } from "@/db/schema";
+import { campaigns, campaignApplications, creatorProfiles } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
+import { getCurrentSession } from "@/lib/auth";
 
 // GET /api/campaigns/[slug] — public, no auth needed
 export async function GET(
@@ -63,7 +64,7 @@ export async function GET(
   }
 }
 
-// POST /api/campaigns/[slug] — simple creator application (no login needed)
+// POST /api/campaigns/[slug] — creator application (works for both logged-in and guest)
 export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -80,15 +81,47 @@ export async function POST(
       );
     }
 
+    // Check if user is logged in — if so, link application to their profile
+    const session = await getCurrentSession();
+    let creatorProfileId: string | null = null;
+
+    if (session?.creatorProfileId) {
+      creatorProfileId = session.creatorProfileId;
+    } else if (session?.id) {
+      // Try looking up creator profile by user id
+      const profiles = await db
+        .select({ id: creatorProfiles.id })
+        .from(creatorProfiles)
+        .where(eq(creatorProfiles.userId, session.id))
+        .limit(1);
+      if (profiles.length > 0) {
+        creatorProfileId = profiles[0].id;
+      }
+    }
+
     // Find campaign by slug
     const [campaign] = await db
-      .select({ id: campaigns.id, title: campaigns.title, sampleStockRemaining: campaigns.sampleStockRemaining })
+      .select({
+        id: campaigns.id,
+        title: campaigns.title,
+        sampleStockRemaining: campaigns.sampleStockRemaining,
+        status: campaigns.status,
+        endDate: campaigns.endDate,
+      })
       .from(campaigns)
       .where(eq(campaigns.slug, slug))
       .limit(1);
 
     if (!campaign) {
       return NextResponse.json({ error: "Campaign tidak ditemukan." }, { status: 404 });
+    }
+
+    if (campaign.status !== "ACTIVE") {
+      return NextResponse.json({ error: "Campaign ini sudah tidak aktif." }, { status: 409 });
+    }
+
+    if (new Date(campaign.endDate) < new Date()) {
+      return NextResponse.json({ error: "Campaign ini sudah berakhir." }, { status: 409 });
     }
 
     if (campaign.sampleStockRemaining <= 0) {
@@ -98,12 +131,33 @@ export async function POST(
       );
     }
 
-    // Insert guest application
+    // Prevent duplicate application (per profile if logged in)
+    if (creatorProfileId) {
+      const existing = await db
+        .select({ id: campaignApplications.id })
+        .from(campaignApplications)
+        .where(
+          and(
+            eq(campaignApplications.campaignId, campaign.id),
+            eq(campaignApplications.creatorProfileId, creatorProfileId)
+          )
+        )
+        .limit(1);
+
+      if (existing.length > 0) {
+        return NextResponse.json(
+          { error: "Kamu sudah pernah mendaftar campaign ini sebelumnya." },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Insert application — linked to profile if logged in, guest otherwise
     const [newApp] = await db
       .insert(campaignApplications)
       .values({
         campaignId: campaign.id,
-        creatorProfileId: null as any,
+        creatorProfileId: creatorProfileId as any,
         tiktokAccountId: null as any,
         shippingAddressSnapshot: null as any,
         status: "PENDING_REVIEW",
@@ -111,13 +165,14 @@ export async function POST(
         applicantWhatsapp: String(applicantWhatsapp).trim(),
         applicantTiktokHandle: String(applicantTiktokHandle).trim(),
         applicantFollowerCount: applicantFollowerCount ? String(applicantFollowerCount).trim() : null,
-        isGuestApply: true,
+        isGuestApply: !creatorProfileId, // false if linked to profile, true if guest
       } as any)
       .returning({ id: campaignApplications.id });
 
     return NextResponse.json({
       success: true,
       applicationId: newApp.id,
+      linked: !!creatorProfileId, // tells frontend if it's linked to their profile
       message: `Pendaftaranmu untuk campaign "${campaign.title}" berhasil dikirim! Tim kami akan menghubungimu via WhatsApp dalam 1-3 hari kerja.`,
     });
   } catch (err: any) {
