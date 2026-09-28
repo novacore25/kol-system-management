@@ -101,11 +101,11 @@ export async function POST(req: NextRequest) {
         endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       } = item;
 
-      // Use provided slug if valid, otherwise auto-generate with timestamp suffix to avoid collisions
-      const baseSlug = providedSlug
-        ? String(providedSlug).toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 60)
-        : title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 50);
-      const slug = `${baseSlug}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      // Use provided slug exactly if given — no timestamp suffix so the preview link matches reality
+      // If no slug provided, auto-generate with timestamp to guarantee uniqueness
+      const slug = providedSlug
+        ? String(providedSlug).toLowerCase().replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-").slice(0, 80)
+        : `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 50)}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
       const [newCampaign] = await db
         .insert(campaigns)
@@ -155,9 +155,18 @@ export async function POST(req: NextRequest) {
       success: true,
       count: createdCampaigns.length,
       campaigns: createdCampaigns,
+      // Return slug of first created campaign for toast/link display
+      slug: createdCampaigns[0]?.slug,
     });
   } catch (error: any) {
     console.error("Error creating campaign:", error);
+    // Friendly error for duplicate slug (unique constraint violation)
+    if (error.message?.includes("unique") || error.code === "23505") {
+      return NextResponse.json(
+        { error: `Link campaign "${error.detail?.match(/"(.+?)"/)?.[1] || "ini"}" sudah dipakai campaign lain. Ubah slug di field Link Pendaftaran Kreator.` },
+        { status: 409 }
+      );
+    }
     return NextResponse.json({ error: error.message || "Failed to create campaign" }, { status: 500 });
   }
 }

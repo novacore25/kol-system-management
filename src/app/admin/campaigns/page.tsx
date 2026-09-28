@@ -352,7 +352,9 @@ export default function AdminCampaignsPage() {
         return;
       }
 
-      const campaignLink = `${BASE_URL}/campaign/${campaignSlug}`;
+      // Use the actual slug returned from DB (matches exactly what's stored)
+      const actualSlug = resData.slug || campaignSlug;
+      const campaignLink = `${BASE_URL}/campaign/${actualSlug}`;
       await loadCampaigns();
       onClose();
       // Reset form
