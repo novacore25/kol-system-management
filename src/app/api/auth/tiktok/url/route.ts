@@ -32,19 +32,22 @@ export async function POST(req: NextRequest) {
     };
     const state = Buffer.from(JSON.stringify(statePayload)).toString("base64url");
 
-    // Scopes requested from TikTok (default to standard user.info.basic)
-    const scopes = process.env.TIKTOK_SCOPES || "user.info.basic";
+    // Scopes configured in TikTok Developer Console
+    const scopes =
+      process.env.TIKTOK_SCOPES ||
+      "user.info.basic,user.info.profile,user.info.stats,video.list";
 
-    const params = new URLSearchParams({
-      client_key: clientKey,
-      scope: scopes,
-      response_type: "code",
-      redirect_uri: redirectUri,
-      state,
-      disable_auto_auth: "0",
-    });
+    // Build URL with exact parameter formatting compliant with TikTok Login Kit v2
+    const queryParts = [
+      `client_key=${encodeURIComponent(clientKey)}`,
+      `scope=${encodeURIComponent(scopes).replace(/%2C/g, ",")}`,
+      `response_type=code`,
+      `redirect_uri=${encodeURIComponent(redirectUri)}`,
+      `state=${encodeURIComponent(state)}`,
+      `disable_auto_auth=0`,
+    ];
 
-    const tiktokAuthUrl = `https://www.tiktok.com/v2/auth/authorize/?${params.toString()}`;
+    const tiktokAuthUrl = `https://www.tiktok.com/v2/auth/authorize/?${queryParts.join("&")}`;
 
     return NextResponse.json({ url: tiktokAuthUrl });
   } catch (error) {
