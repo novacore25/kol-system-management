@@ -27,6 +27,7 @@ interface CampaignDetail {
   brandName: string;
   bannerUrl: string;
   description: string;
+  brief?: string;
   platformType: "TIKTOK_SHOP" | "TIKTOK_GO";
   salePrice?: string;
   shopName?: string;
@@ -236,6 +237,16 @@ export default function CampaignPublicPage() {
                 )}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Brief Campaign */}
+        {campaign.brief && (
+          <div className="bg-amber-50 rounded-2xl border border-amber-200 shadow-sm p-4 space-y-2">
+            <h2 className="font-bold text-sm text-amber-900 flex items-center gap-2">
+              📝 Brief Campaign
+            </h2>
+            <p className="text-xs text-amber-800 leading-relaxed whitespace-pre-wrap">{campaign.brief}</p>
           </div>
         )}
 

@@ -320,6 +320,7 @@ export async function GET() {
     await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "sale_price" text;`);
     await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "shop_name" text;`);
     await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_skus" jsonb DEFAULT '[]'::jsonb;`);
+    await client.query(`ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "brief" text;`);
     results.campaigns_alter = "ok";
 
     // campaign_applications: guest apply columns

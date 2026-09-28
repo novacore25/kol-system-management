@@ -99,6 +99,7 @@ export async function POST(req: NextRequest) {
         sowItems = ["Tautkan link keranjang kuning / showcase produk", "Durasi video minimal 30 detik", "Review jelas & pencahayaan bagus"],
         startDate = new Date().toISOString(),
         endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        brief = "",
       } = item;
 
       // Use provided slug exactly if given — no timestamp suffix so the preview link matches reality
@@ -142,10 +143,11 @@ export async function POST(req: NextRequest) {
             title: sow,
             required: true,
           })),
+          brief: brief || null,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
           createdBy: session.id,
-        })
+        } as any)
         .returning();
 
       createdCampaigns.push(newCampaign);

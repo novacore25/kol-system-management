@@ -52,6 +52,7 @@ export async function GET(
       sowItems: ((campaign.sowChecklist as any[]) || []).map((s) =>
         typeof s === "string" ? s : s.title
       ),
+      brief: (campaign as any).brief || null,
       targetAffiliateLink: campaign.targetAffiliateLink,
       productSkus: (campaign.productSkus as any[]) || [],
       status: campaign.status,

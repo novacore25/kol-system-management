@@ -109,12 +109,19 @@ export default function AdminCampaignsPage() {
     benefitData: "",
     commissionRate: "5.00%",
     sampleQuota: 50,
-    deadlineDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // date string YYYY-MM-DD
+    deadlineDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     hashtags: "#CreavyCampaign, #ReviewJujur",
     mentions: "@creavy_official",
-    sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+    brief: "", // Campaign brief / detailed instructions for creators
   });
 
+  // SOW items — editable list of checklist points
+  const DEFAULT_SOW = [
+    "Tautkan link keranjang kuning / showcase produk resmi",
+    "Durasi video minimal 30 detik",
+    "Review jelas & pencahayaan bagus",
+  ];
+  const [sowItems, setSowItems] = useState<string[]>(DEFAULT_SOW);
 
   // SKU Products List inside Modal
   const [skuList, setSkuList] = useState<SkuProductItem[]>([]);
@@ -173,6 +180,7 @@ export default function AdminCampaignsPage() {
       setSkuList([]);
       setCampaignSlug("");
       setSlugEdited(false);
+      setSowItems(DEFAULT_SOW);
       const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
       setNewCampaign({
         title: "",
@@ -188,7 +196,7 @@ export default function AdminCampaignsPage() {
         deadlineDate: defaultDeadline,
         hashtags: "#CreavyCampaign, #ReviewJujur",
         mentions: "@creavy_official",
-        sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+        brief: "",
       });
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
@@ -361,7 +369,8 @@ export default function AdminCampaignsPage() {
         productSkus: selectedSkus,
         mandatoryHashtags: newCampaign.hashtags.split(",").map((h) => h.trim()),
         mandatoryMentions: newCampaign.mentions.split(",").map((m) => m.trim()),
-        sowItems: newCampaign.sow.split("\n").filter(Boolean),
+        sowItems: sowItems.filter(Boolean),
+        brief: newCampaign.brief,
         endDate: newCampaign.deadlineDate
           ? new Date(newCampaign.deadlineDate).toISOString()
           : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -389,6 +398,7 @@ export default function AdminCampaignsPage() {
       setSkuList([]);
       setCampaignSlug("");
       setSlugEdited(false);
+      setSowItems(DEFAULT_SOW);
       const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
       setNewCampaign({
         title: "",
@@ -404,7 +414,7 @@ export default function AdminCampaignsPage() {
         deadlineDate: defaultDeadline,
         hashtags: "#CreavyCampaign, #ReviewJujur",
         mentions: "@creavy_official",
-        sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+        brief: "",
       });
 
       setToastMessage(`✅ Campaign "${newCampaign.title}" berhasil dibuat! Link: ${campaignLink}`);
@@ -422,6 +432,7 @@ export default function AdminCampaignsPage() {
     setSkuList([]);
     setCampaignSlug("");
     setSlugEdited(false);
+    setSowItems(DEFAULT_SOW);
     const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
     setNewCampaign({
       title: "",
@@ -437,7 +448,7 @@ export default function AdminCampaignsPage() {
       deadlineDate: defaultDeadline,
       hashtags: "#CreavyCampaign, #ReviewJujur",
       mentions: "@creavy_official",
-      sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+      brief: "",
     });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -1053,6 +1064,7 @@ export default function AdminCampaignsPage() {
                       onChange={(e) => setNewCampaign({ ...newCampaign, hashtags: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
                     />
+                    <p className="text-[10px] text-slate-400 mt-0.5">Pisahkan dengan koma</p>
                   </div>
                   <div>
                     <label className="block text-slate-600 font-semibold mb-1">Mention Wajib</label>
@@ -1063,7 +1075,79 @@ export default function AdminCampaignsPage() {
                       onChange={(e) => setNewCampaign({ ...newCampaign, mentions: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
                     />
+                    <p className="text-[10px] text-slate-400 mt-0.5">Pisahkan dengan koma</p>
                   </div>
+                </div>
+
+                {/* 6. SOW Editor */}
+                <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-indigo-600" />
+                      <span className="font-bold text-xs text-slate-900">Scope of Work (SOW)</span>
+                      <span className="text-[10px] text-slate-500 bg-white border border-slate-200 px-1.5 py-0.5 rounded">{sowItems.length} poin</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setSowItems([...sowItems, ""])}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-semibold hover:bg-indigo-700 transition-colors"
+                    >
+                      <Plus className="w-3 h-3" />
+                      Tambah Poin
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-slate-500">
+                    Daftar syarat & ketentuan yang wajib dipenuhi kreator. Tiap poin akan tampil di halaman pendaftaran kreator.
+                  </p>
+                  <div className="space-y-2">
+                    {sowItems.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold text-slate-400 w-5 text-right shrink-0">{idx + 1}.</span>
+                        <input
+                          type="text"
+                          value={item}
+                          onChange={(e) => {
+                            const updated = [...sowItems];
+                            updated[idx] = e.target.value;
+                            setSowItems(updated);
+                          }}
+                          placeholder={`Poin SOW ke-${idx + 1}...`}
+                          className="flex-1 px-2.5 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-400 bg-white"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setSowItems(sowItems.filter((_, i) => i !== idx))}
+                          className="p-1 rounded text-slate-400 hover:text-rose-500 hover:bg-rose-50 transition-colors shrink-0"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ))}
+                    {sowItems.length === 0 && (
+                      <p className="text-[11px] text-slate-400 text-center py-2 italic">
+                        Belum ada poin SOW. Klik "Tambah Poin" untuk menambahkan.
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* 7. Brief Campaign */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <Pencil className="w-3.5 h-3.5 text-indigo-600" />
+                    <label className="block text-slate-700 font-bold text-xs">Brief Campaign</label>
+                    <span className="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">Opsional</span>
+                  </div>
+                  <textarea
+                    rows={5}
+                    placeholder="Tulis brief lengkap untuk kreator di sini... Contoh: Produk ini adalah susu tinggi protein untuk anak aktif. Tonjolkan manfaat utama seperti tinggi kalsium dan rasa enak. Hindari klaim medis. Target audiens: ibu muda dengan anak 5-12 tahun."
+                    value={newCampaign.brief}
+                    onChange={(e) => setNewCampaign({ ...newCampaign, brief: e.target.value })}
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 text-xs resize-none leading-relaxed"
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    Brief ditampilkan ke kreator di halaman pendaftaran. Berikan arahan konten, tone, target audiens, dll.
+                  </p>
                 </div>
               </ModalBody>
 
