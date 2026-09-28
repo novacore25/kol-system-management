@@ -11,10 +11,15 @@ export async function GET(req: NextRequest) {
   const error = searchParams.get("error");
   const errorDescription = searchParams.get("error_description");
 
-  const appUrl =
+  let appUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXTAUTH_URL ||
     `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+
+  appUrl = appUrl.trim().replace(/\/+$/, "");
+  if (!appUrl.includes("localhost") && appUrl.startsWith("http://")) {
+    appUrl = appUrl.replace(/^http:\/\//, "https://");
+  }
 
   let returnUrl = "/profile";
 
