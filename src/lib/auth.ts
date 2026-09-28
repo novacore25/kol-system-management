@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.NEXTAUTH_SECRET || "creavy_jwt_secret_production_2026_super_secure"
+  process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET || "creavy_jwt_secret_production_2026_super_secure"
 );
 
 export interface AuthSessionUser {

@@ -2,22 +2,37 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.NEXTAUTH_SECRET || "creavy_jwt_secret_production_2026_super_secure"
+  process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET || "creavy_jwt_secret_production_2026_super_secure"
 );
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // 1. ADMIN ROUTES
+  // 1. PUBLIC LOGIN ROUTES: Redirect already-logged-in users
+  if (pathname === "/login") {
+    const token = req.cookies.get("creavy_session")?.value;
+    if (token) {
+      try {
+        const { payload } = await jwtVerify(token, JWT_SECRET);
+        if (payload && (payload as any).id) {
+          const dest = (payload as any).role === "ADMIN" ? "/admin" : "/profile";
+          return NextResponse.redirect(new URL(dest, req.url));
+        }
+      } catch {
+        // Invalid or expired token, let user proceed to login
+      }
+    }
+    return NextResponse.next();
+  }
+
+  // 2. ADMIN ROUTES
   if (pathname.startsWith("/admin")) {
-    // Allow public access to /admin/login
     if (pathname === "/admin/login") {
       const token = req.cookies.get("creavy_session")?.value;
       if (token) {
         try {
           const { payload } = await jwtVerify(token, JWT_SECRET);
           if ((payload as any).role === "ADMIN") {
-            // Already logged in as admin, redirect directly to admin dashboard
             return NextResponse.redirect(new URL("/admin", req.url));
           }
         } catch {
@@ -40,13 +55,11 @@ export async function middleware(req: NextRequest) {
       const role = (payload as any).role;
 
       if (role !== "ADMIN") {
-        // Logged in user is not an admin, deny and redirect to admin login with error
         const url = new URL("/admin/login", req.url);
         url.searchParams.set("error", "not_admin");
         return NextResponse.redirect(url);
       }
     } catch {
-      // Expired or invalid token
       const url = new URL("/admin/login", req.url);
       url.searchParams.set("error", "session_expired");
       return NextResponse.redirect(url);
