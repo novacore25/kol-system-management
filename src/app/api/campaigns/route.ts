@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
     const formatted = allCampaigns.map((c) => ({
       id: c.id,
       title: c.title,
+      slug: c.slug,
       brandName: c.brandName,
       category: c.category,
       bannerUrl: c.bannerUrl || "",
@@ -71,6 +72,7 @@ export async function POST(req: NextRequest) {
     for (const item of items) {
       const {
         title,
+        slug: providedSlug,
         brandName,
         category = "General",
         bannerUrl = "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=1000&auto=format&fit=crop",
@@ -99,10 +101,11 @@ export async function POST(req: NextRequest) {
         endDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       } = item;
 
-      const slug = `${title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .slice(0, 50)}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      // Use provided slug if valid, otherwise auto-generate with timestamp suffix to avoid collisions
+      const baseSlug = providedSlug
+        ? String(providedSlug).toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 60)
+        : title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 50);
+      const slug = `${baseSlug}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
       const [newCampaign] = await db
         .insert(campaigns)

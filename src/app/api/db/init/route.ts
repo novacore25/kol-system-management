@@ -291,6 +291,18 @@ export async function GET() {
       ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "sale_price" text;
       ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "shop_name" text;
       ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_skus" jsonb DEFAULT '[]'::jsonb;
+
+      -- Safe column additions for campaign_applications (simple apply by non-registered creators)
+      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_name" text;
+      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_whatsapp" text;
+      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_tiktok_handle" text;
+      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "applicant_follower_count" text;
+      ALTER TABLE "campaign_applications" ADD COLUMN IF NOT EXISTS "is_guest_apply" boolean DEFAULT false;
+
+      -- Make creator_profile_id and tiktok_account_id nullable for guest applications
+      ALTER TABLE "campaign_applications" ALTER COLUMN "creator_profile_id" DROP NOT NULL;
+      ALTER TABLE "campaign_applications" ALTER COLUMN "tiktok_account_id" DROP NOT NULL;
+      ALTER TABLE "campaign_applications" ALTER COLUMN "shipping_address_snapshot" DROP NOT NULL;
     `);
 
     // 3. Query all table names in public schema to confirm

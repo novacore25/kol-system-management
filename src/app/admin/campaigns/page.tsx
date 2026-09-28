@@ -23,6 +23,8 @@ import {
   Trash2,
   ListPlus,
   Link as LinkIcon,
+  Copy,
+  Pencil,
 } from "lucide-react";
 import {
   Modal,
@@ -49,6 +51,7 @@ export interface SkuProductItem {
 interface CampaignAdminItem {
   id: string;
   title: string;
+  slug: string;
   brandName: string;
   platformType?: "TIKTOK_SHOP" | "TIKTOK_GO";
   locationId?: string;
@@ -75,6 +78,24 @@ export default function AdminCampaignsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [copiedSlug, setCopiedSlug] = useState(false);
+
+  // Slug state
+  const [campaignSlug, setCampaignSlug] = useState("");
+  const [slugEdited, setSlugEdited] = useState(false); // if user manually edited slug, don't auto-update
+
+  // Helper: generate slug from title
+  const generateSlug = (title: string) =>
+    title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .slice(0, 60);
+
+  const BASE_URL =
+    typeof window !== "undefined" ? window.location.origin : "https://creator.novacorex.tech";
 
   // Form State inside Modal
   const [newCampaign, setNewCampaign] = useState({
@@ -88,11 +109,12 @@ export default function AdminCampaignsPage() {
     benefitData: "",
     commissionRate: "5.00%",
     sampleQuota: 50,
-    deadlineDate: "30 Oct 2026",
+    deadlineDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // date string YYYY-MM-DD
     hashtags: "#CreavyCampaign, #ReviewJujur",
     mentions: "@creavy_official",
     sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
   });
+
 
   // SKU Products List inside Modal
   const [skuList, setSkuList] = useState<SkuProductItem[]>([]);
@@ -107,6 +129,7 @@ export default function AdminCampaignsPage() {
           const mapped: CampaignAdminItem[] = data.map((d: any) => ({
             id: d.id,
             title: d.title,
+            slug: d.slug || "",
             brandName: d.brandName,
             platformType: d.platformType,
             locationId: d.locationId,
@@ -136,6 +159,13 @@ export default function AdminCampaignsPage() {
   useEffect(() => {
     loadCampaigns();
   }, []);
+
+  // Auto-generate slug from title (unless user manually edited it)
+  useEffect(() => {
+    if (!slugEdited && newCampaign.title) {
+      setCampaignSlug(generateSlug(newCampaign.title));
+    }
+  }, [newCampaign.title, slugEdited]);
 
   // Handle Excel Import inside Modal
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -273,6 +303,10 @@ export default function AdminCampaignsPage() {
       alert("Harap lengkapi Judul Campaign dan Nama Brand/Toko!");
       return;
     }
+    if (!campaignSlug) {
+      alert("Slug campaign tidak boleh kosong.");
+      return;
+    }
 
     const selectedSkus = skuList.filter((s) => s.isSelected);
     const primarySku = selectedSkus[0] || skuList[0];
@@ -281,6 +315,7 @@ export default function AdminCampaignsPage() {
     try {
       const payload = {
         title: newCampaign.title,
+        slug: campaignSlug,
         brandName: newCampaign.brandName,
         shopName: newCampaign.brandName,
         platformType: newCampaign.platformType,
@@ -299,6 +334,9 @@ export default function AdminCampaignsPage() {
         mandatoryHashtags: newCampaign.hashtags.split(",").map((h) => h.trim()),
         mandatoryMentions: newCampaign.mentions.split(",").map((m) => m.trim()),
         sowItems: newCampaign.sow.split("\n").filter(Boolean),
+        endDate: newCampaign.deadlineDate
+          ? new Date(newCampaign.deadlineDate).toISOString()
+          : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       };
 
       const res = await fetch("/api/campaigns", {
@@ -314,10 +352,14 @@ export default function AdminCampaignsPage() {
         return;
       }
 
+      const campaignLink = `${BASE_URL}/campaign/${campaignSlug}`;
       await loadCampaigns();
       onClose();
       // Reset form
       setSkuList([]);
+      setCampaignSlug("");
+      setSlugEdited(false);
+      const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
       setNewCampaign({
         title: "",
         brandName: "",
@@ -329,14 +371,14 @@ export default function AdminCampaignsPage() {
         benefitData: "",
         commissionRate: "5.00%",
         sampleQuota: 50,
-        deadlineDate: "30 Oct 2026",
+        deadlineDate: defaultDeadline,
         hashtags: "#CreavyCampaign, #ReviewJujur",
         mentions: "@creavy_official",
         sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
       });
 
-      setToastMessage(`Campaign "${newCampaign.title}" dengan ${selectedSkus.length} link produk/SKU berhasil dibuat!`);
-      setTimeout(() => setToastMessage(null), 5000);
+      setToastMessage(`✅ Campaign "${newCampaign.title}" berhasil dibuat! Link: ${campaignLink}`);
+      setTimeout(() => setToastMessage(null), 8000);
     } catch (e) {
       console.error("Error saving campaign to DB:", e);
       alert("Terjadi kesalahan saat menyimpan campaign.");
@@ -427,6 +469,7 @@ export default function AdminCampaignsPage() {
                 <th className="py-3 px-3 text-center">Komisi</th>
                 <th className="py-3 px-3 text-center">Kuota Sampel</th>
                 <th className="py-3 px-3">Batas Waktu</th>
+                <th className="py-3 px-3">Link Daftar Kreator</th>
                 <th className="py-3 px-3">Status</th>
               </tr>
             </thead>
@@ -503,6 +546,36 @@ export default function AdminCampaignsPage() {
                           <span>{camp.deadlineDate}</span>
                         </div>
                       </td>
+                      <td className="py-3.5 px-3 max-w-[200px]">
+                        {camp.slug ? (
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] font-mono text-indigo-700 truncate max-w-[130px]">
+                              /campaign/{camp.slug}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(`${window.location.origin}/campaign/${camp.slug}`);
+                              }}
+                              className="p-1 rounded text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors shrink-0"
+                              title="Salin link"
+                            >
+                              <Copy className="w-3 h-3" />
+                            </button>
+                            <a
+                              href={`/campaign/${camp.slug}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1 rounded text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors shrink-0"
+                              title="Buka halaman kreator"
+                            >
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        ) : (
+                          <span className="text-[10px] text-slate-400 italic">—</span>
+                        )}
+                      </td>
                       <td className="py-3.5 px-3">
                         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -514,7 +587,7 @@ export default function AdminCampaignsPage() {
                 })
               ) : (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={7} className="py-12 text-center text-slate-400">
                     <Layers className="w-8 h-8 mx-auto mb-2 text-slate-300" />
                     <p className="font-bold text-slate-600">Belum Ada Campaign</p>
                     <p className="text-xs text-slate-400 mt-0.5">
@@ -642,6 +715,51 @@ export default function AdminCampaignsPage() {
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium"
                     />
                   </div>
+                </div>
+
+                {/* 2b. Slug / Link Campaign */}
+                <div className="p-3.5 bg-indigo-50/60 border border-indigo-200 rounded-2xl space-y-2">
+                  <div className="flex items-center gap-1.5">
+                    <LinkIcon className="w-3.5 h-3.5 text-indigo-600" />
+                    <span className="text-xs font-bold text-indigo-900">Link Pendaftaran Kreator</span>
+                    <span className="text-[10px] text-indigo-600 bg-indigo-100 px-1.5 py-0.5 rounded font-medium">Share ke kreator</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] text-slate-500 shrink-0 font-mono">{BASE_URL}/campaign/</span>
+                    <input
+                      type="text"
+                      value={campaignSlug}
+                      onChange={(e) => {
+                        const cleaned = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "").replace(/-+/g, "-");
+                        setCampaignSlug(cleaned);
+                        setSlugEdited(true);
+                      }}
+                      placeholder="slug-campaign-anda"
+                      className="flex-1 px-2.5 py-1.5 border border-indigo-200 rounded-lg text-xs font-mono focus:outline-none focus:border-indigo-500 bg-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const fullLink = `${BASE_URL}/campaign/${campaignSlug}`;
+                        navigator.clipboard.writeText(fullLink);
+                        setCopiedSlug(true);
+                        setTimeout(() => setCopiedSlug(false), 2000);
+                      }}
+                      disabled={!campaignSlug}
+                      className="p-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 shrink-0"
+                      title="Salin link"
+                    >
+                      {copiedSlug ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                  {campaignSlug && (
+                    <p className="text-[10px] text-indigo-600 font-mono truncate">
+                      🔗 {BASE_URL}/campaign/{campaignSlug}
+                    </p>
+                  )}
+                  <p className="text-[10px] text-slate-500">
+                    Slug otomatis dibuat dari judul. Hanya huruf kecil, angka, dan tanda strip (-). Bisa kamu ubah.
+                  </p>
                 </div>
 
                 {/* 3. SEKSI LINK PRODUK & SKU (THE MAIN HIGHLIGHT) */}
@@ -860,9 +978,9 @@ export default function AdminCampaignsPage() {
                   <div>
                     <label className="block text-slate-600 font-semibold mb-1">Batas Waktu (Deadline)</label>
                     <input
-                      type="text"
-                      placeholder="30 Oct 2026"
+                      type="date"
                       value={newCampaign.deadlineDate}
+                      min={new Date().toISOString().split("T")[0]}
                       onChange={(e) => setNewCampaign({ ...newCampaign, deadlineDate: e.target.value })}
                       className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium"
                     />
