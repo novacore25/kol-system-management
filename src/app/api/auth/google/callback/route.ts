@@ -112,11 +112,22 @@ export async function GET(req: NextRequest) {
       .limit(1)
       .then((rows) => rows[0]);
 
-    // If user clicked login but has NOT registered yet and is NOT admin -> redirect to registration form
+    // If user clicked login but has NOT registered yet and is NOT admin
     if (!existingUser && !registrationData && !isUserAdmin) {
+      // If coming from admin portal → redirect back to admin login with error (NOT creator registration)
+      if (returnUrl.startsWith("/admin")) {
+        return NextResponse.redirect(`${appUrl}/admin/login?error=not_admin`);
+      }
+      // Otherwise → redirect to creator registration form with prefilled data
       const regUrl = `${appUrl}/register?notice=not_registered&email=${encodeURIComponent(googleUser.email)}&name=${encodeURIComponent(googleUser.name)}`;
       return NextResponse.redirect(regUrl);
     }
+
+    // If existing user exists but is CREATOR trying to access admin portal → block
+    if (existingUser && returnUrl.startsWith("/admin") && existingUser.role !== "ADMIN" && !isUserAdmin) {
+      return NextResponse.redirect(`${appUrl}/admin/login?error=not_admin`);
+    }
+
 
     let userId: string;
     const assignedRole: "ADMIN" | "CREATOR" = isUserAdmin ? "ADMIN" : (existingUser?.role === "ADMIN" ? "ADMIN" : "CREATOR");
