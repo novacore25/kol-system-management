@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
       .select({
         campaignId: campaignApplications.campaignId,
         pendingCount: sql<number>`count(*) filter (where ${campaignApplications.status} = 'PENDING_REVIEW')::int`,
-        approvedCount: sql<number>`count(*) filter (where ${campaignApplications.status} in ('APPROVED', 'DISPATCHED'))::int`,
+        approvedCount: sql<number>`count(*) filter (where ${campaignApplications.status} = 'APPROVED')::int`,
         rejectedCount: sql<number>`count(*) filter (where ${campaignApplications.status} = 'REJECTED')::int`,
         totalCount: sql<number>`count(*)::int`,
       })
