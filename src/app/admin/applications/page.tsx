@@ -1,5 +1,6 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { ApplicationReviewTable } from "@/components/admin/ApplicationReviewTable";
+import { Loader2 } from "lucide-react";
 
 export default function ApplicationsReviewPage() {
   return (
@@ -13,7 +14,16 @@ export default function ApplicationsReviewPage() {
         </p>
       </div>
 
-      <ApplicationReviewTable />
+      <Suspense
+        fallback={
+          <div className="py-16 text-center space-y-3">
+            <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto" />
+            <p className="text-xs text-default-500 font-medium">Memuat halaman kurasi...</p>
+          </div>
+        }
+      >
+        <ApplicationReviewTable />
+      </Suspense>
     </div>
   );
 }

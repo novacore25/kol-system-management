@@ -13,7 +13,7 @@ import { eq, desc } from "drizzle-orm";
 import { getCurrentSession } from "@/lib/auth";
 import { ensureDbColumns } from "@/db/ensure-schema";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await ensureDbColumns();
 
@@ -22,7 +22,10 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const rows = await db
+    const { searchParams } = new URL(req.url);
+    const campaignId = searchParams.get("campaignId");
+
+    const query = db
       .select({
         id: campaignApplications.id,
         status: campaignApplications.status,
@@ -73,8 +76,11 @@ export async function GET() {
         tiktokAccounts,
         eq(campaignApplications.tiktokAccountId, tiktokAccounts.id)
       )
-      .leftJoin(sampleShipments, eq(sampleShipments.applicationId, campaignApplications.id))
-      .orderBy(desc(campaignApplications.appliedAt));
+      .leftJoin(sampleShipments, eq(sampleShipments.applicationId, campaignApplications.id));
+
+    const rows = campaignId
+      ? await query.where(eq(campaignApplications.campaignId, campaignId)).orderBy(desc(campaignApplications.appliedAt))
+      : await query.orderBy(desc(campaignApplications.appliedAt));
 
     // Also fetch creator's tiktok accounts if tiktokAccountId was null on application
     const formatted = await Promise.all(

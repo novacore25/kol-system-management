@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { campaigns } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { campaigns, campaignApplications } from "@/db/schema";
+import { desc, eq, sql } from "drizzle-orm";
 import { getCurrentSession } from "@/lib/auth";
 import { ensureDbColumns } from "@/db/ensure-schema";
 
@@ -14,45 +14,72 @@ export async function GET(req: NextRequest) {
       .from(campaigns)
       .orderBy(desc(campaigns.createdAt));
 
+    // Get application counts per campaign
+    const appStats = await db
+      .select({
+        campaignId: campaignApplications.campaignId,
+        pendingCount: sql<number>`count(*) filter (where ${campaignApplications.status} = 'PENDING_REVIEW')::int`,
+        approvedCount: sql<number>`count(*) filter (where ${campaignApplications.status} in ('APPROVED', 'DISPATCHED'))::int`,
+        rejectedCount: sql<number>`count(*) filter (where ${campaignApplications.status} = 'REJECTED')::int`,
+        totalCount: sql<number>`count(*)::int`,
+      })
+      .from(campaignApplications)
+      .groupBy(campaignApplications.campaignId);
+
+    const statsMap = new Map<string, { pending: number; approved: number; rejected: number; total: number }>();
+    for (const stat of appStats) {
+      statsMap.set(stat.campaignId, {
+        pending: Number(stat.pendingCount) || 0,
+        approved: Number(stat.approvedCount) || 0,
+        rejected: Number(stat.rejectedCount) || 0,
+        total: Number(stat.totalCount) || 0,
+      });
+    }
+
     // Format for frontend consumption
-    const formatted = allCampaigns.map((c) => ({
-      id: c.id,
-      title: c.title,
-      slug: c.slug,
-      brandName: c.brandName,
-      category: c.category,
-      bannerUrl: c.bannerUrl || "",
-      platformType: c.platformType,
-      productId: c.productId || undefined,
-      tiktokCampaignId: c.tiktokCampaignId || undefined,
-      salePrice: c.salePrice || undefined,
-      shopName: c.shopName || undefined,
-      locationId: c.locationId || undefined,
-      locationName: c.locationName || undefined,
-      merchantName: c.merchantName || undefined,
-      industryCategory: c.industryCategory || undefined,
-      benefitType: c.benefitType || undefined,
-      benefitData: c.benefitData || undefined,
-      commissionType: c.commissionType,
-      commissionRateText: c.commissionRateText,
-      isFreeSample: c.isFreeSample,
-      sampleQuota: c.sampleQuota,
-      sampleStockRemaining: c.sampleStockRemaining,
-      startDate: c.startDate.toISOString().split("T")[0],
-      endDate: c.endDate.toISOString().split("T")[0],
-      daysRemaining: Math.max(
-        0,
-        Math.ceil((new Date(c.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-      ),
-      mandatoryHashtags: (c.mandatoryHashtags as string[]) || [],
-      mandatoryMentions: (c.mandatoryMentions as string[]) || [],
-      sowItems: ((c.sowChecklist as any[]) || []).map((s) => (typeof s === "string" ? s : s.title)),
-      brief: (c as any).brief || undefined,
-      campaignVariants: ((c as any).campaignVariants as string[]) || [],
-      targetAffiliateLink: c.targetAffiliateLink || undefined,
-      soundUrl: c.soundUrl || undefined,
-      productSkus: (c.productSkus as any[]) || [],
-    }));
+    const formatted = allCampaigns.map((c) => {
+      const stats = statsMap.get(c.id) || { pending: 0, approved: 0, rejected: 0, total: 0 };
+
+      return {
+        id: c.id,
+        title: c.title,
+        slug: c.slug,
+        brandName: c.brandName,
+        category: c.category,
+        bannerUrl: c.bannerUrl || "",
+        platformType: c.platformType,
+        productId: c.productId || undefined,
+        tiktokCampaignId: c.tiktokCampaignId || undefined,
+        salePrice: c.salePrice || undefined,
+        shopName: c.shopName || undefined,
+        locationId: c.locationId || undefined,
+        locationName: c.locationName || undefined,
+        merchantName: c.merchantName || undefined,
+        industryCategory: c.industryCategory || undefined,
+        benefitType: c.benefitType || undefined,
+        benefitData: c.benefitData || undefined,
+        commissionType: c.commissionType,
+        commissionRateText: c.commissionRateText,
+        isFreeSample: c.isFreeSample,
+        sampleQuota: c.sampleQuota,
+        sampleStockRemaining: c.sampleStockRemaining,
+        startDate: c.startDate.toISOString().split("T")[0],
+        endDate: c.endDate.toISOString().split("T")[0],
+        daysRemaining: Math.max(
+          0,
+          Math.ceil((new Date(c.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+        ),
+        mandatoryHashtags: (c.mandatoryHashtags as string[]) || [],
+        mandatoryMentions: (c.mandatoryMentions as string[]) || [],
+        sowItems: ((c.sowChecklist as any[]) || []).map((s) => (typeof s === "string" ? s : s.title)),
+        brief: c.brief || undefined,
+        campaignVariants: (c.campaignVariants as string[]) || [],
+        targetAffiliateLink: c.targetAffiliateLink || undefined,
+        soundUrl: c.soundUrl || undefined,
+        productSkus: (c.productSkus as any[]) || [],
+        applicantStats: stats,
+      };
+    });
 
     return NextResponse.json(formatted);
   } catch (err: any) {

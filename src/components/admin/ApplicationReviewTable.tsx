@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Table,
   TableHeader,
@@ -8,7 +9,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  User,
   Chip,
   Button,
   Modal,
@@ -26,7 +26,6 @@ import {
   X,
   Phone,
   Sparkles,
-  MapPin,
   ExternalLink,
   Search,
   CheckCircle2,
@@ -35,6 +34,8 @@ import {
   Loader2,
   Tag,
   Copy,
+  Layers,
+  ArrowLeft,
 } from "lucide-react";
 
 export interface AdminApplicationItem {
@@ -84,12 +85,24 @@ const REJECTION_REASONS = [
 ];
 
 export function ApplicationReviewTable() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const urlCampaignId = searchParams.get("campaignId") || "ALL";
+
   const [applications, setApplications] = useState<AdminApplicationItem[]>([]);
+  const [campaignList, setCampaignList] = useState<{ id: string; title: string; brandName: string }[]>([]);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string>(urlCampaignId);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Sync state if url changes
+  useEffect(() => {
+    setSelectedCampaignId(urlCampaignId);
+  }, [urlCampaignId]);
 
   // Modals state
   const {
@@ -107,10 +120,32 @@ export function ApplicationReviewTable() {
   const [selectedApp, setSelectedApp] = useState<AdminApplicationItem | null>(null);
   const [selectedReason, setSelectedReason] = useState(REJECTION_REASONS[0]);
 
-  const loadApplications = async () => {
+  // Load campaigns for dropdown filter
+  useEffect(() => {
+    fetch("/api/campaigns")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCampaignList(
+            data.map((c) => ({
+              id: c.id,
+              title: c.title,
+              brandName: c.brandName,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const loadApplications = async (campId = selectedCampaignId) => {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/applications");
+      const url =
+        campId && campId !== "ALL"
+          ? `/api/admin/applications?campaignId=${campId}`
+          : "/api/admin/applications";
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setApplications(Array.isArray(data) ? data : []);
@@ -123,8 +158,17 @@ export function ApplicationReviewTable() {
   };
 
   useEffect(() => {
-    loadApplications();
-  }, []);
+    loadApplications(selectedCampaignId);
+  }, [selectedCampaignId]);
+
+  const handleCampaignFilterChange = (campId: string) => {
+    setSelectedCampaignId(campId);
+    if (campId === "ALL") {
+      router.push("/admin/applications");
+    } else {
+      router.push(`/admin/applications?campaignId=${campId}`);
+    }
+  };
 
   // Actions
   const handleApprove = async (onClose: () => void) => {
@@ -189,6 +233,12 @@ export function ApplicationReviewTable() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const activeCampaignInfo =
+    selectedCampaignId !== "ALL"
+      ? campaignList.find((c) => c.id === selectedCampaignId) ||
+        (applications.length > 0 ? { title: applications[0].campaignTitle, brandName: applications[0].brandName } : null)
+      : null;
+
   const filtered = applications.filter((item) => {
     const matchesStatus =
       filterStatus === "ALL" || item.status === filterStatus;
@@ -202,42 +252,62 @@ export function ApplicationReviewTable() {
 
   return (
     <div className="space-y-4">
-      {/* Search & Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 w-full sm:w-auto">
-          {[
-            { key: "ALL", label: `Semua (${applications.length})` },
-            {
-              key: "PENDING_REVIEW",
-              label: `Menunggu Review (${applications.filter((a) => a.status === "PENDING_REVIEW").length})`,
-            },
-            {
-              key: "APPROVED",
-              label: `Disetujui (${applications.filter((a) => a.status === "APPROVED").length})`,
-            },
-            {
-              key: "DISPATCHED",
-              label: `Sampel Terkirim (${applications.filter((a) => a.status === "DISPATCHED").length})`,
-            },
-            {
-              key: "REJECTED",
-              label: `Ditolak (${applications.filter((a) => a.status === "REJECTED").length})`,
-            },
-          ].map((tab) => (
+      {/* Campaign Focus Banner (if filtered by campaign) */}
+      {selectedCampaignId !== "ALL" && activeCampaignInfo && (
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 rounded-2xl">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold shrink-0 shadow-sm">
+              <Layers className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase text-indigo-700 dark:text-indigo-400 bg-white dark:bg-indigo-900 px-2 py-0.5 rounded border border-indigo-200">
+                  {activeCampaignInfo.brandName}
+                </span>
+                <span className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold">
+                  Mode Kurasi Terfokus
+                </span>
+              </div>
+              <h2 className="font-bold text-sm sm:text-base text-slate-900 dark:text-white mt-0.5">
+                {activeCampaignInfo.title}
+              </h2>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
             <Button
-              key={tab.key}
               size="sm"
-              variant={filterStatus === tab.key ? "solid" : "flat"}
-              color={filterStatus === tab.key ? "primary" : "default"}
-              onClick={() => setFilterStatus(tab.key)}
-              className="text-xs font-semibold rounded-xl shrink-0"
+              variant="flat"
+              color="primary"
+              onClick={() => handleCampaignFilterChange("ALL")}
+              className="text-xs font-bold rounded-xl"
+              startContent={<ArrowLeft className="w-3.5 h-3.5" />}
             >
-              {tab.label}
+              Lihat Semua Campaign
             </Button>
-          ))}
+          </div>
+        </div>
+      )}
+
+      {/* Campaign Dropdown & Search Filter Bar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        {/* Campaign Filter Dropdown */}
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <select
+            value={selectedCampaignId}
+            onChange={(e) => handleCampaignFilterChange(e.target.value)}
+            className="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-800 dark:text-white focus:outline-none focus:border-indigo-500 shadow-sm w-full sm:w-64"
+          >
+            <option value="ALL">📁 Semua Campaign ({campaignList.length})</option>
+            {campaignList.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.brandName} - {c.title}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
           <Input
             placeholder="Cari kreator, @handle, atau brand..."
             value={searchQuery}
@@ -251,13 +321,47 @@ export function ApplicationReviewTable() {
             size="sm"
             variant="flat"
             isIconOnly
-            onClick={loadApplications}
+            onClick={() => loadApplications(selectedCampaignId)}
             title="Refresh data"
-            className="rounded-xl"
+            className="rounded-xl shrink-0"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
           </Button>
         </div>
+      </div>
+
+      {/* Status Filter Tabs */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 w-full">
+        {[
+          { key: "ALL", label: `Semua (${applications.length})` },
+          {
+            key: "PENDING_REVIEW",
+            label: `Menunggu Review (${applications.filter((a) => a.status === "PENDING_REVIEW").length})`,
+          },
+          {
+            key: "APPROVED",
+            label: `Disetujui (${applications.filter((a) => a.status === "APPROVED").length})`,
+          },
+          {
+            key: "DISPATCHED",
+            label: `Sampel Terkirim (${applications.filter((a) => a.status === "DISPATCHED").length})`,
+          },
+          {
+            key: "REJECTED",
+            label: `Ditolak (${applications.filter((a) => a.status === "REJECTED").length})`,
+          },
+        ].map((tab) => (
+          <Button
+            key={tab.key}
+            size="sm"
+            variant={filterStatus === tab.key ? "solid" : "flat"}
+            color={filterStatus === tab.key ? "primary" : "default"}
+            onClick={() => setFilterStatus(tab.key)}
+            className="text-xs font-semibold rounded-xl shrink-0"
+          >
+            {tab.label}
+          </Button>
+        ))}
       </div>
 
       {/* Main Review Table */}

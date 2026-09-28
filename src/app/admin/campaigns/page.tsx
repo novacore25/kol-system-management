@@ -69,6 +69,12 @@ interface CampaignAdminItem {
   targetAffiliateLink?: string;
   salePrice?: string;
   productSkus?: SkuProductItem[];
+  applicantStats?: {
+    pending: number;
+    approved: number;
+    rejected: number;
+    total: number;
+  };
 }
 
 export default function AdminCampaignsPage() {
@@ -150,13 +156,14 @@ export default function AdminCampaignsPage() {
             productId: d.productId || d.locationId || "PROD-GENERAL",
             commissionRate: d.commissionRateText || "5.00%",
             sampleQuota: d.sampleQuota || 50,
-            approvedCount: 0,
             deadlineDate: d.endDate || "30 Sep 2026",
             status: "ACTIVE",
             hashtags: d.mandatoryHashtags || ["#CreavyCampaign"],
             targetAffiliateLink: d.targetAffiliateLink,
             salePrice: d.salePrice,
             productSkus: d.productSkus || [],
+            applicantStats: d.applicantStats || { pending: 0, approved: 0, rejected: 0, total: 0 },
+            approvedCount: d.applicantStats?.approved || 0,
           }));
           setCampaigns(mapped);
         }
@@ -541,6 +548,7 @@ export default function AdminCampaignsPage() {
                 <th className="py-3 px-3">Produk / Link SKU</th>
                 <th className="py-3 px-3 text-center">Komisi</th>
                 <th className="py-3 px-3 text-center">Kuota Sampel</th>
+                <th className="py-3 px-3 text-center">Kurasi Pendaftar</th>
                 <th className="py-3 px-3">Batas Waktu</th>
                 <th className="py-3 px-3">Link Daftar Kreator</th>
                 <th className="py-3 px-3">Status</th>
@@ -550,11 +558,18 @@ export default function AdminCampaignsPage() {
               {filteredCampaigns.length > 0 ? (
                 filteredCampaigns.map((camp) => {
                   const skuCount = camp.productSkus?.length || (camp.productId ? 1 : 0);
+                  const stats = camp.applicantStats || { pending: 0, approved: 0, rejected: 0, total: 0 };
 
                   return (
                     <tr key={camp.id} className="hover:bg-slate-50 transition-colors">
                       <td className="py-3.5 px-4 max-w-xs">
-                        <p className="font-bold text-slate-900 line-clamp-2">{camp.title}</p>
+                        <a
+                          href={`/admin/applications?campaignId=${camp.id}`}
+                          className="font-bold text-slate-900 line-clamp-2 hover:text-indigo-600 transition-colors"
+                          title="Klik untuk kurasi pendaftar campaign ini"
+                        >
+                          {camp.title}
+                        </a>
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[11px] text-slate-500 font-medium">{camp.brandName}</span>
                           {camp.salePrice && (
@@ -612,6 +627,38 @@ export default function AdminCampaignsPage() {
                         <span className="text-[10px] text-slate-400">
                           {camp.sampleQuota - camp.approvedCount} sampel tersisa
                         </span>
+                      </td>
+                      {/* Kurasi Pendaftar Column */}
+                      <td className="py-3.5 px-3 text-center">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-center gap-1 flex-wrap">
+                            {stats.pending > 0 ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 animate-pulse">
+                                ⏳ {stats.pending} Review
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-500">
+                                0 Pending
+                              </span>
+                            )}
+                            {stats.approved > 0 && (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                ✓ {stats.approved}
+                              </span>
+                            )}
+                            {stats.rejected > 0 && (
+                              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                                ✕ {stats.rejected}
+                              </span>
+                            )}
+                          </div>
+                          <a
+                            href={`/admin/applications?campaignId=${camp.id}`}
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline"
+                          >
+                            Kurasi ({stats.total}) →
+                          </a>
+                        </div>
                       </td>
                       <td className="py-3.5 px-3">
                         <div className="flex items-center gap-1.5 text-slate-600">
