@@ -13,7 +13,6 @@ import {
   CheckCircle2,
   Mail,
   User,
-  FileText,
 } from "lucide-react";
 
 function GoogleIcon({ className = "w-5 h-5" }: { className?: string }) {
@@ -43,12 +42,13 @@ function AdminLoginForm() {
   const searchParams = useSearchParams();
   const errorParam = searchParams.get("error");
   const [loading, setLoading] = useState(false);
-  const [showRequestForm, setShowRequestForm] = useState(false);
+  // Auto-expand request form when user was denied (not_admin / unauthorized_email)
+  const isAccessDenied = errorParam === "not_admin" || errorParam === "unauthorized_email";
+  const [showRequestForm, setShowRequestForm] = useState(isAccessDenied);
 
   // Request form state
   const [reqName, setReqName] = useState("");
   const [reqEmail, setReqEmail] = useState("");
-  const [reqReason, setReqReason] = useState("");
   const [reqLoading, setReqLoading] = useState(false);
   const [reqResult, setReqResult] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
@@ -83,14 +83,13 @@ function AdminLoginForm() {
       const res = await fetch("/api/admin/request-access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: reqName, email: reqEmail, reason: reqReason }),
+        body: JSON.stringify({ name: reqName, email: reqEmail }),
       });
       const data = await res.json();
       if (res.ok) {
         setReqResult({ type: "success", message: data.message });
         setReqName("");
         setReqEmail("");
-        setReqReason("");
       } else {
         setReqResult({ type: "error", message: data.error || "Terjadi kesalahan." });
       }
@@ -238,17 +237,6 @@ function AdminLoginForm() {
                     value={reqEmail}
                     onChange={(e) => setReqEmail(e.target.value)}
                     className="w-full pl-9 pr-3 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-foreground placeholder:text-default-400 focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400/30 transition-all"
-                  />
-                </div>
-
-                <div className="relative">
-                  <FileText className="absolute left-3 top-3 w-3.5 h-3.5 text-default-400" />
-                  <textarea
-                    placeholder="Alasan / jabatan (opsional)"
-                    value={reqReason}
-                    onChange={(e) => setReqReason(e.target.value)}
-                    rows={2}
-                    className="w-full pl-9 pr-3 py-2.5 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-foreground placeholder:text-default-400 focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400/30 transition-all resize-none"
                   />
                 </div>
 

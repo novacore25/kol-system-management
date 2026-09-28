@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
+import { users } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, reason } = body;
+    const { name, email } = body;
 
     if (!name || !email) {
       return NextResponse.json({ error: "Nama dan email wajib diisi." }, { status: 400 });
@@ -16,37 +18,58 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Format email tidak valid." }, { status: 400 });
     }
 
-    // Ensure the pending_admin_requests table exists
+    // Ensure PENDING_ADMIN value exists in the enum (safe to run multiple times)
     await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS pending_admin_requests (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-        name VARCHAR(200) NOT NULL,
-        email VARCHAR(200) NOT NULL,
-        reason TEXT,
-        status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-        reviewed_at TIMESTAMPTZ,
-        UNIQUE (email)
-      )
+      DO $$ BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_enum
+          WHERE enumlabel = 'PENDING_ADMIN'
+            AND enumtypid = (SELECT oid FROM pg_type WHERE typname = 'user_role')
+        ) THEN
+          ALTER TYPE user_role ADD VALUE 'PENDING_ADMIN';
+        END IF;
+      END $$;
     `);
 
-    // Check for duplicate
-    const existing = await db.execute(
-      sql`SELECT id FROM pending_admin_requests WHERE email = ${email} LIMIT 1`
-    );
+    // Check if email already exists in users table
+    const existing = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1)
+      .then((rows) => rows[0]);
 
-    if (existing.rows && existing.rows.length > 0) {
-      return NextResponse.json(
-        { error: "Email ini sudah pernah mengajukan akses. Tunggu review dari Superadmin." },
-        { status: 409 }
-      );
+    if (existing) {
+      if (existing.role === "ADMIN") {
+        return NextResponse.json(
+          { error: "Email ini sudah terdaftar sebagai Admin." },
+          { status: 409 }
+        );
+      }
+      if (existing.role === "PENDING_ADMIN") {
+        return NextResponse.json(
+          { error: "Permintaan untuk email ini sudah ada dan sedang menunggu persetujuan Superadmin." },
+          { status: 409 }
+        );
+      }
+      // Update existing user to PENDING_ADMIN
+      await db
+        .update(users)
+        .set({ role: "PENDING_ADMIN" as any })
+        .where(eq(users.email, email));
+    } else {
+      // Insert new user with PENDING_ADMIN role
+      await db.insert(users).values({
+        email,
+        role: "PENDING_ADMIN" as any,
+        isActive: false,
+      });
     }
 
-    await db.execute(
-      sql`INSERT INTO pending_admin_requests (name, email, reason) VALUES (${name}, ${email}, ${reason || null})`
-    );
-
-    return NextResponse.json({ success: true, message: "Permintaan akses berhasil dikirim!" });
+    return NextResponse.json({
+      success: true,
+      message: "Permintaan akses admin berhasil dikirim! Superadmin akan mengubah role kamu menjadi ADMIN di database.",
+    });
   } catch (err: any) {
     console.error("Admin request access error:", err);
     return NextResponse.json({ error: "Terjadi kesalahan server." }, { status: 500 });
