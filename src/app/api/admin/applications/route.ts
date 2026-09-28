@@ -66,73 +66,108 @@ export async function GET() {
       .from(campaignApplications)
       .innerJoin(campaigns, eq(campaignApplications.campaignId, campaigns.id))
       .leftJoin(creatorProfiles, eq(campaignApplications.creatorProfileId, creatorProfiles.id))
-      .leftJoin(tiktokAccounts, eq(campaignApplications.tiktokAccountId, tiktokAccounts.id))
+      .leftJoin(
+        tiktokAccounts,
+        eq(campaignApplications.tiktokAccountId, tiktokAccounts.id)
+      )
       .leftJoin(sampleShipments, eq(sampleShipments.applicationId, campaignApplications.id))
       .orderBy(desc(campaignApplications.appliedAt));
 
-    const formatted = rows.map((r) => {
-      const creatorName = r.creatorFullName || r.applicantName || "Kreator";
-      const whatsapp = r.creatorWhatsapp || r.applicantWhatsapp || "-";
-      const tiktok = r.tiktokHandle || r.applicantTiktokHandle || "-";
-      const followers = r.tiktokFollowerCount 
-        ? Number(r.tiktokFollowerCount) 
-        : (r.applicantFollowerCount ? Number(String(r.applicantFollowerCount).replace(/\D/g, "")) : 0);
+    // Also fetch creator's tiktok accounts if tiktokAccountId was null on application
+    const formatted = await Promise.all(
+      rows.map(async (r) => {
+        let tiktokHandle = r.tiktokHandle || r.applicantTiktokHandle || "";
+        let followers = r.tiktokFollowerCount ? Number(r.tiktokFollowerCount) : 0;
+        let engagementRate = r.tiktokEngagementRate || "4.5%";
 
-      // Extract variant from internal notes if exists
-      let selectedVariant = "-";
-      if (r.internalNotes && r.internalNotes.startsWith("Varian dipilih: ")) {
-        selectedVariant = r.internalNotes.replace("Varian dipilih: ", "");
-      }
+        // Fallback: If no tiktok info but creatorProfileId exists, check tiktokAccounts for this profile
+        if ((!tiktokHandle || tiktokHandle === "-" || followers === 0) && r.creatorProfileId) {
+          const fallbackAcc = await db
+            .select({
+              handle: tiktokAccounts.handle,
+              followerCount: tiktokAccounts.followerCount,
+              engagementRate: tiktokAccounts.engagementRate,
+            })
+            .from(tiktokAccounts)
+            .where(eq(tiktokAccounts.creatorProfileId, r.creatorProfileId))
+            .limit(1);
 
-      return {
-        id: r.id,
-        status: r.status,
-        rejectionReason: r.rejectionReason,
-        internalNotes: r.internalNotes,
-        selectedVariant,
-        appliedAt: r.appliedAt,
-        reviewedAt: r.reviewedAt,
-        isGuestApply: !!r.isGuestApply,
+          if (fallbackAcc.length > 0) {
+            tiktokHandle = fallbackAcc[0].handle;
+            followers = Number(fallbackAcc[0].followerCount || 0);
+            engagementRate = fallbackAcc[0].engagementRate || "4.5%";
+          }
+        }
 
-        // Creator details
-        creatorName,
-        whatsapp,
-        tiktokHandle: tiktok.startsWith("@") ? tiktok : `@${tiktok}`,
-        followers,
-        engagementRate: r.tiktokEngagementRate || "4.5%",
-        tier: r.creatorTier || "NANO",
-        city: "-",
+        if (!followers && r.applicantFollowerCount) {
+          followers = Number(String(r.applicantFollowerCount).replace(/\D/g, "")) || 0;
+        }
 
-        // Campaign details
-        campaignId: r.campaignId,
-        campaignTitle: r.campaignTitle,
-        campaignSlug: r.campaignSlug,
-        brandName: r.brandName,
-        bannerUrl: r.bannerUrl,
-        commissionRateText: r.commissionRateText,
-        platformType: r.platformType,
+        const creatorName = r.creatorFullName || r.applicantName || "Kreator";
+        const whatsapp = r.creatorWhatsapp || r.applicantWhatsapp || "-";
 
-        // Shipping details
-        shippingAddress: r.shippingAddressSnapshot || {
-          recipientName: creatorName,
-          phoneNumber: whatsapp,
-          streetAddress: "-",
-          district: "-",
+        // Clean handle display
+        let displayHandle = "-";
+        if (tiktokHandle && tiktokHandle !== "-") {
+          displayHandle = tiktokHandle.startsWith("@") ? tiktokHandle : `@${tiktokHandle}`;
+        }
+
+        // Extract variant from internal notes if exists
+        let selectedVariant = "-";
+        if (r.internalNotes && r.internalNotes.startsWith("Varian dipilih: ")) {
+          selectedVariant = r.internalNotes.replace("Varian dipilih: ", "");
+        }
+
+        return {
+          id: r.id,
+          status: r.status,
+          rejectionReason: r.rejectionReason,
+          internalNotes: r.internalNotes,
+          selectedVariant,
+          appliedAt: r.appliedAt,
+          reviewedAt: r.reviewedAt,
+          isGuestApply: !!r.isGuestApply,
+
+          // Creator details
+          creatorName,
+          whatsapp,
+          tiktokHandle: displayHandle,
+          followers,
+          engagementRate,
+          tier: r.creatorTier || "NANO",
           city: "-",
-          province: "-",
-          postalCode: "-",
-        },
 
-        // Logistics details
-        shipment: r.shipmentId ? {
-          id: r.shipmentId,
-          courierName: r.courierName,
-          trackingNumber: r.trackingNumber,
-          trackingStatus: r.trackingStatus,
-          dispatchedAt: r.dispatchedAt,
-        } : null,
-      };
-    });
+          // Campaign details
+          campaignId: r.campaignId,
+          campaignTitle: r.campaignTitle,
+          campaignSlug: r.campaignSlug,
+          brandName: r.brandName,
+          bannerUrl: r.bannerUrl,
+          commissionRateText: r.commissionRateText,
+          platformType: r.platformType,
+
+          // Shipping details
+          shippingAddress: r.shippingAddressSnapshot || {
+            recipientName: creatorName,
+            phoneNumber: whatsapp,
+            streetAddress: "-",
+            district: "-",
+            city: "-",
+            province: "-",
+            postalCode: "-",
+          },
+
+          // Logistics details
+          shipment: r.shipmentId ? {
+            id: r.shipmentId,
+            courierName: r.courierName,
+            trackingNumber: r.trackingNumber,
+            trackingStatus: r.trackingStatus,
+            dispatchedAt: r.dispatchedAt,
+          } : null,
+        };
+      })
+    );
 
     return NextResponse.json(formatted);
   } catch (err: any) {

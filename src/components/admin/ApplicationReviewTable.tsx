@@ -320,16 +320,29 @@ export function ApplicationReviewTable() {
                     {/* TikTok Stats */}
                     <TableCell>
                       <div className="space-y-0.5 text-xs">
-                        <div className="flex items-center gap-1 font-extrabold text-foreground">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                          <span>{item.tiktokHandle}</span>
-                        </div>
-                        <p className="text-default-500 font-medium text-[11px]">
-                          {item.followers ? Number(item.followers).toLocaleString() : "0"} Followers
-                        </p>
-                        <Chip size="sm" variant="flat" className="text-[9px] h-4 font-bold">
-                          {item.tier || "CREATOR"}
-                        </Chip>
+                        {item.tiktokHandle && item.tiktokHandle !== "-" ? (
+                          <>
+                            <a
+                              href={`https://tiktok.com/@${item.tiktokHandle.replace(/^@/, "")}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 font-extrabold text-foreground hover:text-primary transition-colors"
+                              title="Buka profil TikTok"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                              <span className="truncate max-w-[130px]">{item.tiktokHandle}</span>
+                              <ExternalLink className="w-3 h-3 text-default-400 shrink-0" />
+                            </a>
+                            <p className="text-default-500 font-medium text-[11px]">
+                              {item.followers ? Number(item.followers).toLocaleString() : "0"} Followers
+                            </p>
+                            <Chip size="sm" variant="flat" className="text-[9px] h-4 font-bold">
+                              {item.tier || "CREATOR"}
+                            </Chip>
+                          </>
+                        ) : (
+                          <span className="text-default-400 text-xs italic">Belum terhubung</span>
+                        )}
                       </div>
                     </TableCell>
 

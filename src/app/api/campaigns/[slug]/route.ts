@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db";
-import { campaigns, campaignApplications, creatorProfiles } from "@/db/schema";
+import { campaigns, campaignApplications, creatorProfiles, tiktokAccounts } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { getCurrentSession } from "@/lib/auth";
 
@@ -92,6 +92,9 @@ export async function POST(
     // Check if user is logged in — link application to their profile
     const session = await getCurrentSession();
     let creatorProfileId: string | null = null;
+    let resolvedTiktokAccountId: string | null = body.tiktokAccountId || null;
+    let finalTiktokHandle = String(applicantTiktokHandle).trim();
+    let finalFollowerCount = applicantFollowerCount ? String(applicantFollowerCount).trim() : null;
 
     if (session?.creatorProfileId) {
       creatorProfileId = session.creatorProfileId;
@@ -103,6 +106,33 @@ export async function POST(
         .limit(1);
       if (profiles.length > 0) {
         creatorProfileId = profiles[0].id;
+      }
+    }
+
+    // If profile exists, automatically resolve TikTok account if not explicitly passed
+    if (creatorProfileId) {
+      const accounts = await db
+        .select({
+          id: tiktokAccounts.id,
+          handle: tiktokAccounts.handle,
+          followerCount: tiktokAccounts.followerCount,
+        })
+        .from(tiktokAccounts)
+        .where(
+          resolvedTiktokAccountId
+            ? eq(tiktokAccounts.id, resolvedTiktokAccountId)
+            : eq(tiktokAccounts.creatorProfileId, creatorProfileId)
+        )
+        .limit(1);
+
+      if (accounts.length > 0) {
+        resolvedTiktokAccountId = accounts[0].id;
+        if (!finalTiktokHandle || finalTiktokHandle === "-") {
+          finalTiktokHandle = accounts[0].handle;
+        }
+        if (!finalFollowerCount) {
+          finalFollowerCount = String(accounts[0].followerCount || "0");
+        }
       }
     }
 
@@ -167,17 +197,17 @@ export async function POST(
       .insert(campaignApplications)
       .values({
         campaignId: campaign.id,
-        creatorProfileId: creatorProfileId as any,
-        tiktokAccountId: null as any,
+        creatorProfileId: creatorProfileId,
+        tiktokAccountId: resolvedTiktokAccountId,
         shippingAddressSnapshot: (shippingAddressSnapshot || null) as any,
         status: "PENDING_REVIEW",
         applicantName: String(applicantName).trim(),
         applicantWhatsapp: String(applicantWhatsapp).trim(),
-        applicantTiktokHandle: String(applicantTiktokHandle).trim(),
-        applicantFollowerCount: applicantFollowerCount ? String(applicantFollowerCount).trim() : null,
+        applicantTiktokHandle: finalTiktokHandle,
+        applicantFollowerCount: finalFollowerCount,
         isGuestApply: !creatorProfileId,
-        internalNotes: internalNotes as any,
-      } as any)
+        internalNotes: internalNotes,
+      })
       .returning({ id: campaignApplications.id });
 
     return NextResponse.json({

@@ -202,6 +202,7 @@ export default function CampaignPublicPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          tiktokAccountId: selectedTiktokId || null,
           selectedVariant: selectedVariant || null,
           shippingAddressSnapshot: defaultAddr ? {
             recipientName: defaultAddr.recipientName,

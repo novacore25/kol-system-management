@@ -10,42 +10,56 @@ export async function GET() {
     return NextResponse.json({ authenticated: false, user: null }, { status: 401 });
   }
 
-  // If creator, also return their profile + tiktok accounts
+  // Fetch creator profile + tiktok accounts if available
   let creatorProfile = null;
   let tiktokAccountsList: any[] = [];
 
-  if (session.role === "CREATOR" && session.creatorProfileId) {
-    try {
+  try {
+    let profile = null;
+    if (session.creatorProfileId) {
       const profiles = await db
         .select()
         .from(creatorProfiles)
         .where(eq(creatorProfiles.id, session.creatorProfileId))
         .limit(1);
-
-      if (profiles.length > 0) {
-        creatorProfile = {
-          id: profiles[0].id,
-          fullName: profiles[0].fullName,
-          whatsappNumber: profiles[0].whatsappNumber,
-        };
-
-        // Fetch their TikTok accounts
-        const accounts = await db
-          .select({
-            id: tiktokAccounts.id,
-            handle: tiktokAccounts.handle,
-            displayName: tiktokAccounts.displayName,
-            followerCount: tiktokAccounts.followerCount,
-            avatarUrl: tiktokAccounts.avatarUrl,
-          })
-          .from(tiktokAccounts)
-          .where(eq(tiktokAccounts.creatorProfileId, profiles[0].id));
-
-        tiktokAccountsList = accounts;
-      }
-    } catch (e) {
-      console.error("Error fetching creator profile in /api/auth/me:", e);
+      if (profiles.length > 0) profile = profiles[0];
     }
+
+    if (!profile && session.id) {
+      const profiles = await db
+        .select()
+        .from(creatorProfiles)
+        .where(eq(creatorProfiles.userId, session.id))
+        .limit(1);
+      if (profiles.length > 0) profile = profiles[0];
+    }
+
+    if (profile) {
+      creatorProfile = {
+        id: profile.id,
+        fullName: profile.fullName,
+        whatsappNumber: profile.whatsappNumber,
+        tier: profile.tier,
+      };
+
+      // Fetch their TikTok accounts
+      const accounts = await db
+        .select({
+          id: tiktokAccounts.id,
+          handle: tiktokAccounts.handle,
+          displayName: tiktokAccounts.displayName,
+          followerCount: tiktokAccounts.followerCount,
+          avatarUrl: tiktokAccounts.avatarUrl,
+          engagementRate: tiktokAccounts.engagementRate,
+          isVerified: tiktokAccounts.isVerified,
+        })
+        .from(tiktokAccounts)
+        .where(eq(tiktokAccounts.creatorProfileId, profile.id));
+
+      tiktokAccountsList = accounts;
+    }
+  } catch (e) {
+    console.error("Error fetching creator profile in /api/auth/me:", e);
   }
 
   return NextResponse.json({
