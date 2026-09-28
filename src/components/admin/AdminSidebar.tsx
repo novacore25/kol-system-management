@@ -14,10 +14,18 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 
+interface AdminMenuItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isActive: boolean;
+  badge?: string;
+}
+
 export function AdminSidebar() {
   const pathname = usePathname();
 
-  const menuItems = [
+  const menuItems: AdminMenuItem[] = [
     {
       label: "Overview & Metrik",
       href: "/admin",
@@ -35,21 +43,18 @@ export function AdminSidebar() {
       href: "/admin/applications",
       icon: UserCheck,
       isActive: pathname.startsWith("/admin/applications"),
-      badge: "1 Baru",
     },
     {
       label: "Logistik & Resi Sampel",
       href: "/admin/logistics",
       icon: Truck,
       isActive: pathname.startsWith("/admin/logistics"),
-      badge: "1 Pending",
     },
     {
       label: "Import Raw Data",
       href: "/admin/import",
       icon: Sparkles,
       isActive: pathname.startsWith("/admin/import"),
-      badge: "Baru",
     },
   ];
 

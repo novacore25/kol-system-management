@@ -1,11 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import {
-  Card,
-  CardBody,
-  Button,
-  Chip,
-} from "@heroui/react";
+import { Card, Button, Chip } from "@heroui/react";
 import {
   Layers,
   UserCheck,
@@ -15,9 +10,51 @@ import {
   Sparkles,
   TrendingUp,
   Clock,
+  PackageCheck,
+  Plus,
 } from "lucide-react";
+import { db } from "@/db";
+import { campaigns, campaignApplications, sampleShipments, rawDataVideos } from "@/db/schema";
+import { eq, count, desc } from "drizzle-orm";
 
-export default function AdminDashboardPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminDashboardPage() {
+  let activeCampaignsCount = 0;
+  let activeCampaignsBrands: string[] = [];
+  let pendingApplicationsCount = 0;
+  let pendingShipmentsCount = 0;
+  let detectedVideosCount = 0;
+
+  try {
+    const allCampaigns = await db
+      .select({ id: campaigns.id, title: campaigns.title, brandName: campaigns.brandName })
+      .from(campaigns)
+      .orderBy(desc(campaigns.createdAt));
+
+    activeCampaignsCount = allCampaigns.length;
+    activeCampaignsBrands = Array.from(new Set(allCampaigns.map((c) => c.brandName))).slice(0, 4);
+
+    const pendingApps = await db
+      .select({ value: count() })
+      .from(campaignApplications)
+      .where(eq(campaignApplications.status, "PENDING_REVIEW"));
+    pendingApplicationsCount = pendingApps[0]?.value || 0;
+
+    const pendingShips = await db
+      .select({ value: count() })
+      .from(sampleShipments)
+      .where(eq(sampleShipments.trackingStatus, "LABEL_CREATED"));
+    pendingShipmentsCount = pendingShips[0]?.value || 0;
+
+    const detectedVids = await db
+      .select({ value: count() })
+      .from(rawDataVideos);
+    detectedVideosCount = detectedVids[0]?.value || 0;
+  } catch (err) {
+    console.error("Error loading admin dashboard stats:", err);
+  }
+
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
@@ -34,14 +71,27 @@ export default function AdminDashboardPage() {
         <div className="flex items-center gap-2">
           <Button
             as={Link}
-            href="/admin/applications"
+            href="/admin/campaigns"
             color="primary"
             size="sm"
-            className="bg-brand-600 text-white font-bold text-xs"
-            endContent={<ArrowRight className="w-3.5 h-3.5" />}
+            className="bg-brand-600 text-white font-bold text-xs shadow-md"
+            startContent={<Plus className="w-3.5 h-3.5" />}
           >
-            Kurasi Pendaftar (1 Baru)
+            Buat Campaign Baru
           </Button>
+          {pendingApplicationsCount > 0 && (
+            <Button
+              as={Link}
+              href="/admin/applications"
+              color="warning"
+              variant="flat"
+              size="sm"
+              className="font-bold text-xs"
+              endContent={<ArrowRight className="w-3.5 h-3.5" />}
+            >
+              Kurasi Pendaftar ({pendingApplicationsCount} Baru)
+            </Button>
+          )}
         </div>
       </div>
 
@@ -55,8 +105,12 @@ export default function AdminDashboardPage() {
               <Layers className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-foreground mt-2">4</p>
-          <p className="text-[11px] text-default-400 mt-1">Make Over, Emina, Kahf, Skintific</p>
+          <p className="text-2xl font-black text-foreground mt-2">{activeCampaignsCount}</p>
+          <p className="text-[11px] text-default-400 mt-1 truncate">
+            {activeCampaignsBrands.length > 0
+              ? activeCampaignsBrands.join(", ")
+              : "Belum ada campaign"}
+          </p>
         </Card>
 
         {/* Metric 2 */}
@@ -67,10 +121,10 @@ export default function AdminDashboardPage() {
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-foreground mt-2">1</p>
+          <p className="text-2xl font-black text-foreground mt-2">{pendingApplicationsCount}</p>
           <div className="flex items-center gap-1 text-[11px] text-amber-600 font-bold mt-1">
             <Clock className="w-3 h-3" />
-            <span>Perlu ditinjau admin</span>
+            <span>{pendingApplicationsCount > 0 ? "Perlu ditinjau admin" : "Tidak ada antrean"}</span>
           </div>
         </Card>
 
@@ -82,8 +136,10 @@ export default function AdminDashboardPage() {
               <Truck className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-foreground mt-2">1</p>
-          <p className="text-[11px] text-default-400 mt-1">Siap dikirim ekspedisi</p>
+          <p className="text-2xl font-black text-foreground mt-2">{pendingShipmentsCount}</p>
+          <p className="text-[11px] text-default-400 mt-1">
+            {pendingShipmentsCount > 0 ? "Siap dikirim ekspedisi" : "Semua resi terisi"}
+          </p>
         </Card>
 
         {/* Metric 4 */}
@@ -94,7 +150,7 @@ export default function AdminDashboardPage() {
               <Video className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-foreground mt-2">12</p>
+          <p className="text-2xl font-black text-foreground mt-2">{detectedVideosCount}</p>
           <div className="flex items-center gap-1 text-[11px] text-emerald-600 font-bold mt-1">
             <TrendingUp className="w-3 h-3" />
             <span>Auto-detected via TikTok API</span>
@@ -119,10 +175,20 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="p-3 bg-default-50 dark:bg-default-100/50 rounded-2xl flex items-center justify-between text-xs">
-            <span className="font-bold text-default-700">Pendaftar Campaign Terbaru</span>
-            <Chip size="sm" color="warning" variant="flat" className="font-bold text-[10px]">
-              Menunggu Review
-            </Chip>
+            <span className="font-bold text-default-700">
+              {pendingApplicationsCount > 0
+                ? `${pendingApplicationsCount} pendaftar baru menunggu review`
+                : "Belum ada pendaftar baru"}
+            </span>
+            {pendingApplicationsCount > 0 ? (
+              <Chip size="sm" color="warning" variant="flat" className="font-bold text-[10px]">
+                {pendingApplicationsCount} Perlu Review
+              </Chip>
+            ) : (
+              <Chip size="sm" color="default" variant="flat" className="text-[10px]">
+                Antrean Bersih
+              </Chip>
+            )}
           </div>
 
           <Button
@@ -153,10 +219,20 @@ export default function AdminDashboardPage() {
           </div>
 
           <div className="p-3 bg-default-50 dark:bg-default-100/50 rounded-2xl flex items-center justify-between text-xs">
-            <span className="font-bold text-default-700">Siti Rahmawati - Emina Glossy Tint</span>
-            <Chip size="sm" color="warning" variant="flat" className="font-bold text-[10px]">
-              Perlu Input Resi
-            </Chip>
+            <span className="font-bold text-default-700">
+              {pendingShipmentsCount > 0
+                ? `${pendingShipmentsCount} paket sampel menunggu nomor resi`
+                : "Tidak ada sampel tertunda"}
+            </span>
+            {pendingShipmentsCount > 0 ? (
+              <Chip size="sm" color="warning" variant="flat" className="font-bold text-[10px]">
+                {pendingShipmentsCount} Perlu Resi
+              </Chip>
+            ) : (
+              <Chip size="sm" color="success" variant="flat" className="text-[10px] font-bold">
+                Semua Terkirim
+              </Chip>
+            )}
           </div>
 
           <Button

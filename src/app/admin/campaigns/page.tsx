@@ -135,35 +135,44 @@ export default function AdminCampaignsPage() {
 
       const resData = await res.json();
       if (!res.ok) {
-        console.warn("API returned error, adding to local state:", resData.error);
+        alert(resData.error || "Gagal membuat campaign.");
+        return;
       }
+
+      // Reload fresh campaigns from API
+      const freshRes = await fetch("/api/campaigns");
+      if (freshRes.ok) {
+        const freshData = await freshRes.json();
+        if (Array.isArray(freshData)) {
+          const mapped: CampaignAdminItem[] = freshData.map((d: any) => ({
+            id: d.id,
+            title: d.title,
+            brandName: d.brandName,
+            platformType: d.platformType,
+            locationId: d.locationId,
+            locationName: d.locationName,
+            industryCategory: d.industryCategory,
+            benefitType: d.benefitType,
+            benefitData: d.benefitData,
+            productId: d.productId || d.locationId || "PROD-GENERAL",
+            commissionRate: d.commissionRateText || "15%",
+            sampleQuota: d.sampleQuota || 50,
+            approvedCount: 0,
+            deadlineDate: d.endDate || "30 Sep 2026",
+            status: "ACTIVE",
+            hashtags: d.mandatoryHashtags || ["#Creavy"],
+          }));
+          setCampaigns(mapped);
+        }
+      }
+
+      onClose();
+      setToastMessage(`Campaign "${newCampaign.title}" berhasil dibuat dan tersimpan di database!`);
+      setTimeout(() => setToastMessage(null), 4000);
     } catch (e) {
       console.error("Error saving campaign to DB:", e);
+      alert("Terjadi kesalahan saat menyimpan campaign.");
     }
-
-    const created: CampaignAdminItem = {
-      id: `camp-${Date.now()}`,
-      title: newCampaign.title,
-      brandName: newCampaign.brandName,
-      platformType: newCampaign.platformType,
-      locationId: newCampaign.locationId,
-      locationName: newCampaign.locationName,
-      industryCategory: newCampaign.industryCategory,
-      benefitType: newCampaign.benefitType,
-      benefitData: newCampaign.benefitData,
-      productId: newCampaign.productId || newCampaign.locationId || "PROD-101",
-      commissionRate: newCampaign.commissionRate,
-      sampleQuota: Number(newCampaign.sampleQuota),
-      approvedCount: 0,
-      deadlineDate: newCampaign.deadlineDate,
-      status: "ACTIVE",
-      hashtags: newCampaign.hashtags.split(",").map((h) => h.trim()),
-    };
-
-    setCampaigns((prev) => [created, ...prev]);
-    onClose();
-    setToastMessage(`Campaign "${created.title}" berhasil dibuat!`);
-    setTimeout(() => setToastMessage(null), 4000);
   };
 
   const filteredCampaigns = campaigns.filter(
