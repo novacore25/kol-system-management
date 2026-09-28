@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { db } from "@/db";
 import { users, creatorProfiles, tiktokAccounts, shippingAddresses } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -290,20 +291,29 @@ export async function GET(req: NextRequest) {
       creatorProfileId,
     });
 
-    // 10. Redirect to user profile or destination
-    const destination = assignedRole === "ADMIN" && !returnUrl.startsWith("/admin") ? "/admin" : returnUrl;
-    const response = NextResponse.redirect(`${appUrl}${destination}`);
-
-    // Set HTTP-only Cookie
-    response.cookies.set("creavy_session", sessionToken, {
+    // 10. Set HTTP-only Session Cookie
+    const isProduction = process.env.NODE_ENV === "production" || appUrl.startsWith("https://");
+    const cookieStore = await cookies();
+    cookieStore.set("creavy_session", sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isProduction,
       sameSite: "lax",
       maxAge: 30 * 24 * 60 * 60, // 30 days
       path: "/",
     });
+    cookieStore.delete("creavy_tiktok_pending");
 
-    // Clear temporary pending TikTok cookie
+    // 11. Redirect to user profile or destination
+    const destination = assignedRole === "ADMIN" && !returnUrl.startsWith("/admin") ? "/admin" : returnUrl;
+    const response = NextResponse.redirect(`${appUrl}${destination}`);
+
+    response.cookies.set("creavy_session", sessionToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60,
+      path: "/",
+    });
     response.cookies.delete("creavy_tiktok_pending");
 
     return response;

@@ -13,10 +13,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const appUrl =
+    let appUrl =
       process.env.NEXT_PUBLIC_APP_URL ||
       process.env.NEXTAUTH_URL ||
       `${req.nextUrl.protocol}//${req.nextUrl.host}`;
+
+    appUrl = appUrl.trim().replace(/\/+$/, "");
+    if (!appUrl.includes("localhost") && appUrl.startsWith("http://")) {
+      appUrl = appUrl.replace(/^http:\/\//, "https://");
+    }
 
     const redirectUri = `${appUrl}/api/auth/google/callback`;
 
