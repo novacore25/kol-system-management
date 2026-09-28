@@ -167,6 +167,34 @@ export default function AdminCampaignsPage() {
     }
   }, [newCampaign.title, slugEdited]);
 
+  // Reset form when modal is closed (X button or click outside)
+  useEffect(() => {
+    if (!isOpen) {
+      setSkuList([]);
+      setCampaignSlug("");
+      setSlugEdited(false);
+      const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+      setNewCampaign({
+        title: "",
+        brandName: "",
+        platformType: "TIKTOK_SHOP",
+        locationId: "",
+        locationName: "",
+        industryCategory: "Dining",
+        benefitType: "VOUCHER_DIGITAL",
+        benefitData: "",
+        commissionRate: "5.00%",
+        sampleQuota: 50,
+        deadlineDate: defaultDeadline,
+        hashtags: "#CreavyCampaign, #ReviewJujur",
+        mentions: "@creavy_official",
+        sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+      });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   // Handle Excel Import inside Modal
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -387,6 +415,31 @@ export default function AdminCampaignsPage() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  // Reset all modal form state to defaults
+  const resetForm = () => {
+    setSkuList([]);
+    setCampaignSlug("");
+    setSlugEdited(false);
+    const defaultDeadline = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+    setNewCampaign({
+      title: "",
+      brandName: "",
+      platformType: "TIKTOK_SHOP",
+      locationId: "",
+      locationName: "",
+      industryCategory: "Dining",
+      benefitType: "VOUCHER_DIGITAL",
+      benefitData: "",
+      commissionRate: "5.00%",
+      sampleQuota: 50,
+      deadlineDate: defaultDeadline,
+      hashtags: "#CreavyCampaign, #ReviewJujur",
+      mentions: "@creavy_official",
+      sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+    });
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const filteredCampaigns = campaigns.filter(
@@ -1017,11 +1070,21 @@ export default function AdminCampaignsPage() {
               <ModalFooter className="border-t border-slate-100 py-3 flex items-center justify-between">
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={() => { resetForm(); onClose(); }}
                   disabled={isSaving}
                   className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                 >
                   Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  disabled={isSaving}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 text-xs font-semibold transition-colors"
+                  title="Hapus semua data form"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Bersihkan Semua
                 </button>
                 <button
                   type="button"
