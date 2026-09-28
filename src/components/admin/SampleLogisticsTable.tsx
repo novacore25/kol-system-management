@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -26,9 +26,36 @@ import {
   CheckCircle2,
   PackageCheck,
   Send,
-  ExternalLink,
+  RefreshCw,
+  Loader2,
+  Tag,
+  Phone,
 } from "lucide-react";
-import { AdminApplicationItem, initialApplications } from "@/lib/admin-data";
+
+export interface LogisticsItem {
+  id: string;
+  status: "APPROVED" | "DISPATCHED";
+  creatorName: string;
+  whatsapp: string;
+  tiktokHandle: string;
+  campaignTitle: string;
+  brandName: string;
+  selectedVariant?: string;
+  shippingAddress: {
+    recipientName?: string;
+    phoneNumber?: string;
+    streetAddress?: string;
+    district?: string;
+    city?: string;
+    province?: string;
+    postalCode?: string;
+  };
+  shipmentId?: string | null;
+  courierName?: string | null;
+  trackingNumber?: string | null;
+  trackingStatus?: string | null;
+  dispatchedAt?: string | null;
+}
 
 const COURIERS = [
   "J&T Express",
@@ -37,49 +64,87 @@ const COURIERS = [
   "Shopee Xpress (SPX)",
   "Anteraja",
   "Ninja Xpress",
+  "GoSend / GrabExpress",
 ];
 
 export function SampleLogisticsTable() {
-  const [items, setItems] = useState<AdminApplicationItem[]>(
-    initialApplications.filter(
-      (a) => a.status === "APPROVED" || a.status === "DISPATCHED"
-    )
-  );
+  const [items, setItems] = useState<LogisticsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [activeItem, setActiveItem] = useState<AdminApplicationItem | null>(null);
+  const [activeItem, setActiveItem] = useState<LogisticsItem | null>(null);
   const [selectedCourier, setSelectedCourier] = useState(COURIERS[0]);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const handleOpenShipModal = (item: AdminApplicationItem) => {
+  const loadLogistics = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/logistics");
+      if (res.ok) {
+        const data = await res.json();
+        setItems(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error("Failed to load logistics queue:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadLogistics();
+  }, []);
+
+  const handleOpenShipModal = (item: LogisticsItem) => {
     setActiveItem(item);
     setSelectedCourier(item.courierName || COURIERS[0]);
     setTrackingNumber(item.trackingNumber || "");
     onOpen();
   };
 
-  const handleSaveTracking = (onClose: () => void) => {
-    if (!activeItem || !trackingNumber) return;
+  const handleSaveTracking = async (onClose: () => void) => {
+    if (!activeItem || !trackingNumber.trim()) return;
 
-    setItems((prev) =>
-      prev.map((i) =>
-        i.id === activeItem.id
-          ? {
-              ...i,
-              status: "DISPATCHED",
-              courierName: selectedCourier,
-              trackingNumber: trackingNumber.trim(),
-              dispatchedAt: "17 Sep 2026 " + new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" }),
-            }
-          : i
-      )
-    );
-    onClose();
+    setSaving(true);
+    try {
+      const res = await fetch("/api/admin/logistics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          applicationId: activeItem.id,
+          courierName: selectedCourier,
+          trackingNumber: trackingNumber.trim(),
+        }),
+      });
+
+      if (res.ok) {
+        setItems((prev) =>
+          prev.map((i) =>
+            i.id === activeItem.id
+              ? {
+                  ...i,
+                  status: "DISPATCHED",
+                  courierName: selectedCourier,
+                  trackingNumber: trackingNumber.trim(),
+                  dispatchedAt: new Date().toISOString(),
+                }
+              : i
+          )
+        );
+        onClose();
+      }
+    } catch (err) {
+      console.error("Error saving tracking number:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const copyFullAddress = (item: AdminApplicationItem) => {
-    const text = `${item.shippingAddress.recipientName} (${item.shippingAddress.phone})\n${item.shippingAddress.street}\n${item.shippingAddress.district}, ${item.shippingAddress.city}, ${item.shippingAddress.province} - ${item.shippingAddress.postalCode}`;
+  const copyFullAddress = (item: LogisticsItem) => {
+    const addr = item.shippingAddress;
+    const text = `${addr.recipientName || item.creatorName} (${addr.phoneNumber || item.whatsapp})\n${addr.streetAddress || "-"}\n${addr.district || "-"}, ${addr.city || "-"}, ${addr.province || "-"} ${addr.postalCode || ""}`;
     navigator.clipboard.writeText(text);
     setCopiedId(item.id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -90,143 +155,176 @@ export function SampleLogisticsTable() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="font-bold text-base text-foreground flex items-center gap-2">
-            <Truck className="w-5 h-5 text-brand-600" />
-            Antrean Pengiriman Sampel Produk
+            <Truck className="w-5 h-5 text-indigo-600" />
+            Antrean Pengiriman Sampel Produk ({items.length})
           </h3>
           <p className="text-xs text-default-500">
             Daftar kreator yang telah disetujui dan siap dikirimkan sampel produk gratis dari gudang.
           </p>
         </div>
+        <Button
+          size="sm"
+          variant="flat"
+          onClick={loadLogistics}
+          startContent={<RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />}
+          className="rounded-xl font-semibold text-xs"
+        >
+          Refresh
+        </Button>
       </div>
 
       <div className="border border-divider/60 rounded-2xl overflow-hidden shadow-sm bg-card">
-        <Table aria-label="Tabel Logistik Sampel" removeWrapper>
-          <TableHeader>
-            <TableColumn>KREATOR & CAMPAIGN</TableColumn>
-            <TableColumn>ALAMAT LENGKAP PENGIRIMAN</TableColumn>
-            <TableColumn>EKSPEDISI & RESI</TableColumn>
-            <TableColumn>STATUS LOGISTIK</TableColumn>
-            <TableColumn align="center">AKSI</TableColumn>
-          </TableHeader>
-          <TableBody emptyContent="Tidak ada antrean sampel saat ini.">
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                {/* Kreator & Campaign */}
-                <TableCell>
-                  <div className="space-y-1 text-xs">
-                    <p className="font-extrabold text-foreground">{item.creatorName}</p>
-                    <p className="text-purple-600 font-bold text-[11px]">{item.tiktokHandle}</p>
-                    <div className="p-2 bg-default-50 dark:bg-default-100/50 rounded-lg text-[11px] max-w-[200px]">
-                      <span className="text-default-400 block text-[9px] uppercase font-bold">{item.brandName}</span>
-                      <span className="font-medium line-clamp-1">{item.campaignTitle}</span>
-                    </div>
-                  </div>
-                </TableCell>
+        {loading ? (
+          <div className="py-16 text-center space-y-3">
+            <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto" />
+            <p className="text-xs text-default-500 font-medium">Memuat antrean logistik dari database...</p>
+          </div>
+        ) : (
+          <Table aria-label="Tabel Logistik Sampel" removeWrapper>
+            <TableHeader>
+              <TableColumn>KREATOR & CAMPAIGN</TableColumn>
+              <TableColumn>ALAMAT LENGKAP PENGIRIMAN</TableColumn>
+              <TableColumn>EKSPEDISI & RESI</TableColumn>
+              <TableColumn>STATUS LOGISTIK</TableColumn>
+              <TableColumn align="center">AKSI</TableColumn>
+            </TableHeader>
+            <TableBody emptyContent="Tidak ada antrean sampel saat ini. Pendaftar yang disetujui akan muncul di sini.">
+              {items.map((item) => {
+                const addr = item.shippingAddress;
+                return (
+                  <TableRow key={item.id}>
+                    {/* Kreator & Campaign */}
+                    <TableCell>
+                      <div className="space-y-1 text-xs">
+                        <p className="font-extrabold text-foreground">{item.creatorName}</p>
+                        <p className="text-purple-600 font-bold text-[11px]">{item.tiktokHandle}</p>
+                        <div className="p-2 bg-default-50 dark:bg-default-100/50 rounded-lg text-[11px] max-w-[200px]">
+                          <span className="text-default-400 block text-[9px] uppercase font-bold">{item.brandName}</span>
+                          <span className="font-medium line-clamp-1">{item.campaignTitle}</span>
+                          {item.selectedVariant && item.selectedVariant !== "-" && (
+                            <span className="inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-violet-700 bg-violet-50 px-1.5 py-0.5 rounded border border-violet-200">
+                              <Tag className="w-2.5 h-2.5" />
+                              {item.selectedVariant}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
 
-                {/* Alamat Pengiriman */}
-                <TableCell>
-                  <div className="space-y-1 text-xs max-w-[260px]">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-default-800">{item.shippingAddress.recipientName}</span>
+                    {/* Alamat Pengiriman */}
+                    <TableCell>
+                      <div className="space-y-1 text-xs max-w-[260px]">
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-default-800">{addr.recipientName || item.creatorName}</span>
+                          <Button
+                            size="sm"
+                            variant="light"
+                            onClick={() => copyFullAddress(item)}
+                            className="text-[10px] h-6 px-2 text-indigo-600 font-bold"
+                            startContent={<Copy className="w-3 h-3" />}
+                          >
+                            {copiedId === item.id ? "Tersalin!" : "Salin Label"}
+                          </Button>
+                        </div>
+                        <p className="text-default-500 text-[11px]">Telp: {addr.phoneNumber || item.whatsapp}</p>
+                        <p className="text-default-700 text-[11px] font-medium leading-relaxed">
+                          {addr.streetAddress || "-"}, {addr.district || "-"}, {addr.city || "-"},{" "}
+                          {addr.province || "-"} {addr.postalCode ? `(${addr.postalCode})` : ""}
+                        </p>
+                      </div>
+                    </TableCell>
+
+                    {/* Ekspedisi & Resi */}
+                    <TableCell>
+                      {item.trackingNumber ? (
+                        <div className="space-y-1 text-xs">
+                          <Chip size="sm" variant="flat" color="secondary" className="font-bold text-[10px]">
+                            {item.courierName}
+                          </Chip>
+                          <p className="font-mono font-bold text-foreground tracking-wide">
+                            {item.trackingNumber}
+                          </p>
+                          {item.dispatchedAt && (
+                            <span className="text-[10px] text-default-400 block">
+                              Dikirim: {new Date(item.dispatchedAt).toLocaleDateString("id-ID", {
+                                day: "numeric",
+                                month: "short",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-default-400 italic">Belum ada nomor resi</span>
+                      )}
+                    </TableCell>
+
+                    {/* Status Logistik */}
+                    <TableCell>
+                      {item.status === "APPROVED" && (
+                        <Chip size="sm" color="warning" variant="flat" className="font-bold text-xs">
+                          Menunggu Input Resi
+                        </Chip>
+                      )}
+                      {item.status === "DISPATCHED" && (
+                        <Chip size="sm" color="success" variant="flat" startContent={<CheckCircle2 className="w-3.5 h-3.5" />} className="font-bold text-xs">
+                          Terkirim (Resi Aktif)
+                        </Chip>
+                      )}
+                    </TableCell>
+
+                    {/* Aksi */}
+                    <TableCell>
                       <Button
                         size="sm"
-                        variant="light"
-                        onClick={() => copyFullAddress(item)}
-                        className="text-[10px] h-6 px-2 text-brand-600"
-                        startContent={<Copy className="w-3 h-3" />}
+                        color="primary"
+                        variant={item.trackingNumber ? "bordered" : "solid"}
+                        onClick={() => handleOpenShipModal(item)}
+                        startContent={<Send className="w-3.5 h-3.5" />}
+                        className="font-bold text-xs rounded-xl"
                       >
-                        {copiedId === item.id ? "Tersalin!" : "Salin Label"}
+                        {item.trackingNumber ? "Edit Resi" : "Input Resi"}
                       </Button>
-                    </div>
-                    <p className="text-default-500 text-[11px]">Telp: {item.shippingAddress.phone}</p>
-                    <p className="text-default-700 text-[11px] font-medium leading-relaxed">
-                      {item.shippingAddress.street}, {item.shippingAddress.district}, {item.shippingAddress.city},{" "}
-                      {item.shippingAddress.province} ({item.shippingAddress.postalCode})
-                    </p>
-                  </div>
-                </TableCell>
-
-                {/* Ekspedisi & Resi */}
-                <TableCell>
-                  {item.trackingNumber ? (
-                    <div className="space-y-1 text-xs">
-                      <Chip size="sm" variant="flat" color="secondary" className="font-bold text-[10px]">
-                        {item.courierName}
-                      </Chip>
-                      <p className="font-mono font-bold text-foreground tracking-wide">
-                        {item.trackingNumber}
-                      </p>
-                      <span className="text-[10px] text-default-400 block">
-                        Dikirim: {item.dispatchedAt}
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-xs text-default-400 italic">Belum ada nomor resi</span>
-                  )}
-                </TableCell>
-
-                {/* Status Logistik */}
-                <TableCell>
-                  {item.status === "APPROVED" && (
-                    <Chip size="sm" color="warning" variant="flat" className="font-bold text-xs">
-                      Menunggu Input Resi
-                    </Chip>
-                  )}
-                  {item.status === "DISPATCHED" && (
-                    <Chip size="sm" color="success" variant="flat" startContent={<CheckCircle2 className="w-3.5 h-3.5" />} className="font-bold text-xs">
-                      Terkirim (Resi Aktif)
-                    </Chip>
-                  )}
-                </TableCell>
-
-                {/* Aksi */}
-                <TableCell>
-                  <Button
-                    size="sm"
-                    color="primary"
-                    variant={item.trackingNumber ? "bordered" : "solid"}
-                    onClick={() => handleOpenShipModal(item)}
-                    startContent={<Send className="w-3.5 h-3.5" />}
-                    className="font-bold text-xs"
-                  >
-                    {item.trackingNumber ? "Edit Resi" : "Input Resi"}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
       </div>
 
       {/* MODAL INPUT RESI */}
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        size="md"
-        placement="center"
-        backdrop="blur"
-      >
-        <ModalContent className="bg-white text-slate-900 border border-slate-200 shadow-2xl rounded-2xl">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="center">
+        <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex items-center gap-2">
-                <PackageCheck className="w-5 h-5 text-brand-600" />
-                <span className="font-bold">Input Nomor Resi Kurir</span>
+                <PackageCheck className="w-5 h-5 text-indigo-600" />
+                <span>Input Resi Pengiriman Sampel</span>
               </ModalHeader>
-              <ModalBody className="space-y-3">
-                <div className="p-3 bg-default-50 dark:bg-default-100/50 rounded-xl text-xs space-y-1">
-                  <span className="text-default-400 block text-[10px] uppercase font-bold">Tujuan Pengiriman</span>
-                  <p className="font-bold text-default-800">{activeItem?.creatorName} ({activeItem?.tiktokHandle})</p>
-                  <p className="text-default-600">{activeItem?.shippingAddress.city}, {activeItem?.shippingAddress.province}</p>
+              <ModalBody className="space-y-4">
+                <div className="p-3 bg-default-50 dark:bg-default-100/40 rounded-xl space-y-1 text-xs">
+                  <p className="font-bold text-foreground">
+                    {activeItem?.creatorName} ({activeItem?.tiktokHandle})
+                  </p>
+                  <p className="text-default-500">
+                    Campaign: <strong>{activeItem?.campaignTitle}</strong>
+                  </p>
+                  {activeItem?.selectedVariant && activeItem?.selectedVariant !== "-" && (
+                    <p className="text-violet-700 font-semibold">
+                      Varian: <strong>{activeItem?.selectedVariant}</strong>
+                    </p>
+                  )}
                 </div>
 
                 <Select
                   label="Pilih Ekspedisi / Kurir"
                   size="sm"
-                  variant="bordered"
                   selectedKeys={[selectedCourier]}
                   onChange={(e) => setSelectedCourier(e.target.value)}
-                  isRequired
+                  variant="bordered"
                 >
                   {COURIERS.map((c) => (
                     <SelectItem key={c} textValue={c}>
@@ -236,28 +334,30 @@ export function SampleLogisticsTable() {
                 </Select>
 
                 <Input
-                  label="Nomor Resi Pengiriman"
-                  placeholder="Contoh: JT9928174620ID"
+                  label="Nomor Resi / AWB"
+                  placeholder="Contoh: JNT1234567890ID"
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
-                  size="sm"
                   variant="bordered"
-                  className="font-mono"
-                  isRequired
+                  size="sm"
                 />
+
+                <p className="text-[11px] text-default-400">
+                  Nomor resi yang diinput akan langsung muncul di halaman <strong>Campaign Saya</strong> kreator.
+                </p>
               </ModalBody>
               <ModalFooter>
-                <Button size="sm" variant="light" onPress={onClose}>
+                <Button size="sm" variant="flat" onClick={onClose} disabled={saving}>
                   Batal
                 </Button>
                 <Button
                   size="sm"
                   color="primary"
-                  className="bg-brand-600 text-white font-bold"
                   onClick={() => handleSaveTracking(onClose)}
-                  isDisabled={!trackingNumber}
+                  isLoading={saving}
+                  className="font-bold shadow-sm"
                 >
-                  Simpan & Update Status
+                  Simpan &amp; Perbarui Status
                 </Button>
               </ModalFooter>
             </>
