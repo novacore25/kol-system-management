@@ -376,10 +376,27 @@ export default function CampaignPublicPage() {
           </p>
 
           {submitSuccess ? (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-center space-y-2">
-              <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-              <p className="font-bold text-sm text-emerald-800">Pendaftaran Berhasil!</p>
-              <p className="text-xs text-emerald-700">{submitSuccess}</p>
+            <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-4">
+              <div className="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-7 h-7 text-emerald-600" />
+              </div>
+              <div className="space-y-1">
+                <p className="font-bold text-base text-emerald-800">🎉 Pendaftaran Berhasil!</p>
+                <p className="text-xs text-emerald-700 leading-relaxed">{submitSuccess}</p>
+                <p className="text-[11px] text-emerald-600">
+                  Tim kami akan menghubungimu via WhatsApp untuk langkah selanjutnya.
+                </p>
+              </div>
+              <a
+                href="/my-tasks"
+                className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-colors shadow-md shadow-indigo-600/20"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Lihat Campaign Saya
+              </a>
+              <p className="text-[10px] text-emerald-600">
+                Pantau status pendaftaran dan informasi pengiriman sampel di halaman Campaign Saya.
+              </p>
             </div>
           ) : !canApply ? (
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-1">
