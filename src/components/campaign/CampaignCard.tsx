@@ -51,6 +51,13 @@ export interface CampaignData {
   sowItems: string[];
   targetAffiliateLink?: string;
   productVariants?: string[];
+  productSkus?: {
+    productId: string;
+    productName: string;
+    salePrice?: string;
+    productLink?: string;
+    commissionRate?: string;
+  }[];
 }
 
 export function CampaignCard({ campaign }: { campaign: CampaignData }) {
@@ -323,7 +330,51 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
                   </div>
                 )}
 
-                {campaign.targetAffiliateLink && (
+                {/* Multi-SKU Showcase Links List */}
+                {campaign.productSkus && campaign.productSkus.length > 0 ? (
+                  <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-amber-900 text-xs flex items-center gap-1.5">
+                        <ShoppingBag className="w-3.5 h-3.5 text-amber-600" />
+                        Daftar Link Showcase Produk ({campaign.productSkus.length} Varian / SKU):
+                      </span>
+                      <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                        Klik untuk Tambah ke Showcase
+                      </span>
+                    </div>
+
+                    <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                      {campaign.productSkus.map((sku, idx) => (
+                        <div
+                          key={idx}
+                          className="p-2.5 bg-white rounded-lg border border-amber-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs"
+                        >
+                          <div className="space-y-0.5 flex-1 min-w-0">
+                            <p className="font-bold text-slate-900 text-xs truncate">{sku.productName}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-slate-500">
+                              {sku.salePrice && <span className="font-semibold text-emerald-700">{sku.salePrice}</span>}
+                              <span className="font-mono bg-slate-100 px-1.5 py-0.2 rounded text-slate-700">
+                                ID: {sku.productId}
+                              </span>
+                            </div>
+                          </div>
+
+                          {sku.productLink && (
+                            <a
+                              href={sku.productLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] shrink-0 transition-colors shadow-xs self-start sm:self-auto"
+                            >
+                              <span>Tambah ke Showcase</span>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : campaign.targetAffiliateLink ? (
                   <div className="p-3 bg-amber-50/70 border border-amber-200 rounded-xl flex items-center justify-between gap-2">
                     <div className="space-y-0.5">
                       <span className="font-bold text-amber-900 text-xs flex items-center gap-1.5">
@@ -344,7 +395,7 @@ export function CampaignCard({ campaign }: { campaign: CampaignData }) {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
-                )}
+                ) : null}
               </ModalBody>
 
               <ModalFooter className="border-t border-slate-100 py-3 flex justify-between">

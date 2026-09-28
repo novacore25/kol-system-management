@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
       sowItems: ((c.sowChecklist as any[]) || []).map((s) => (typeof s === "string" ? s : s.title)),
       targetAffiliateLink: c.targetAffiliateLink || undefined,
       soundUrl: c.soundUrl || undefined,
+      productSkus: (c.productSkus as any[]) || [],
     }));
 
     return NextResponse.json(formatted);
@@ -130,6 +131,7 @@ export async function POST(req: NextRequest) {
           sampleStockRemaining: sampleQuota,
           targetAffiliateLink: targetAffiliateLink || null,
           soundUrl: soundUrl || null,
+          productSkus: (item.productSkus as any[]) || [],
           mandatoryHashtags,
           mandatoryMentions,
           sowChecklist: sowItems.map((sow: string, idx: number) => ({

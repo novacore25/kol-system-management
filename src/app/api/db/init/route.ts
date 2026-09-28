@@ -290,6 +290,7 @@ export async function GET() {
       ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "tiktok_campaign_id" text;
       ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "sale_price" text;
       ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "shop_name" text;
+      ALTER TABLE "campaigns" ADD COLUMN IF NOT EXISTS "product_skus" jsonb DEFAULT '[]'::jsonb;
     `);
 
     // 3. Query all table names in public schema to confirm

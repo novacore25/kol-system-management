@@ -204,6 +204,16 @@ export const campaigns = pgTable("campaigns", {
   targetAffiliateLink: text("target_affiliate_link"),
   soundUrl: text("sound_url"),
   
+  // Multi-SKU / Product Links list
+  productSkus: jsonb("product_skus").$type<{
+    productId: string;
+    productName: string;
+    salePrice?: string;
+    productLink?: string;
+    commissionRate?: string;
+    isSelected: boolean;
+  }[]>().default([]).notNull(),
+  
   // SOW Checklist & Do's and Don'ts dalam format JSONB
   mandatoryHashtags: jsonb("mandatory_hashtags").$type<string[]>().default([]).notNull(),
   mandatoryMentions: jsonb("mandatory_mentions").$type<string[]>().default([]).notNull(),

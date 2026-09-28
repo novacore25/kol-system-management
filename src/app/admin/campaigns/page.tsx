@@ -21,6 +21,8 @@ import {
   Check,
   AlertCircle,
   Trash2,
+  ListPlus,
+  Link as LinkIcon,
 } from "lucide-react";
 import {
   Modal,
@@ -33,6 +35,16 @@ import {
 } from "@heroui/react";
 import * as XLSX from "xlsx";
 import clsx from "clsx";
+
+export interface SkuProductItem {
+  id: string;
+  productId: string;
+  productName: string;
+  salePrice: string;
+  productLink: string;
+  commissionRate: string;
+  isSelected: boolean;
+}
 
 interface CampaignAdminItem {
   id: string;
@@ -53,37 +65,37 @@ interface CampaignAdminItem {
   hashtags: string[];
   targetAffiliateLink?: string;
   salePrice?: string;
-}
-
-interface ParsedExcelProduct {
-  selected: boolean;
-  campaignId?: string;
-  productName: string;
-  productId: string;
-  shopName: string;
-  salePrice: string;
-  commissionRate: string;
-  productLink: string;
-  sampleQuota: number;
+  productSkus?: SkuProductItem[];
 }
 
 export default function AdminCampaignsPage() {
   const [campaigns, setCampaigns] = useState<CampaignAdminItem[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  // Excel Import Modal State
-  const {
-    isOpen: isImportOpen,
-    onOpen: onOpenImport,
-    onOpenChange: onImportChange,
-  } = useDisclosure();
-
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [parsedProducts, setParsedProducts] = useState<ParsedExcelProduct[]>([]);
-  const [importFileName, setImportFileName] = useState<string>("");
-  const [isImporting, setIsImporting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Form State inside Modal
+  const [newCampaign, setNewCampaign] = useState({
+    title: "",
+    brandName: "",
+    platformType: "TIKTOK_SHOP" as "TIKTOK_SHOP" | "TIKTOK_GO",
+    locationId: "",
+    locationName: "",
+    industryCategory: "Dining",
+    benefitType: "VOUCHER_DIGITAL" as "VOUCHER_DIGITAL" | "OUTLET_PASS_LINK",
+    benefitData: "",
+    commissionRate: "5.00%",
+    sampleQuota: 50,
+    deadlineDate: "30 Oct 2026",
+    hashtags: "#CreavyCampaign, #ReviewJujur",
+    mentions: "@creavy_official",
+    sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+  });
+
+  // SKU Products List inside Modal
+  const [skuList, setSkuList] = useState<SkuProductItem[]>([]);
 
   // Load campaigns from API/DB
   const loadCampaigns = async () => {
@@ -111,6 +123,7 @@ export default function AdminCampaignsPage() {
             hashtags: d.mandatoryHashtags || ["#CreavyCampaign"],
             targetAffiliateLink: d.targetAffiliateLink,
             salePrice: d.salePrice,
+            productSkus: d.productSkus || [],
           }));
           setCampaigns(mapped);
         }
@@ -124,35 +137,12 @@ export default function AdminCampaignsPage() {
     loadCampaigns();
   }, []);
 
-  // Form State for Manual Campaign Creation
-  const [newCampaign, setNewCampaign] = useState({
-    title: "",
-    brandName: "",
-    platformType: "TIKTOK_SHOP" as "TIKTOK_SHOP" | "TIKTOK_GO",
-    locationId: "",
-    locationName: "",
-    industryCategory: "Dining",
-    benefitType: "VOUCHER_DIGITAL" as "VOUCHER_DIGITAL" | "OUTLET_PASS_LINK",
-    benefitData: "",
-    productId: "",
-    targetAffiliateLink: "",
-    salePrice: "",
-    commissionRate: "5.00%",
-    sampleQuota: 50,
-    deadlineDate: "30 Oct 2026",
-    hashtags: "#CreavyCampaign, #ReviewJujur",
-    mentions: "@creavy_official",
-    sow: "Tautkan link keranjang kuning / showcase produk\nDurasi minimal 30 detik\nPencahayaan jelas & review jujur",
-  });
-
-  // Handle Excel File Parsing
+  // Handle Excel Import inside Modal
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setImportFileName(file.name);
     const reader = new FileReader();
-
     reader.onload = (evt) => {
       try {
         const bstr = evt.target?.result;
@@ -166,9 +156,11 @@ export default function AdminCampaignsPage() {
           return;
         }
 
-        // Map columns dynamically
-        const extracted: ParsedExcelProduct[] = rawData
-          .map((row: any) => {
+        let detectedBrand = "";
+        let detectedCommission = "";
+
+        const extractedSkus: SkuProductItem[] = rawData
+          .map((row: any, idx: number) => {
             const productName =
               row["product name"] ||
               row["Product name"] ||
@@ -184,7 +176,7 @@ export default function AdminCampaignsPage() {
               row["Shop Name"] ||
               row["brand"] ||
               row["Brand"] ||
-              "Brand";
+              "";
             const salePrice =
               row["Sale price"] || row["Sale Price"] || row["price"] || "-";
             const commissionRate =
@@ -198,31 +190,39 @@ export default function AdminCampaignsPage() {
               row["link"] ||
               row["target_link"] ||
               "";
-            const campaignId = String(row["Campaign ID"] || "");
+
+            if (shopName && !detectedBrand) detectedBrand = String(shopName).trim();
+            if (commissionRate && !detectedCommission) detectedCommission = String(commissionRate).trim();
 
             if (!productName && !productId) return null;
 
             return {
-              selected: true,
-              campaignId,
-              productName: String(productName).trim(),
+              id: `sku-${Date.now()}-${idx}`,
               productId: String(productId).trim(),
-              shopName: String(shopName).trim(),
+              productName: String(productName).trim(),
               salePrice: String(salePrice).trim(),
               commissionRate: String(commissionRate).trim(),
               productLink: String(productLink).trim(),
-              sampleQuota: 50,
+              isSelected: true,
             };
           })
-          .filter(Boolean) as ParsedExcelProduct[];
+          .filter(Boolean) as SkuProductItem[];
 
-        if (extracted.length === 0) {
-          alert("Tidak ditemukan data produk yang valid di dalam file Excel.");
+        if (extractedSkus.length === 0) {
+          alert("Tidak ditemukan data produk/SKU yang valid di dalam file Excel.");
           return;
         }
 
-        setParsedProducts(extracted);
-        onOpenImport();
+        // Auto-fill header data from file if empty or detected
+        setNewCampaign((prev) => ({
+          ...prev,
+          title: prev.title || (detectedBrand ? `[${detectedBrand}] Campaign Seeding Kreator` : extractedSkus[0]?.productName || ""),
+          brandName: prev.brandName || detectedBrand || "Brand",
+          commissionRate: detectedCommission || prev.commissionRate,
+        }));
+
+        // Merge or replace SKU list
+        setSkuList(extractedSkus);
       } catch (err) {
         console.error("Failed to parse Excel:", err);
         alert("Gagal membaca file Excel. Pastikan file berformat .xlsx atau .csv.");
@@ -230,106 +230,77 @@ export default function AdminCampaignsPage() {
     };
 
     reader.readAsBinaryString(file);
-    // Reset file input so user can re-upload if needed
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  // Submit Batch Imported Campaigns to Database
-  const handleSaveImportedCampaigns = async (onClose: () => void) => {
-    const selectedItems = parsedProducts.filter((p) => p.selected);
-    if (selectedItems.length === 0) {
-      alert("Pilih minimal 1 produk untuk di-import!");
-      return;
-    }
-
-    setIsImporting(true);
-    try {
-      const payload = selectedItems.map((p) => ({
-        title: p.productName,
-        brandName: p.shopName,
-        shopName: p.shopName,
-        productId: p.productId,
-        tiktokCampaignId: p.campaignId,
-        salePrice: p.salePrice,
-        commissionRateText: p.commissionRate,
-        targetAffiliateLink: p.productLink,
-        sampleQuota: Number(p.sampleQuota) || 50,
-        platformType: "TIKTOK_SHOP",
-        mandatoryHashtags: ["#CreavyCampaign", "#ReviewJujur"],
-        mandatoryMentions: ["@creavy_official"],
-        sowItems: [
-          "Tautkan link keranjang kuning / showcase produk resmi",
-          "Durasi video minimal 30 detik",
-          "Review jelas & pencahayaan bagus",
-        ],
-      }));
-
-      const res = await fetch("/api/campaigns", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const resData = await res.json();
-      if (!res.ok) {
-        alert(resData.error || "Gagal meng-import campaign ke database.");
-        setIsImporting(false);
-        return;
-      }
-
-      await loadCampaigns();
-      onClose();
-      setToastMessage(`Berhasil meng-import ${selectedItems.length} campaign dari TikTok Shop ke database!`);
-      setTimeout(() => setToastMessage(null), 5000);
-    } catch (err) {
-      console.error("Batch import error:", err);
-      alert("Terjadi kesalahan saat menyimpan data ke database.");
-    } finally {
-      setIsImporting(false);
-    }
+  // Add Manual SKU Item
+  const handleAddManualSku = () => {
+    const newSku: SkuProductItem = {
+      id: `sku-${Date.now()}`,
+      productId: "",
+      productName: "",
+      salePrice: "Rp0",
+      commissionRate: newCampaign.commissionRate || "5.00%",
+      productLink: "",
+      isSelected: true,
+    };
+    setSkuList((prev) => [...prev, newSku]);
   };
 
-  // Toggle selection in import preview
-  const toggleSelectAll = () => {
-    const allSelected = parsedProducts.every((p) => p.selected);
-    setParsedProducts((prev) => prev.map((p) => ({ ...p, selected: !allSelected })));
+  // Remove SKU Item
+  const handleRemoveSku = (id: string) => {
+    setSkuList((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const toggleSelectRow = (index: number) => {
-    setParsedProducts((prev) =>
-      prev.map((p, i) => (i === index ? { ...p, selected: !p.selected } : p))
+  // Update SKU Item
+  const handleUpdateSku = (id: string, field: keyof SkuProductItem, value: any) => {
+    setSkuList((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
     );
   };
 
-  // Single Manual Campaign Creation
-  const handleCreateCampaign = async (onClose: () => void) => {
+  // Toggle All SKUs Selection
+  const handleToggleSelectAll = () => {
+    const allSelected = skuList.every((s) => s.isSelected);
+    setSkuList((prev) => prev.map((s) => ({ ...s, isSelected: !allSelected })));
+  };
+
+  // Submit and Save Campaign
+  const handleSaveCampaign = async (onClose: () => void) => {
     if (!newCampaign.title || !newCampaign.brandName) {
-      alert("Harap lengkapi Judul dan Brand!");
+      alert("Harap lengkapi Judul Campaign dan Nama Brand/Toko!");
       return;
     }
 
-    const payload = {
-      title: newCampaign.title,
-      brandName: newCampaign.brandName,
-      platformType: newCampaign.platformType,
-      locationId: newCampaign.locationId,
-      locationName: newCampaign.locationName,
-      industryCategory: newCampaign.industryCategory,
-      benefitType: newCampaign.benefitType,
-      benefitData: newCampaign.benefitData,
-      productId: newCampaign.productId || newCampaign.locationId,
-      targetAffiliateLink: newCampaign.targetAffiliateLink,
-      salePrice: newCampaign.salePrice,
-      commissionRateText: newCampaign.commissionRate,
-      sampleQuota: Number(newCampaign.sampleQuota),
-      mandatoryHashtags: newCampaign.hashtags.split(",").map((h) => h.trim()),
-      mandatoryMentions: newCampaign.mentions.split(",").map((m) => m.trim()),
-      sowItems: newCampaign.sow.split("\n").filter(Boolean),
-    };
+    const selectedSkus = skuList.filter((s) => s.isSelected);
+    const primarySku = selectedSkus[0] || skuList[0];
 
+    setIsSaving(true);
     try {
+      const payload = {
+        title: newCampaign.title,
+        brandName: newCampaign.brandName,
+        shopName: newCampaign.brandName,
+        platformType: newCampaign.platformType,
+        locationId: newCampaign.locationId,
+        locationName: newCampaign.locationName,
+        industryCategory: newCampaign.industryCategory,
+        benefitType: newCampaign.benefitType,
+        benefitData: newCampaign.benefitData,
+        // Primary binding fallback
+        productId: primarySku?.productId || newCampaign.locationId || "",
+        targetAffiliateLink: primarySku?.productLink || "",
+        salePrice: primarySku?.salePrice || "",
+        commissionRateText: newCampaign.commissionRate,
+        sampleQuota: Number(newCampaign.sampleQuota) || 50,
+        productSkus: selectedSkus,
+        mandatoryHashtags: newCampaign.hashtags.split(",").map((h) => h.trim()),
+        mandatoryMentions: newCampaign.mentions.split(",").map((m) => m.trim()),
+        sowItems: newCampaign.sow.split("\n").filter(Boolean),
+      };
+
       const res = await fetch("/api/campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -339,16 +310,38 @@ export default function AdminCampaignsPage() {
       const resData = await res.json();
       if (!res.ok) {
         alert(resData.error || "Gagal membuat campaign.");
+        setIsSaving(false);
         return;
       }
 
       await loadCampaigns();
       onClose();
-      setToastMessage(`Campaign "${newCampaign.title}" berhasil dibuat dan tersimpan di database!`);
-      setTimeout(() => setToastMessage(null), 4000);
+      // Reset form
+      setSkuList([]);
+      setNewCampaign({
+        title: "",
+        brandName: "",
+        platformType: "TIKTOK_SHOP",
+        locationId: "",
+        locationName: "",
+        industryCategory: "Dining",
+        benefitType: "VOUCHER_DIGITAL",
+        benefitData: "",
+        commissionRate: "5.00%",
+        sampleQuota: 50,
+        deadlineDate: "30 Oct 2026",
+        hashtags: "#CreavyCampaign, #ReviewJujur",
+        mentions: "@creavy_official",
+        sow: "Tautkan link keranjang kuning / showcase produk resmi\nDurasi video minimal 30 detik\nReview jelas & pencahayaan bagus",
+      });
+
+      setToastMessage(`Campaign "${newCampaign.title}" dengan ${selectedSkus.length} link produk/SKU berhasil dibuat!`);
+      setTimeout(() => setToastMessage(null), 5000);
     } catch (e) {
       console.error("Error saving campaign to DB:", e);
       alert("Terjadi kesalahan saat menyimpan campaign.");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -360,17 +353,10 @@ export default function AdminCampaignsPage() {
       c.locationName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const selectedSkuCount = skuList.filter((s) => s.isSelected).length;
+
   return (
     <div className="space-y-6">
-      {/* Hidden File Input for Excel Import */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        accept=".xlsx, .xls, .csv"
-        className="hidden"
-      />
-
       {/* Toast Notification */}
       {toastMessage && (
         <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-emerald-800 text-xs font-semibold flex items-center justify-between shadow-md">
@@ -388,7 +374,7 @@ export default function AdminCampaignsPage() {
         </div>
       )}
 
-      {/* Header with Actions */}
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -402,27 +388,14 @@ export default function AdminCampaignsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap">
-          {/* Button Import Excel TikTok Shop */}
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 text-xs font-bold text-emerald-800 shadow-sm transition-all"
-          >
-            <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-            <span>Import Excel TikTok Shop (.xlsx)</span>
-          </button>
-
-          {/* Button Manual Create Campaign */}
-          <button
-            type="button"
-            onClick={onOpen}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-semibold text-white shadow-sm transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Buat Campaign Manual</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-md shadow-indigo-600/20 transition-all"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Buat Campaign Baru</span>
+        </button>
       </div>
 
       {/* Filter & Search Bar */}
@@ -439,7 +412,7 @@ export default function AdminCampaignsPage() {
         </div>
 
         <div className="flex items-center gap-2 text-xs text-slate-500 w-full sm:w-auto justify-end">
-          <span>Total: <strong>{filteredCampaigns.length} Campaign Tersedia</strong></span>
+          <span>Total: <strong>{filteredCampaigns.length} Campaign Aktif</strong></span>
         </div>
       </div>
 
@@ -450,8 +423,7 @@ export default function AdminCampaignsPage() {
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50/60 text-slate-400 text-[10px] uppercase font-bold tracking-wider">
                 <th className="py-3 px-4">Campaign &amp; Brand</th>
-                <th className="py-3 px-3">TikTok Product ID</th>
-                <th className="py-3 px-3">Link Showcase Kreator</th>
+                <th className="py-3 px-3">Produk / Link SKU</th>
                 <th className="py-3 px-3 text-center">Komisi</th>
                 <th className="py-3 px-3 text-center">Kuota Sampel</th>
                 <th className="py-3 px-3">Batas Waktu</th>
@@ -460,85 +432,93 @@ export default function AdminCampaignsPage() {
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
               {filteredCampaigns.length > 0 ? (
-                filteredCampaigns.map((camp) => (
-                  <tr key={camp.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="py-3.5 px-4 max-w-xs">
-                      <p className="font-bold text-slate-900 line-clamp-2">{camp.title}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[11px] text-slate-500 font-medium">{camp.brandName}</span>
-                        {camp.salePrice && (
-                          <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-semibold border border-emerald-200">
-                            {camp.salePrice}
-                          </span>
-                        )}
-                        {camp.platformType === "TIKTOK_GO" ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            <MapPin className="w-3 h-3 text-emerald-600" />
-                            <span>TikTok Go</span>
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-                            <ShoppingBag className="w-3 h-3 text-amber-500" />
-                            <span>TikTok Shop</span>
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-3">
-                      <div className="inline-flex items-center gap-1 font-mono font-bold text-xs text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">
-                        <Tag className="w-3 h-3 text-indigo-500" />
-                        <span>{camp.productId}</span>
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-3 max-w-[200px]">
-                      {camp.targetAffiliateLink ? (
-                        <a
-                          href={camp.targetAffiliateLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 hover:underline truncate max-w-[180px]"
-                        >
-                          <span className="truncate">{camp.targetAffiliateLink}</span>
-                          <ExternalLink className="w-3 h-3 shrink-0" />
-                        </a>
-                      ) : (
-                        <span className="text-slate-400 italic text-[11px]">Belum diisi</span>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-3 text-center">
-                      <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
-                        {camp.commissionRate}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-3 text-center">
-                      <div className="font-bold text-slate-800">
-                        {camp.approvedCount} / {camp.sampleQuota}
-                      </div>
-                      <span className="text-[10px] text-slate-400">
-                        {camp.sampleQuota - camp.approvedCount} sampel tersisa
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-3">
-                      <div className="flex items-center gap-1.5 text-slate-600">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{camp.deadlineDate}</span>
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-3">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        Aktif
-                      </span>
-                    </td>
-                  </tr>
-                ))
+                filteredCampaigns.map((camp) => {
+                  const skuCount = camp.productSkus?.length || (camp.productId ? 1 : 0);
+
+                  return (
+                    <tr key={camp.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3.5 px-4 max-w-xs">
+                        <p className="font-bold text-slate-900 line-clamp-2">{camp.title}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[11px] text-slate-500 font-medium">{camp.brandName}</span>
+                          {camp.salePrice && (
+                            <span className="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded font-semibold border border-emerald-200">
+                              {camp.salePrice}
+                            </span>
+                          )}
+                          {camp.platformType === "TIKTOK_GO" ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                              <MapPin className="w-3 h-3 text-emerald-600" />
+                              <span>TikTok Go</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                              <ShoppingBag className="w-3 h-3 text-amber-500" />
+                              <span>TikTok Shop</span>
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-3 max-w-[240px]">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-mono font-bold text-[11px] bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-200">
+                              {camp.productId}
+                            </span>
+                            {skuCount > 1 && (
+                              <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-200">
+                                +{skuCount - 1} SKU Lainnya
+                              </span>
+                            )}
+                          </div>
+                          {camp.targetAffiliateLink && (
+                            <a
+                              href={camp.targetAffiliateLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-[10px] font-semibold text-indigo-600 hover:text-indigo-800 hover:underline truncate max-w-[200px] block"
+                            >
+                              <span className="truncate">{camp.targetAffiliateLink}</span>
+                              <ExternalLink className="w-3 h-3 shrink-0" />
+                            </a>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-3 text-center">
+                        <span className="px-2 py-0.5 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                          {camp.commissionRate}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-3 text-center">
+                        <div className="font-bold text-slate-800">
+                          {camp.approvedCount} / {camp.sampleQuota}
+                        </div>
+                        <span className="text-[10px] text-slate-400">
+                          {camp.sampleQuota - camp.approvedCount} sampel tersisa
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-3">
+                        <div className="flex items-center gap-1.5 text-slate-600">
+                          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{camp.deadlineDate}</span>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-3">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          Aktif
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <td colSpan={6} className="py-12 text-center text-slate-400">
                     <Layers className="w-8 h-8 mx-auto mb-2 text-slate-300" />
                     <p className="font-bold text-slate-600">Belum Ada Campaign</p>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      Klik <strong>&quot;Import Excel TikTok Shop&quot;</strong> atau <strong>&quot;Buat Campaign Manual&quot;</strong> untuk menambahkan campaign pertama.
+                      Klik <strong>&quot;Buat Campaign Baru&quot;</strong> untuk membuat campaign dan import file link SKU produk.
                     </p>
                   </td>
                 </tr>
@@ -548,180 +528,68 @@ export default function AdminCampaignsPage() {
         </div>
       </div>
 
-      {/* MODAL IMPORT EXCEL TIKTOK SHOP PARTNER CENTER */}
+      {/* MODAL BUAT CAMPAIGN BARU (WITH INTEGRATED EXCEL IMPORT & MULTI-SKU LIST) */}
       <Modal
-        isOpen={isImportOpen}
-        onOpenChange={onImportChange}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
         size="4xl"
         placement="center"
         backdrop="blur"
         scrollBehavior="inside"
       >
         <ModalContent className="bg-white text-slate-900 border border-slate-200 shadow-2xl rounded-2xl max-h-[90vh]">
-          {(onClose) => {
-            const selectedCount = parsedProducts.filter((p) => p.selected).length;
-
-            return (
-              <>
-                <ModalHeader className="border-b border-slate-100 pb-3 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
-                    <div>
-                      <h3 className="font-bold text-sm text-slate-900">
-                        Preview Import Produk dari TikTok Shop Partner Center
-                      </h3>
-                      <p className="text-[11px] text-slate-500 font-normal">
-                        File: <strong>{importFileName}</strong> ({parsedProducts.length} produk terdeteksi)
-                      </p>
-                    </div>
-                  </div>
-                </ModalHeader>
-
-                <ModalBody className="py-4 space-y-4 text-xs">
-                  <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl text-emerald-900 flex items-start gap-2.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
-                    <div className="space-y-0.5">
-                      <p className="font-bold text-xs">Kuncian Binding &amp; Link Showcase Terdeteksi Otomatis:</p>
-                      <p className="text-[11px] text-emerald-800 leading-relaxed">
-                        Seluruh <strong>Product ID</strong> dan <strong>Product Showcase Link</strong> dari file Excel akan disimpan ke database agar kreator dapat langsung menambahkan produk ke showcase TikTok mereka hanya dengan 1 klik.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <button
-                      type="button"
-                      onClick={toggleSelectAll}
-                      className="text-xs font-bold text-indigo-600 hover:text-indigo-800"
-                    >
-                      {parsedProducts.every((p) => p.selected) ? "Batal Pilih Semua" : "Pilih Semua Produk"}
-                    </button>
-                    <span className="text-slate-500 text-xs">
-                      Terpilih: <strong>{selectedCount} dari {parsedProducts.length} produk</strong>
-                    </span>
-                  </div>
-
-                  {/* Preview Table */}
-                  <div className="border border-slate-200 rounded-xl overflow-hidden max-h-80 overflow-y-auto">
-                    <table className="w-full text-left text-xs">
-                      <thead className="bg-slate-50 text-slate-500 text-[10px] uppercase font-bold sticky top-0 border-b border-slate-200">
-                        <tr>
-                          <th className="py-2.5 px-3 text-center w-10">Pilih</th>
-                          <th className="py-2.5 px-3">Nama Produk &amp; Toko</th>
-                          <th className="py-2.5 px-3">Product ID</th>
-                          <th className="py-2.5 px-3">Harga &amp; Komisi</th>
-                          <th className="py-2.5 px-3">Link Showcase</th>
-                          <th className="py-2.5 px-3 w-24 text-center">Kuota</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {parsedProducts.map((prod, idx) => (
-                          <tr
-                            key={idx}
-                            className={clsx(
-                              "transition-colors",
-                              prod.selected ? "bg-indigo-50/20 hover:bg-indigo-50/40" : "opacity-50 hover:opacity-80"
-                            )}
-                          >
-                            <td className="py-3 px-3 text-center">
-                              <input
-                                type="checkbox"
-                                checked={prod.selected}
-                                onChange={() => toggleSelectRow(idx)}
-                                className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                              />
-                            </td>
-                            <td className="py-3 px-3 max-w-xs">
-                              <p className="font-bold text-slate-900 line-clamp-2">{prod.productName}</p>
-                              <span className="text-[10px] text-slate-500 font-medium">{prod.shopName}</span>
-                            </td>
-                            <td className="py-3 px-3">
-                              <span className="font-mono font-bold text-[11px] bg-slate-100 text-slate-800 px-2 py-0.5 rounded border border-slate-200">
-                                {prod.productId}
-                              </span>
-                            </td>
-                            <td className="py-3 px-3 whitespace-nowrap">
-                              <p className="font-semibold text-slate-800 text-[11px]">{prod.salePrice}</p>
-                              <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
-                                Komisi: {prod.commissionRate}
-                              </span>
-                            </td>
-                            <td className="py-3 px-3 max-w-[180px]">
-                              {prod.productLink ? (
-                                <span className="font-mono text-[10px] text-indigo-600 truncate block">
-                                  {prod.productLink}
-                                </span>
-                              ) : (
-                                <span className="text-slate-400 italic text-[10px]">-</span>
-                              )}
-                            </td>
-                            <td className="py-3 px-3 text-center">
-                              <input
-                                type="number"
-                                min={1}
-                                value={prod.sampleQuota}
-                                onChange={(e) => {
-                                  const val = Number(e.target.value) || 1;
-                                  setParsedProducts((prev) =>
-                                    prev.map((item, i) => (i === idx ? { ...item, sampleQuota: val } : item))
-                                  );
-                                }}
-                                className="w-16 px-2 py-1 border border-slate-200 rounded-lg text-center font-bold text-xs"
-                              />
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </ModalBody>
-
-                <ModalFooter className="border-t border-slate-100 py-3 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    disabled={isImporting}
-                    className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="button"
-                    disabled={isImporting || selectedCount === 0}
-                    onClick={() => handleSaveImportedCampaigns(onClose)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 text-xs font-bold text-white hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-600/20 disabled:opacity-60 disabled:cursor-not-allowed"
-                  >
-                    {isImporting ? (
-                      <>
-                        <Spinner size="sm" color="white" />
-                        <span>Menyimpan ke Database...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="w-4 h-4" />
-                        <span>Simpan &amp; Import {selectedCount} Campaign</span>
-                      </>
-                    )}
-                  </button>
-                </ModalFooter>
-              </>
-            );
-          }}
-        </ModalContent>
-      </Modal>
-
-      {/* MODAL BUAT CAMPAIGN MANUAL */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="2xl" placement="center" backdrop="blur">
-        <ModalContent className="bg-white text-slate-900 border border-slate-200 shadow-2xl rounded-2xl">
           {(onClose) => (
             <>
-              <ModalHeader className="border-b border-slate-100 pb-3 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-indigo-600" />
-                <h3 className="font-bold text-sm text-slate-900">Buat Campaign Baru &amp; Kunci ID Binding</h3>
+              <ModalHeader className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-indigo-600" />
+                  <div>
+                    <h3 className="font-bold text-sm text-slate-900">
+                      Buat Campaign Baru &amp; Kunci Binding Link Produk / SKU
+                    </h3>
+                    <p className="text-[11px] text-slate-500 font-normal">
+                      Import link dari file Excel TikTok Shop atau tambahkan data SKU produk secara manual.
+                    </p>
+                  </div>
+                </div>
               </ModalHeader>
 
-              <ModalBody className="py-4 space-y-4 text-xs">
-                {/* 0. Tipe Platform Switcher */}
+              <ModalBody className="py-4 space-y-5 text-xs">
+                {/* 0. File Import Banner Inside Modal */}
+                <div className="p-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-indigo-50 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                      <FileSpreadsheet className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xs text-slate-900">
+                        Punya File Export TikTok Shop Partner Center (.xlsx)?
+                      </h4>
+                      <p className="text-[11px] text-slate-600 mt-0.5">
+                        Upload file Excel untuk mengisi judul, brand, rate komisi, dan semua link SKU otomatis.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-colors shrink-0 self-start sm:self-auto"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload &amp; Auto-Fill File Excel</span>
+                  </button>
+
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileUpload}
+                    accept=".xlsx, .xls, .csv"
+                    className="hidden"
+                  />
+                </div>
+
+                {/* 1. Tipe Platform Switcher */}
                 <div>
                   <label className="block text-slate-600 font-semibold mb-1.5">Tipe Platform Campaign</label>
                   <div className="grid grid-cols-2 gap-2">
@@ -735,7 +603,7 @@ export default function AdminCampaignsPage() {
                       }`}
                     >
                       <ShoppingBag className="w-4 h-4 text-amber-500" />
-                      <span>TikTok Shop (Keranjang Kuning)</span>
+                      <span>TikTok Shop (Keranjang Kuning / Showcase)</span>
                     </button>
                     <button
                       type="button"
@@ -752,29 +620,161 @@ export default function AdminCampaignsPage() {
                   </div>
                 </div>
 
-                {/* 1. Judul & Brand */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
+                {/* 2. Judul Campaign & Brand */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="sm:col-span-2">
                     <label className="block text-slate-600 font-semibold mb-1">Judul Campaign</label>
                     <input
                       type="text"
-                      placeholder={newCampaign.platformType === "TIKTOK_GO" ? "Contoh: [SOLARIA] Weekend Dine-in Feast" : "Contoh: MilkyBoost Susu Penambah Berat Badan"}
+                      placeholder="Contoh: [MilkyBoost] Susu Penambah Berat Badan Seeding"
                       value={newCampaign.title}
                       onChange={(e) => setNewCampaign({ ...newCampaign, title: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium"
                     />
                   </div>
                   <div>
                     <label className="block text-slate-600 font-semibold mb-1">Nama Brand / Toko</label>
                     <input
                       type="text"
-                      placeholder={newCampaign.platformType === "TIKTOK_GO" ? "Contoh: Solaria Indonesia" : "Contoh: MilkyBoost Official"}
+                      placeholder="Contoh: MilkyBoost Official"
                       value={newCampaign.brandName}
                       onChange={(e) => setNewCampaign({ ...newCampaign, brandName: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium"
                     />
                   </div>
                 </div>
+
+                {/* 3. SEKSI LINK PRODUK & SKU (THE MAIN HIGHLIGHT) */}
+                {newCampaign.platformType === "TIKTOK_SHOP" && (
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
+                      <div className="flex items-center gap-2">
+                        <Tag className="w-4 h-4 text-indigo-600" />
+                        <h4 className="font-bold text-xs text-slate-900">
+                          Daftar Link Produk &amp; SKU Kuncian (TikTok Shop Binding)
+                        </h4>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        {skuList.length > 0 && (
+                          <button
+                            type="button"
+                            onClick={handleToggleSelectAll}
+                            className="text-xs font-bold text-indigo-600 hover:text-indigo-800"
+                          >
+                            {skuList.every((s) => s.isSelected) ? "Batal Pilih Semua" : "Pilih Semua"}
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={handleAddManualSku}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs border border-indigo-200 transition-colors"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Tambah Produk Manual</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-slate-500">
+                      Centang produk yang ingin dimasukkan ke campaign ini. Kreator dapat mengklik masing-masing link untuk memasukkannya ke showcase mereka.
+                      {skuList.length > 0 && (
+                        <strong className="text-slate-800 ml-1">
+                          ({selectedSkuCount} dari {skuList.length} produk terpilih)
+                        </strong>
+                      )}
+                    </p>
+
+                    {/* SKU Table List */}
+                    {skuList.length > 0 ? (
+                      <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                        {skuList.map((sku, index) => (
+                          <div
+                            key={sku.id}
+                            className={clsx(
+                              "p-3 rounded-xl border transition-all flex flex-col gap-2",
+                              sku.isSelected
+                                ? "bg-white border-indigo-200 shadow-sm"
+                                : "bg-slate-100/70 border-slate-200 opacity-60"
+                            )}
+                          >
+                            {/* Top row: Checkbox, Name, Price, Delete */}
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex items-start gap-2.5 flex-1">
+                                <input
+                                  type="checkbox"
+                                  checked={sku.isSelected}
+                                  onChange={(e) => handleUpdateSku(sku.id, "isSelected", e.target.checked)}
+                                  className="w-4 h-4 mt-1 rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer shrink-0"
+                                />
+                                <div className="flex-1 space-y-1">
+                                  <input
+                                    type="text"
+                                    placeholder="Nama Produk / Varian SKU (contoh: Susu Penambah Berat Badan 3 Box)"
+                                    value={sku.productName}
+                                    onChange={(e) => handleUpdateSku(sku.id, "productName", e.target.value)}
+                                    className="w-full px-2.5 py-1 border border-slate-200 rounded-lg text-xs font-bold text-slate-900 focus:outline-none focus:border-indigo-500"
+                                  />
+                                </div>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveSku(sku.id)}
+                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors shrink-0"
+                                title="Hapus SKU"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+
+                            {/* Bottom row: Product ID, Price, Showcase Link */}
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pl-6.5 text-[11px]">
+                              <div>
+                                <label className="block text-slate-400 text-[10px] font-semibold mb-0.5">Product ID (Atribusi)</label>
+                                <input
+                                  type="text"
+                                  placeholder="Contoh: 1736993709100336445"
+                                  value={sku.productId}
+                                  onChange={(e) => handleUpdateSku(sku.id, "productId", e.target.value)}
+                                  className="w-full px-2 py-1 border border-slate-200 rounded-lg font-mono text-xs focus:outline-none focus:border-indigo-500 bg-slate-50"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-slate-400 text-[10px] font-semibold mb-0.5">Harga Jual</label>
+                                <input
+                                  type="text"
+                                  placeholder="Rp259.500"
+                                  value={sku.salePrice}
+                                  onChange={(e) => handleUpdateSku(sku.id, "salePrice", e.target.value)}
+                                  className="w-full px-2 py-1 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-indigo-500 bg-slate-50"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-slate-400 text-[10px] font-semibold mb-0.5">Link Showcase Produk</label>
+                                <input
+                                  type="text"
+                                  placeholder="https://affiliate-id.tokopedia.com/api/v1/share/..."
+                                  value={sku.productLink}
+                                  onChange={(e) => handleUpdateSku(sku.id, "productLink", e.target.value)}
+                                  className="w-full px-2 py-1 border border-slate-200 rounded-lg font-mono text-xs focus:outline-none focus:border-indigo-500 bg-slate-50 text-indigo-700"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-6 bg-white border border-dashed border-slate-200 rounded-xl text-center space-y-2">
+                        <Tag className="w-6 h-6 mx-auto text-slate-300" />
+                        <p className="font-semibold text-slate-700 text-xs">Belum ada link produk/SKU</p>
+                        <p className="text-[11px] text-slate-400">
+                          Upload file Excel di atas atau klik tombol <strong>&quot;Tambah Produk Manual&quot;</strong>.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Khusus TikTok Go: POI Tag, Location, Category, Benefit */}
                 {newCampaign.platformType === "TIKTOK_GO" && (
@@ -832,62 +832,12 @@ export default function AdminCampaignsPage() {
                           <option value="OUTLET_PASS_LINK">Pass Kunjungan Resmi / Reservasi VIP Creavy</option>
                         </select>
                       </div>
-                      <div className="sm:col-span-2">
-                        <label className="block text-emerald-900 font-semibold mb-1">
-                          {newCampaign.benefitType === "VOUCHER_DIGITAL" ? "Kode Voucher Digital Kasir" : "Link Spreadsheet Pass Kunjungan Kreator"}
-                        </label>
-                        <input
-                          type="text"
-                          placeholder={newCampaign.benefitType === "VOUCHER_DIGITAL" ? "Contoh: SOLARIA-VIP-VOUCHER" : "Contoh: https://docs.google.com/spreadsheets/..."}
-                          value={newCampaign.benefitData}
-                          onChange={(e) => setNewCampaign({ ...newCampaign, benefitData: e.target.value })}
-                          className="w-full px-3 py-2 border border-emerald-300 rounded-xl focus:outline-none focus:border-emerald-500 bg-white"
-                        />
-                      </div>
                     </div>
                   </div>
                 )}
 
-                {/* 2. TikTok Product ID & Showcase Link */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-slate-600 font-semibold mb-1">
-                      TikTok Shop Product ID <span className="text-rose-500">* (Kunci Atribusi)</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Contoh: 1736993709100336445"
-                      value={newCampaign.productId}
-                      onChange={(e) => setNewCampaign({ ...newCampaign, productId: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-mono"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-slate-600 font-semibold mb-1">
-                      Link Showcase Produk (Affiliate Share Link)
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="https://affiliate-id.tokopedia.com/api/v1/share/..."
-                      value={newCampaign.targetAffiliateLink}
-                      onChange={(e) => setNewCampaign({ ...newCampaign, targetAffiliateLink: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-mono"
-                    />
-                  </div>
-                </div>
-
-                {/* 3. Harga, Komisi & Kuota */}
+                {/* 4. Komisi, Kuota & Deadline */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-slate-600 font-semibold mb-1">Harga Jual</label>
-                    <input
-                      type="text"
-                      placeholder="Rp259.500"
-                      value={newCampaign.salePrice}
-                      onChange={(e) => setNewCampaign({ ...newCampaign, salePrice: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
-                    />
-                  </div>
                   <div>
                     <label className="block text-slate-600 font-semibold mb-1">Rate Komisi (%)</label>
                     <input
@@ -895,7 +845,7 @@ export default function AdminCampaignsPage() {
                       placeholder="5.00%"
                       value={newCampaign.commissionRate}
                       onChange={(e) => setNewCampaign({ ...newCampaign, commissionRate: e.target.value })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium"
                     />
                   </div>
                   <div>
@@ -904,12 +854,22 @@ export default function AdminCampaignsPage() {
                       type="number"
                       value={newCampaign.sampleQuota}
                       onChange={(e) => setNewCampaign({ ...newCampaign, sampleQuota: Number(e.target.value) })}
-                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 font-semibold mb-1">Batas Waktu (Deadline)</label>
+                    <input
+                      type="text"
+                      placeholder="30 Oct 2026"
+                      value={newCampaign.deadlineDate}
+                      onChange={(e) => setNewCampaign({ ...newCampaign, deadlineDate: e.target.value })}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 font-medium"
                     />
                   </div>
                 </div>
 
-                {/* 4. Hashtag & Mentions */}
+                {/* 5. Hashtag & Mentions */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-slate-600 font-semibold mb-1">Hashtag Wajib</label>
@@ -934,20 +894,32 @@ export default function AdminCampaignsPage() {
                 </div>
               </ModalBody>
 
-              <ModalFooter className="border-t border-slate-100 py-3 flex justify-between">
+              <ModalFooter className="border-t border-slate-100 py-3 flex items-center justify-between">
                 <button
                   type="button"
                   onClick={onClose}
+                  disabled={isSaving}
                   className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleCreateCampaign(onClose)}
-                  className="px-5 py-2 rounded-xl bg-indigo-600 text-xs font-semibold text-white hover:bg-indigo-700 transition-colors shadow-sm"
+                  disabled={isSaving}
+                  onClick={() => handleSaveCampaign(onClose)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-xs font-bold text-white hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-600/20 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Simpan Campaign
+                  {isSaving ? (
+                    <>
+                      <Spinner size="sm" color="white" />
+                      <span>Menyimpan Campaign...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4" />
+                      <span>Simpan Campaign ({selectedSkuCount} Link Terpilih)</span>
+                    </>
+                  )}
                 </button>
               </ModalFooter>
             </>
