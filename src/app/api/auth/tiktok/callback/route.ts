@@ -34,8 +34,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const clientKey = process.env.TIKTOK_CLIENT_KEY || "awkbncxurh4il884";
-    const clientSecret = process.env.TIKTOK_CLIENT_SECRET || "behlfH8cCWW8BrsgPxcbbST6MrIHDVfR";
+    const clientKey = process.env.TIKTOK_CLIENT_KEY || "sbawsch65yctvm5j4b";
+    const clientSecret = process.env.TIKTOK_CLIENT_SECRET || "oPyMpYfZQmN9VxHmAn46gfRgZwVuYLsp";
     const redirectUri = `${appUrl}/api/auth/tiktok/callback`;
 
     // 1. Exchange authorization code for TikTok User Access Token

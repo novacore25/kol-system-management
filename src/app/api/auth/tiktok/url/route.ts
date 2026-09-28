@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}));
     const { returnUrl = "/profile" } = body;
 
-    const clientKey = process.env.TIKTOK_CLIENT_KEY || "awkbncxurh4il884";
+    const clientKey = process.env.TIKTOK_CLIENT_KEY || "sbawsch65yctvm5j4b";
     if (!clientKey) {
       return NextResponse.json(
         { error: "TIKTOK_CLIENT_KEY is not configured" },
