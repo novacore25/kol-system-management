@@ -1,17 +1,17 @@
-# Graph Report - kol-system  (2026-09-29)
+# Graph Report - kol-system  (2026-09-24)
 
 ## Corpus Check
-- 92 files · ~92,988 words
+- 74 files · ~73,721 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 4 file(s) not represented in the graph (top: (none) 2, .example 1, .css 1)
 
 ## Summary
-- 438 nodes · 644 edges · 45 communities (27 shown, 11 thin omitted)
+- 383 nodes · 496 edges · 36 communities (27 shown, 6 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0e8bb868`
+- Built from commit: `79efa765`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -36,53 +36,48 @@
 - Product Requirements, Unique UX & Brand Identity
 - schema.ts
 - package.json
-- @heroui/react
+- auth.ts
 - types/index.ts
 - compilerOptions
 - dependencies
-- lucide-react
+- devDependencies
 - postcss.config.mjs
 - wilayah.ts
 - README.md
-- clsx
-- CreatorRegistrationForm.tsx
-- scripts
 - react
-- tiktok.ts
-- ApplicationReviewTable.tsx
-- SampleLogisticsTable.tsx
-- earnings/page.tsx
-- my-tasks/page.tsx
-- admin-data.ts
+- CreatorRegistrationForm.tsx
+- callback/route.ts
+- campaigns/route.ts
+- middleware.ts
 
 ## God Nodes (most connected - your core abstractions)
-1. `react` - 31 edges
-2. `lucide-react` - 28 edges
-3. `getCurrentSession()` - 24 edges
-4. `@heroui/react` - 18 edges
-5. `compilerOptions` - 16 edges
-6. `drizzle-orm` - 13 edges
-7. `db` - 12 edges
-8. `CreatorTaskItem` - 12 edges
-9. `What You Must Do When Invoked` - 12 edges
-10. `/graphify` - 10 edges
+1. `react` - 26 edges
+2. `lucide-react` - 23 edges
+3. `@heroui/react` - 16 edges
+4. `compilerOptions` - 16 edges
+5. `CreatorTaskItem` - 12 edges
+6. `What You Must Do When Invoked` - 12 edges
+7. `clsx` - 10 edges
+8. `/graphify` - 10 edges
+9. `scripts` - 9 edges
+10. `graphify reference: extra exports and benchmark` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `AdminLayout()` --calls--> `getCurrentSession()`  [EXTRACTED]
-  src/app/admin/layout.tsx → src/lib/auth.ts
-- `PATCH()` --calls--> `getCurrentSession()`  [EXTRACTED]
-  src/app/api/admin/applications/route.ts → src/lib/auth.ts
-- `GET()` --calls--> `getCurrentSession()`  [EXTRACTED]
-  src/app/api/admin/logistics/route.ts → src/lib/auth.ts
-- `POST()` --calls--> `getCurrentSession()`  [EXTRACTED]
-  src/app/api/admin/logistics/route.ts → src/lib/auth.ts
 - `GET()` --calls--> `getCurrentSession()`  [EXTRACTED]
   src/app/api/auth/me/route.ts → src/lib/auth.ts
+- `POST()` --calls--> `getCurrentSession()`  [EXTRACTED]
+  src/app/api/campaigns/route.ts → src/lib/auth.ts
+- `GET()` --calls--> `createSessionToken()`  [EXTRACTED]
+  src/app/api/auth/google/callback/route.ts → src/lib/auth.ts
+- `GET()` --calls--> `isAdminEmail()`  [EXTRACTED]
+  src/app/api/auth/google/callback/route.ts → src/lib/auth.ts
+- `GET()` --calls--> `getDistricts()`  [EXTRACTED]
+  src/app/api/wilayah/route.ts → src/lib/wilayah.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (45 total, 11 thin omitted)
+## Communities (36 total, 6 thin omitted)
 
 ### Community 0 - "TikTok API & Ecosystem Integration Guide"
 Cohesion: 0.17
@@ -138,18 +133,18 @@ Nodes (4): 1. Perbedaan Utama: Versi Kita vs Gro Creator, 2. Struktur Modul Apli
 
 ### Community 18 - "schema.ts"
 Cohesion: 0.07
-Nodes (59): drizzle-orm, AdminLayout(), dynamic, GET(), PATCH(), GET(), POST(), GET() (+51 more)
+Nodes (28): applicationStatusEnum, auditLogs, campaignApplications, campaignApplicationsRelations, campaignPlatformTypeEnum, campaignsRelations, campaignStatusEnum, campaignTasks (+20 more)
 
 ### Community 19 - "package.json"
-Cohesion: 0.05
-Nodes (31): devDependencies, autoprefixer, drizzle-kit, postcss, tailwindcss, @types/node, @types/pg, @types/react (+23 more)
+Cohesion: 0.07
+Nodes (26): name, private, scripts, build, db:generate, db:migrate, db:push, db:studio (+18 more)
 
-### Community 20 - "@heroui/react"
-Cohesion: 0.27
-Nodes (5): @heroui/react, initialCampaigns, CampaignCard(), CampaignData, AuthSessionUser
+### Community 20 - "auth.ts"
+Cohesion: 0.29
+Nodes (6): GET(), POST(), AuthSessionUser, getCurrentSession(), JWT_SECRET, verifySessionToken()
 
 ### Community 21 - "types/index.ts"
-Cohesion: 0.10
+Cohesion: 0.09
 Nodes (26): CreatorTaskItem, ApplicationStatus, CampaignPlatformType, CampaignSalesAwarenessSummary, CampaignStatus, CommissionType, CreatorTier, DosAndDontsItem (+18 more)
 
 ### Community 22 - "compilerOptions"
@@ -157,8 +152,12 @@ Cohesion: 0.11
 Nodes (18): compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib, module (+10 more)
 
 ### Community 23 - "dependencies"
-Cohesion: 0.14
-Nodes (14): dependencies, clsx, dotenv, drizzle-orm, framer-motion, @heroui/react, jose, lucide-react (+6 more)
+Cohesion: 0.15
+Nodes (13): dependencies, clsx, dotenv, drizzle-orm, framer-motion, @heroui/react, jose, lucide-react (+5 more)
+
+### Community 24 - "devDependencies"
+Cohesion: 0.20
+Nodes (10): devDependencies, autoprefixer, drizzle-kit, postcss, tailwindcss, @types/node, @types/pg, @types/react (+2 more)
 
 ### Community 27 - "wilayah.ts"
 Cohesion: 0.44
@@ -168,49 +167,45 @@ Nodes (7): GET(), cache, getDistricts(), getProvinces(), getRegencies(), getVill
 Cohesion: 0.22
 Nodes (8): 1. Clone repository, 1. Portal Kreator, 2. Install dependencies, 2. Panel Admin Agensi, 3. Jalankan development server, 🛠️ Cara Menjalankan Secara Lokal, 📱 Panduan Review UI (Fitur & Halaman), 💻 Tech Stack
 
-### Community 29 - "clsx"
-Cohesion: 0.18
-Nodes (5): clsx, xlsx, CampaignAdminItem, SkuProductItem, initialCreatorTasks
+### Community 29 - "react"
+Cohesion: 0.08
+Nodes (19): clsx, @heroui/react, lucide-react, react, CampaignAdminItem, initialCampaigns, CommissionItem, mockCommissions (+11 more)
 
 ### Community 31 - "CreatorRegistrationForm.tsx"
 Cohesion: 0.12
 Nodes (9): OnboardingPage(), POPULAR_BANKS, CreatorRegistrationForm(), NICHES, POPULAR_BANKS, SelectedWilayah, WilayahOption, WilayahSelect() (+1 more)
 
-### Community 33 - "scripts"
-Cohesion: 0.22
-Nodes (9): scripts, build, db:generate, db:migrate, db:push, db:studio, dev, lint (+1 more)
+### Community 33 - "callback/route.ts"
+Cohesion: 0.28
+Nodes (8): GET(), GoogleUserInfo, creatorProfiles, shippingAddresses, tiktokAccounts, users, createSessionToken(), isAdminEmail()
 
-### Community 34 - "react"
-Cohesion: 0.38
-Nodes (3): react, AdminMenuItem, AdminSidebar()
+### Community 34 - "campaigns/route.ts"
+Cohesion: 0.29
+Nodes (5): drizzle-orm, pg, db, pool, campaigns
 
-### Community 36 - "ApplicationReviewTable.tsx"
+### Community 35 - "middleware.ts"
 Cohesion: 0.40
-Nodes (3): AdminApplicationItem, ApplicationReviewTable(), REJECTION_REASONS
-
-### Community 37 - "SampleLogisticsTable.tsx"
-Cohesion: 0.40
-Nodes (3): COURIERS, LogisticsItem, SampleLogisticsTable()
+Nodes (3): jose, config, JWT_SECRET
 
 ## Knowledge Gaps
-- **208 isolated node(s):** `nextConfig`, `name`, `version`, `private`, `dev` (+203 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 276 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **198 isolated node(s):** `nextConfig`, `name`, `version`, `private`, `dev` (+193 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 251 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `react` connect `react` to `app/layout.tsx`, `ApplicationReviewTable.tsx`, `SampleLogisticsTable.tsx`, `(auth)/login/page.tsx`, `earnings/page.tsx`, `my-tasks/page.tsx`, `schema.ts`, `package.json`, `@heroui/react`, `types/index.ts`, `lucide-react`, `clsx`, `CreatorRegistrationForm.tsx`?**
-  _High betweenness centrality (0.112) - this node is a cross-community bridge._
-- **Why does `lucide-react` connect `lucide-react` to `react`, `app/layout.tsx`, `ApplicationReviewTable.tsx`, `SampleLogisticsTable.tsx`, `(auth)/login/page.tsx`, `earnings/page.tsx`, `my-tasks/page.tsx`, `schema.ts`, `package.json`, `@heroui/react`, `types/index.ts`, `clsx`, `CreatorRegistrationForm.tsx`?**
-  _High betweenness centrality (0.081) - this node is a cross-community bridge._
-- **Why does `@heroui/react` connect `@heroui/react` to `react`, `app/layout.tsx`, `ApplicationReviewTable.tsx`, `SampleLogisticsTable.tsx`, `(auth)/login/page.tsx`, `schema.ts`, `package.json`, `types/index.ts`, `lucide-react`, `clsx`, `CreatorRegistrationForm.tsx`?**
-  _High betweenness centrality (0.054) - this node is a cross-community bridge._
+- **Why does `react` connect `react` to `app/layout.tsx`, `package.json`, `auth.ts`, `types/index.ts`, `CreatorRegistrationForm.tsx`?**
+  _High betweenness centrality (0.104) - this node is a cross-community bridge._
+- **Why does `drizzle-orm` connect `campaigns/route.ts` to `callback/route.ts`, `schema.ts`, `package.json`?**
+  _High betweenness centrality (0.085) - this node is a cross-community bridge._
+- **Why does `lucide-react` connect `react` to `app/layout.tsx`, `package.json`, `auth.ts`, `types/index.ts`, `CreatorRegistrationForm.tsx`?**
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
 - **What connects `nextConfig`, `name`, `version` to the rest of the system?**
-  _208 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _198 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**
   _Cohesion score 0.08 - nodes in this community are weakly interconnected._
 - **Should `app/layout.tsx` be split into smaller, more focused modules?**
   _Cohesion score 0.13725490196078433 - nodes in this community are weakly interconnected._
 - **Should `schema.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06561859193438141 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06896551724137931 - nodes in this community are weakly interconnected._
