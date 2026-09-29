@@ -24,6 +24,58 @@ export async function GET(
       return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
     }
 
+    // Check if current user has already applied
+    const session = await getCurrentSession();
+    let alreadyApplied = false;
+    let userApplication: {
+      id: string;
+      status: string;
+      appliedAt: string;
+      selectedVariant?: string | null;
+    } | null = null;
+
+    if (session) {
+      let creatorProfileId = session.creatorProfileId || null;
+      if (!creatorProfileId && session.id) {
+        const [prof] = await db
+          .select({ id: creatorProfiles.id })
+          .from(creatorProfiles)
+          .where(eq(creatorProfiles.userId, session.id))
+          .limit(1);
+        if (prof) creatorProfileId = prof.id;
+      }
+
+      if (creatorProfileId) {
+        const [app] = await db
+          .select({
+            id: campaignApplications.id,
+            status: campaignApplications.status,
+            appliedAt: campaignApplications.appliedAt,
+            internalNotes: campaignApplications.internalNotes,
+          })
+          .from(campaignApplications)
+          .where(
+            and(
+              eq(campaignApplications.campaignId, campaign.id),
+              eq(campaignApplications.creatorProfileId, creatorProfileId)
+            )
+          )
+          .limit(1);
+
+        if (app) {
+          alreadyApplied = true;
+          userApplication = {
+            id: app.id,
+            status: app.status,
+            appliedAt: app.appliedAt.toISOString(),
+            selectedVariant: app.internalNotes?.startsWith("Varian dipilih: ")
+              ? app.internalNotes.replace("Varian dipilih: ", "")
+              : null,
+          };
+        }
+      }
+    }
+
     return NextResponse.json({
       id: campaign.id,
       title: campaign.title,
@@ -61,6 +113,8 @@ export async function GET(
       targetAffiliateLink: campaign.targetAffiliateLink,
       productSkus: (campaign.productSkus as any[]) || [],
       status: campaign.status,
+      alreadyApplied,
+      userApplication,
     });
   } catch (err: any) {
     console.error("Error fetching campaign by slug:", err);

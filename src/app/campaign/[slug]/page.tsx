@@ -4,6 +4,9 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import {
   CheckCircle2,
+  XCircle,
+  ClipboardList,
+  ChevronRight,
   ShoppingBag,
   MapPin,
   Calendar,
@@ -99,6 +102,12 @@ export default function CampaignPublicPage() {
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [alreadyApplied, setAlreadyApplied] = useState(false);
+  const [userApplication, setUserApplication] = useState<{
+    id: string;
+    status: string;
+    createdAt?: string;
+    selectedVariant?: string | null;
+  } | null>(null);
 
   // Check auth on mount
   useEffect(() => {
@@ -141,11 +150,17 @@ export default function CampaignPublicPage() {
         return res.json();
       })
       .then((data) => {
-        if (data) setCampaign(data);
+        if (data) {
+          setCampaign(data);
+          if (data.alreadyApplied) {
+            setAlreadyApplied(true);
+            setUserApplication(data.userApplication || null);
+          }
+        }
         setLoading(false);
       })
       .catch(() => { setLoading(false); setNotFound(true); });
-  }, [slug]);
+  }, [slug, isLoggedIn]);
 
   const handleTiktokSelect = (accountId: string) => {
     setSelectedTiktokId(accountId);
@@ -221,6 +236,12 @@ export default function CampaignPublicPage() {
       } else {
         setSubmitSuccess(data.message);
         setAlreadyApplied(true);
+        setUserApplication({
+          id: data.applicationId || "new",
+          status: "PENDING_REVIEW",
+          createdAt: new Date().toISOString(),
+          selectedVariant: selectedVariant || null,
+        });
         setShowApplyModal(false);
       }
     } catch {
@@ -397,14 +418,99 @@ export default function CampaignPublicPage() {
           </div>
         )}
 
-        {/* Registration Card */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 space-y-3">
-          <div className="space-y-1">
-            <h2 className="font-bold text-sm text-slate-900">🚀 Daftar ke Campaign Ini</h2>
-            <p className="text-[11px] text-slate-500">Isi form berikut untuk mendaftarkan diri. Tim kami akan menghubungimu via WhatsApp.</p>
-          </div>
+        {/* Registration / Application Status Card */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+          {alreadyApplied || userApplication ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
+                  userApplication?.status === "APPROVED"
+                    ? "bg-emerald-100 text-emerald-600 ring-4 ring-emerald-50"
+                    : userApplication?.status === "REJECTED"
+                    ? "bg-rose-100 text-rose-600 ring-4 ring-rose-50"
+                    : userApplication?.status === "WAITLISTED"
+                    ? "bg-slate-100 text-slate-600 ring-4 ring-slate-50"
+                    : "bg-amber-100 text-amber-600 ring-4 ring-amber-50"
+                }`}>
+                  {userApplication?.status === "APPROVED" ? (
+                    <CheckCircle2 className="w-6 h-6" />
+                  ) : userApplication?.status === "REJECTED" ? (
+                    <XCircle className="w-6 h-6" />
+                  ) : (
+                    <Clock className="w-6 h-6" />
+                  )}
+                </div>
+                <div>
+                  <h2 className="font-bold text-sm text-slate-900">Kamu Sudah Mendaftar Campaign Ini</h2>
+                  <p className="text-xs text-slate-500">Pendaftaranmu telah tercatat dan tersimpan di sistem.</p>
+                </div>
+              </div>
 
-          {submitSuccess ? (
+              {/* Status Details Box */}
+              <div className={`p-4 rounded-xl border space-y-2.5 ${
+                userApplication?.status === "APPROVED"
+                  ? "bg-emerald-50/70 border-emerald-200"
+                  : userApplication?.status === "REJECTED"
+                  ? "bg-rose-50/70 border-rose-200"
+                  : userApplication?.status === "WAITLISTED"
+                  ? "bg-slate-50 border-slate-200"
+                  : "bg-amber-50/70 border-amber-200"
+              }`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-700">Status Pendaftaran:</span>
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                    userApplication?.status === "APPROVED"
+                      ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/30"
+                      : userApplication?.status === "REJECTED"
+                      ? "bg-rose-600 text-white shadow-sm shadow-rose-600/30"
+                      : userApplication?.status === "WAITLISTED"
+                      ? "bg-slate-600 text-white"
+                      : "bg-amber-500 text-white shadow-sm shadow-amber-500/30"
+                  }`}>
+                    {userApplication?.status === "APPROVED"
+                      ? "✓ Disetujui (Approved)"
+                      : userApplication?.status === "REJECTED"
+                      ? "✕ Tidak Disetujui"
+                      : userApplication?.status === "WAITLISTED"
+                      ? "⏳ Antrean Waitlist"
+                      : "⏳ Sedang Ditinjau (Pending Review)"}
+                  </span>
+                </div>
+
+                <p className="text-xs leading-relaxed text-slate-600">
+                  {userApplication?.status === "APPROVED"
+                    ? "Selamat! Pendaftaranmu telah disetujui. Tim kami akan segera memproses pengiriman sampel atau instruksi tugas."
+                    : userApplication?.status === "REJECTED"
+                    ? "Mohon maaf, pendaftaranmu belum terpilih untuk campaign ini. Jangan berkecil hati, kamu bisa mendaftar campaign seru lainnya di daftar campaign!"
+                    : userApplication?.status === "WAITLISTED"
+                    ? "Pendaftaranmu masuk ke dalam daftar antrean (waitlist). Kami akan menghubungimu jika ada kuota sampel tambahan."
+                    : "Pendaftaranmu telah kami terima dan saat ini sedang dalam proses kurasi & review oleh tim admin. Tim kami akan menghubungimu via WhatsApp jika ada update."}
+                </p>
+
+                {userApplication?.selectedVariant && (
+                  <div className="pt-2 border-t border-slate-200/60 text-xs text-slate-700 flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-violet-500" />
+                    <span>Varian dipilih: <strong className="text-slate-900">{userApplication.selectedVariant}</strong></span>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Link to Campaign Anda */}
+              <div className="space-y-2 pt-1">
+                <a
+                  href="/my-tasks"
+                  className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-colors shadow-md shadow-indigo-600/20"
+                >
+                  <ClipboardList className="w-4 h-4" />
+                  <span>Cek Progres di Menu Campaign Anda</span>
+                  <ChevronRight className="w-4 h-4" />
+                </a>
+                <p className="text-[11px] text-slate-400 text-center">
+                  Silakan buka menu <strong>Campaign Anda</strong> untuk melihat detail tugas, progres konten, dan nomor resi pengiriman sampel.
+                </p>
+              </div>
+            </div>
+          ) : submitSuccess ? (
             <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-4">
               <div className="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
                 <CheckCircle2 className="w-7 h-7 text-emerald-600" />
@@ -429,6 +535,11 @@ export default function CampaignPublicPage() {
             </div>
           ) : (
             <>
+              <div className="space-y-1">
+                <h2 className="font-bold text-sm text-slate-900">🚀 Daftar ke Campaign Ini</h2>
+                <p className="text-[11px] text-slate-500">Isi form berikut untuk mendaftarkan diri. Tim kami akan menghubungimu via WhatsApp.</p>
+              </div>
+
               {/* Auth status banner */}
               {isLoggedIn && currentUser ? (
                 <div className="flex items-center gap-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl">
